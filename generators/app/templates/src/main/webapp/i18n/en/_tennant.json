@@ -1,0 +1,22 @@
+{
+    "<%=angularAppName%>": {
+        "<%= tennantNameLowerFirst %>" : {
+            "home": {
+                "title": "<%= tennantNamePluralUpperFirst %>",
+                "createLabel": "Create a new <%= tennantNameUpperFirst %>",
+                "createOrEditLabel": "Create or edit a <%= tennantNameUpperFirst %>"
+            },
+            "created": "A new <%= tennantNameUpperFirst %> \"{{ param }}\" has been created",
+            "updated": "The <%= tennantNameUpperFirst %> \"{{ param }}\" has been updated",
+            "deleted": "The <%= tennantNameUpperFirst %> \"{{ param }}\" has been deleted",
+            "delete": {
+                "question": "Are you sure you want to delete <%= tennantNameUpperFirst %> {{ id }}?"
+            },
+            "detail": {
+                "title": "<%= tennantNameUpperFirst %>"
+            },
+            "name": "Name",
+            "contact": "Contact"
+        }
+    }
+}

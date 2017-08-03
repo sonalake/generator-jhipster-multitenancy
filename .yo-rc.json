@@ -1,0 +1,10 @@
+{
+  "generator-jhipster-module": {
+    "promptValues": {
+      "githubName": "jdubois",
+      "authorName": "Julien Dubois",
+      "authorEmail": "julien.dubois@gmail.com",
+      "authorUrl": "https://jhipster.github.io"
+    }
+  }
+}
