@@ -83,9 +83,11 @@ module.exports = JhipsterGenerator.extend({
         this.packageName = jhipsterVar.packageName;
         this.packageFolder = jhipsterVar.packageFolder;
         this.angularAppName = jhipsterVar.angularAppName;
+        this.javaAppName = _.upperFirst(this.baseName) + 'App';
         this.clientFramework = jhipsterVar.clientFramework;
         this.clientPackageManager = jhipsterVar.clientPackageManager;
         const javaDir = jhipsterVar.javaDir;
+        const testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
         const resourceDir = jhipsterVar.resourceDir;
         const webappDir = jhipsterVar.webappDir;
 
@@ -104,24 +106,25 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/java/package/repository/_TennantRepository.java', `${javaDir}repository/${this.tennantNameUpperFirst}Repository.java`);
         this.template('src/main/java/package/service/_TennantService.java', `${javaDir}service/${this.tennantNameUpperFirst}Service.java`);
         this.template('src/main/java/package/web/rest/_TennantResource.java', `${javaDir}web/rest/${this.tennantNameUpperFirst}Resource.java`);
+        this.template('src/test/java/package/web/rest/_TennantResourceIntTest.java', `${testDir}/web/rest/${this.tennantNameUpperFirst}ResourceIntTest.java`);
         this.template('src/main/resources/config/liquibase/_tennant.csv', `${resourceDir}config/liquibase/${this.tennantDbName}.csv`);
 
         this.changelogDate = jhipsterFunc.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_added_entity_Tennant.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}_added_entity_${this.tennantNameUpperFirst}.xml`);
         jhipsterFunc.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.tennantNameUpperFirst}`);
 
-        this.template('src/main/webapp/scripts/app/tennant/_tennant.controller.js', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}.controller.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant.service.js', `${webappDir}app/${this.tennantNameSpinalCased}//${this.tennantNameSpinalCased}.service.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant.state.js', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}.state.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-delete-dialog.controller.js', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-delete-dialog.controller.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-delete-dialog.html', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-delete-dialog.html`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-detail.controller.js', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-detail.controller.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-detail.html', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-detail.html`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-dialog.controller.js', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-dialog.controller.js`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennant-dialog.html', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-dialog.html`);
-        this.template('src/main/webapp/scripts/app/tennant/_tennants.html', `${webappDir}app/${this.tennantNameSpinalCased}/${this.tennantNamePluralSpinalCased}.html`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant.controller.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}.controller.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant.service.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}//${this.tennantNameSpinalCased}.service.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant.state.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}.state.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-delete-dialog.controller.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-delete-dialog.controller.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-delete-dialog.html', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-delete-dialog.html`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-detail.controller.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-detail.controller.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-detail.html', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-detail.html`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-dialog.controller.js', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-dialog.controller.js`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennant-dialog.html', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNameSpinalCased}-dialog.html`);
+        this.template('src/main/webapp/scripts/app/entities/tennant/_tennants.html', `${webappDir}app/entities/${this.tennantNameSpinalCased}/${this.tennantNamePluralSpinalCased}.html`);
 
-        jhipsterFunc.addElementToMenu(this.tennantNameLowerFirst, 'sunglasses', true, this.clientFramework);
+        jhipsterFunc.addEntityToMenu(this.tennantNameLowerFirst, true, this.clientFramework);
         jhipsterFunc.addElementTranslationKey(this.tennantNameLowerFirst, this.tennantNameUpperFirst, 'en');
         this.template('src/main/webapp/i18n/en/_tennant.json', `${webappDir}i18n/en/${this.tennantNameLowerFirst}.json`);
     },

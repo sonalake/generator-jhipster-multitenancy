@@ -10,7 +10,7 @@
     function stateConfig($stateProvider) {
         $stateProvider
         .state('<%= tennantNameSpinalCased %>', {
-            parent: 'app',
+            parent: 'entity',
             url: '/<%= tennantNameSpinalCased %>',
             data: {
                 authorities: ['ROLE_ADMIN'],
@@ -18,7 +18,7 @@
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNamePluralLowerFirst %>.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNamePluralLowerFirst %>.html',
                     controller: '<%= tennantNameUpperFirst %>Controller',
                     controllerAs: 'vm'
                 }
@@ -40,7 +40,7 @@
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-detail.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-detail.html',
                     controller: '<%= tennantNameUpperFirst %>DetailController',
                     controllerAs: 'vm'
                 }
@@ -71,7 +71,7 @@
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
                     controller: '<%= tennantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -96,7 +96,7 @@
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
                     controller: '<%= tennantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -124,7 +124,7 @@
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
                     controller: '<%= tennantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -149,7 +149,7 @@
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-delete-dialog.html',
+                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-delete-dialog.html',
                     controller: '<%= tennantNameUpperFirst %>DeleteController',
                     controllerAs: 'vm',
                     size: 'md',

@@ -1,34 +1,33 @@
-# generator-jhipster-fortune [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> Sample JHipster module, generates a &#34;fortune cookie&#34; page in your JHipster application
+# generator-jhipster-multi-tennancy 
 
 ## Usage
 
-This is a [JHipster](http://jhipster.github.io/) module, that is meant to be use in a JHipster application.
+This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
 
-The "Fortune cookie" is an example, used to demonstrate how to create modules with JHipster.
+This module add multi-tennacy to your application.
 
 ## Installation
 
-As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed.
+As this is a [JHipster](http://jhipster.github.io/) module, you need to have JHipster and its related tools already installed.
 
 ```bash
-npm install -g generator-jhipster-fortune
+npm install -g generator-jhipster-multi-tennancy
 ```
+
+## In Development
+
+To run this generator in your local environment, run the command below. This will refresh, if you make any changes.
+
+```bash
+cd generator-jhipster-multi-tennancy
+npm link
+```
+
+## Running
 
 Then run the module on a JHipster generated application:
 
 ```bash
-yo jhipster-fortune
+yo jhipster-multi-tennancy
 ```
 
-## License
-
-Apache-2.0 © [Julien Dubois](http://www.julien-dubois.com/)
-
-
-[npm-image]: https://badge.fury.io/js/generator-jhipster-fortune.svg
-[npm-url]: https://npmjs.org/package/generator-jhipster-fortune
-[travis-image]: https://travis-ci.org/jdubois/generator-jhipster-fortune.svg?branch=master
-[travis-url]: https://travis-ci.org/jdubois/generator-jhipster-fortune
-[daviddm-image]: https://david-dm.org/jdubois/generator-jhipster-fortune.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/jdubois/generator-jhipster-fortune
