@@ -4,7 +4,7 @@
 
 This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
 
-This module add multi-tennacy to your application.
+This module will add multi-tennacy to your application.
 
 ## Installation
 
