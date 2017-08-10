@@ -125,7 +125,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/scripts/app/entities/tenant/_tenants.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNamePluralSpinalCased}.html`);
 
         jhipsterFunc.addEntityToMenu(this.tenantNameLowerFirst, true, this.clientFramework);
-        jhipsterFunc.addElementTranslationKey(this.tenantNameLowerFirst, this.tenantNameUpperFirst, 'en');
+        jhipsterFunc.addEntityTranslationKey(this.tenantNameLowerFirst, this.tenantNameUpperFirst, 'en');
         this.template('src/main/webapp/i18n/en/_tenant.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}.json`);
     },
 
