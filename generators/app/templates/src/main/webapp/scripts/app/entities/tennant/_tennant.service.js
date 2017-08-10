@@ -2,12 +2,12 @@
     'use strict';
     angular
         .module('<%=angularAppName%>')
-        .factory('<%= tennantNameUpperFirst %>', <%= tennantNameUpperFirst %>);
+        .factory('<%= tenantNameUpperFirst %>', <%= tenantNameUpperFirst %>);
 
-    <%= tennantNameUpperFirst %>.$inject = ['$resource'];
+    <%= tenantNameUpperFirst %>.$inject = ['$resource'];
 
-    function <%= tennantNameUpperFirst %> ($resource) {
-        var resourceUrl =  'api/<%= tennantNamePluralLowerFirst %>/:id';
+    function <%= tenantNameUpperFirst %> ($resource) {
+        var resourceUrl =  'api/<%= tenantNamePluralLowerFirst %>/:id';
 
         return $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true},

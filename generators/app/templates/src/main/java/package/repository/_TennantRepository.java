@@ -1,18 +1,18 @@
 package <%=packageName%>.repository;
 
-import <%=packageName%>.domain.<%= tennantNameUpperFirst %>;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 
 import org.springframework.data.jpa.repository.*;
 
 import java.util.List;
 
 /**
- * Spring Data JPA repository for the <%= tennantNameLowerFirst %> entity.
+ * Spring Data JPA repository for the <%= tenantNameLowerFirst %> entity.
  */
 @SuppressWarnings("unused")
-public interface <%= tennantNameUpperFirst %>Repository extends JpaRepository<<%= tennantNameUpperFirst %>,Long> {
+public interface <%= tenantNameUpperFirst %>Repository extends JpaRepository<<%= tenantNameUpperFirst %>,Long> {
 
-    @Query("select <%= tennantNameLowerFirst %> from <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %> where <%= tennantNameLowerFirst %>.<%= tennantNameLowerFirst %>Contact.login = ?#{principal.username}")
-    List<<%= tennantNameUpperFirst %>> findBy<%= tennantNameUpperFirst %>ContactIsCurrentUser();
+    @Query("select <%= tenantNameLowerFirst %> from <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> where <%= tenantNameLowerFirst %>.<%= tenantNameLowerFirst %>Contact.login = ?#{principal.username}")
+    List<<%= tenantNameUpperFirst %>> findBy<%= tenantNameUpperFirst %>ContactIsCurrentUser();
 
 }

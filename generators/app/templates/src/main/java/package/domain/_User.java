@@ -23,8 +23,8 @@ import java.util.Set;
 @Entity
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@FilterDef(name = "USER_FILTER", parameters = {@ParamDef(name = "<%= tennantNameSpinalCased %>Id", type = "long")})
-@Filter(name = "USER_FILTER", condition = "<%= tennantNameSpinalCased %>_id = :<%= tennantNameSpinalCased %>Id")
+@FilterDef(name = "USER_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
+@Filter(name = "USER_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,14 +93,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Set<Authority> authorities = new HashSet<>();
 
     @ManyToOne
-    private <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>;
+    private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
 
-    public <%= tennantNameUpperFirst %> get<%= tennantNameUpperFirst %>() {
-        return <%= tennantNameLowerFirst %>;
+    public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
+        return <%= tenantNameLowerFirst %>;
     }
 
-    public void set<%= tennantNameUpperFirst %>(<%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>) {
-        this.<%= tennantNameLowerFirst %> = <%= tennantNameLowerFirst %>;
+    public void set<%= tenantNameUpperFirst %>(<%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     public Long getId() {

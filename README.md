@@ -1,4 +1,4 @@
-# generator-jhipster-multi-tennancy 
+# generator-jhipster-multitenancy 
 
 ## Usage
 
@@ -11,7 +11,7 @@ This module will add multi-tennacy to your application.
 As this is a [JHipster](http://jhipster.github.io/) module, you need to have JHipster and its related tools already installed.
 
 ```bash
-npm install -g generator-jhipster-multi-tennancy
+npm install -g generator-jhipster-multitenancy
 ```
 
 ## In Development
@@ -19,7 +19,7 @@ npm install -g generator-jhipster-multi-tennancy
 To run this generator in your local environment, run the command below. This will refresh, if you make any changes.
 
 ```bash
-cd generator-jhipster-multi-tennancy
+cd generator-jhipster-multitenancy
 npm link
 ```
 
@@ -28,6 +28,6 @@ npm link
 Then run the module on a JHipster generated application:
 
 ```bash
-yo jhipster-multi-tennancy
+yo jhipster-multitenancy
 ```
 

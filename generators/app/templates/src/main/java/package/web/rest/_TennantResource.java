@@ -1,8 +1,8 @@
 package <%=packageName%>.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import <%=packageName%>.domain.<%= tennantNameUpperFirst %>;
-import <%=packageName%>.service.<%= tennantNameUpperFirst %>Service;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
+import <%=packageName%>.service.<%= tenantNameUpperFirst %>Service;
 import <%=packageName%>.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -17,103 +17,103 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing <%= tennantNameUpperFirst %>.
+ * REST controller for managing <%= tenantNameUpperFirst %>.
  */
 @RestController
 @RequestMapping("/api")
-public class <%= tennantNameUpperFirst %>Resource {
+public class <%= tenantNameUpperFirst %>Resource {
 
-    private final Logger log = LoggerFactory.getLogger(<%= tennantNameUpperFirst %>Resource.class);
+    private final Logger log = LoggerFactory.getLogger(<%= tenantNameUpperFirst %>Resource.class);
 
-    private static final String ENTITY_NAME = "<%= tennantNameLowerFirst %>";
+    private static final String ENTITY_NAME = "<%= tenantNameLowerFirst %>";
 
-    private final <%= tennantNameUpperFirst %>Service <%= tennantNameLowerFirst %>Service;
+    private final <%= tenantNameUpperFirst %>Service <%= tenantNameLowerFirst %>Service;
 
-    public <%= tennantNameUpperFirst %>Resource(<%= tennantNameUpperFirst %>Service <%= tennantNameLowerFirst %>Service) {
-        this.<%= tennantNameLowerFirst %>Service = <%= tennantNameLowerFirst %>Service;
+    public <%= tenantNameUpperFirst %>Resource(<%= tenantNameUpperFirst %>Service <%= tenantNameLowerFirst %>Service) {
+        this.<%= tenantNameLowerFirst %>Service = <%= tenantNameLowerFirst %>Service;
     }
 
     /**
-     * POST  /<%= tennantNamePluralLowerFirst %> : Create a new <%= tennantNameLowerFirst %>.
+     * POST  /<%= tenantNamePluralLowerFirst %> : Create a new <%= tenantNameLowerFirst %>.
      *
-     * @param <%= tennantNameLowerFirst %> the <%= tennantNameLowerFirst %> to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new <%= tennantNameLowerFirst %>, or with status 400 (Bad Request) if the <%= tennantNameLowerFirst %> has already an ID
+     * @param <%= tenantNameLowerFirst %> the <%= tenantNameLowerFirst %> to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new <%= tenantNameLowerFirst %>, or with status 400 (Bad Request) if the <%= tenantNameLowerFirst %> has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/<%= tennantNamePluralLowerFirst %>")
+    @PostMapping("/<%= tenantNamePluralLowerFirst %>")
     @Timed
-    public ResponseEntity<<%= tennantNameUpperFirst %>> create<%= tennantNameUpperFirst %>(@Valid @RequestBody <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>) throws URISyntaxException {
-        log.debug("REST request to save <%= tennantNameUpperFirst %> : {}", <%= tennantNameLowerFirst %>);
-        if (<%= tennantNameLowerFirst %>.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new <%= tennantNameLowerFirst %> cannot already have an ID")).body(null);
+    public ResponseEntity<<%= tenantNameUpperFirst %>> create<%= tenantNameUpperFirst %>(@Valid @RequestBody <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) throws URISyntaxException {
+        log.debug("REST request to save <%= tenantNameUpperFirst %> : {}", <%= tenantNameLowerFirst %>);
+        if (<%= tenantNameLowerFirst %>.getId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new <%= tenantNameLowerFirst %> cannot already have an ID")).body(null);
         }
-<%= tennantNameUpperFirst %> result = <%= tennantNameLowerFirst %>Service.save(<%= tennantNameLowerFirst %>);
-        return ResponseEntity.created(new URI("/api/<%= tennantNamePluralLowerFirst %>/" + result.getId()))
+<%= tenantNameUpperFirst %> result = <%= tenantNameLowerFirst %>Service.save(<%= tenantNameLowerFirst %>);
+        return ResponseEntity.created(new URI("/api/<%= tenantNamePluralLowerFirst %>/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getName()))
             .body(result);
     }
 
     /**
-     * PUT  /<%= tennantNamePluralLowerFirst %> : Updates an existing <%= tennantNameLowerFirst %>.
+     * PUT  /<%= tenantNamePluralLowerFirst %> : Updates an existing <%= tenantNameLowerFirst %>.
      *
-     * @param <%= tennantNameLowerFirst %> the <%= tennantNameLowerFirst %> to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated <%= tennantNameLowerFirst %>,
-     * or with status 400 (Bad Request) if the <%= tennantNameLowerFirst %> is not valid,
-     * or with status 500 (Internal Server Error) if the <%= tennantNameLowerFirst %> couldnt be updated
+     * @param <%= tenantNameLowerFirst %> the <%= tenantNameLowerFirst %> to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated <%= tenantNameLowerFirst %>,
+     * or with status 400 (Bad Request) if the <%= tenantNameLowerFirst %> is not valid,
+     * or with status 500 (Internal Server Error) if the <%= tenantNameLowerFirst %> couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/<%= tennantNamePluralLowerFirst %>")
+    @PutMapping("/<%= tenantNamePluralLowerFirst %>")
     @Timed
-    public ResponseEntity<<%= tennantNameUpperFirst %>> update<%= tennantNameUpperFirst %>(@Valid @RequestBody <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>) throws URISyntaxException {
-        log.debug("REST request to update <%= tennantNameUpperFirst %> : {}", <%= tennantNameLowerFirst %>);
-        if (<%= tennantNameLowerFirst %>.getId() == null) {
-            return create<%= tennantNameUpperFirst %>(<%= tennantNameLowerFirst %>);
+    public ResponseEntity<<%= tenantNameUpperFirst %>> update<%= tenantNameUpperFirst %>(@Valid @RequestBody <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) throws URISyntaxException {
+        log.debug("REST request to update <%= tenantNameUpperFirst %> : {}", <%= tenantNameLowerFirst %>);
+        if (<%= tenantNameLowerFirst %>.getId() == null) {
+            return create<%= tenantNameUpperFirst %>(<%= tenantNameLowerFirst %>);
         }
-        <%= tennantNameUpperFirst %> result = <%= tennantNameLowerFirst %>Service.save(<%= tennantNameLowerFirst %>);
+        <%= tenantNameUpperFirst %> result = <%= tenantNameLowerFirst %>Service.save(<%= tenantNameLowerFirst %>);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, <%= tennantNameLowerFirst %>.getName()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, <%= tenantNameLowerFirst %>.getName()))
             .body(result);
     }
 
     /**
-     * GET  /<%= tennantNamePluralLowerFirst %> : get all the <%= tennantNamePluralLowerFirst %>.
+     * GET  /<%= tenantNamePluralLowerFirst %> : get all the <%= tenantNamePluralLowerFirst %>.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of <%= tennantNamePluralLowerFirst %> in body
+     * @return the ResponseEntity with status 200 (OK) and the list of <%= tenantNamePluralLowerFirst %> in body
      */
-    @GetMapping("/<%= tennantNamePluralLowerFirst %>")
+    @GetMapping("/<%= tenantNamePluralLowerFirst %>")
     @Timed
-    public List<<%= tennantNameUpperFirst %>> getAll<%= tennantNamePluralUpperFirst %>() {
-        log.debug("REST request to get all <%= tennantNamePluralUpperFirst %>");
-        return <%= tennantNameLowerFirst %>Service.findAll();
+    public List<<%= tenantNameUpperFirst %>> getAll<%= tenantNamePluralUpperFirst %>() {
+        log.debug("REST request to get all <%= tenantNamePluralUpperFirst %>");
+        return <%= tenantNameLowerFirst %>Service.findAll();
     }
 
     /**
-     * GET  /<%= tennantNamePluralLowerFirst %>/:id : get the "id" <%= tennantNameLowerFirst %>.
+     * GET  /<%= tenantNamePluralLowerFirst %>/:id : get the "id" <%= tenantNameLowerFirst %>.
      *
-     * @param id the id of the <%= tennantNameLowerFirst %> to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the <%= tennantNameLowerFirst %>, or with status 404 (Not Found)
+     * @param id the id of the <%= tenantNameLowerFirst %> to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the <%= tenantNameLowerFirst %>, or with status 404 (Not Found)
      */
-    @GetMapping("/<%= tennantNamePluralLowerFirst %>/{id}")
+    @GetMapping("/<%= tenantNamePluralLowerFirst %>/{id}")
     @Timed
-    public ResponseEntity<<%= tennantNameUpperFirst %>> get<%= tennantNameUpperFirst %>(@PathVariable Long id) {
-        log.debug("REST request to get <%= tennantNameUpperFirst %> : {}", id);
-        <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %> = <%= tennantNameLowerFirst %>Service.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(<%= tennantNameLowerFirst %>));
+    public ResponseEntity<<%= tenantNameUpperFirst %>> get<%= tenantNameUpperFirst %>(@PathVariable Long id) {
+        log.debug("REST request to get <%= tenantNameUpperFirst %> : {}", id);
+        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>Service.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(<%= tenantNameLowerFirst %>));
     }
 
     /**
-     * DELETE  /<%= tennantNamePluralLowerFirst %>/:id : delete the "id" <%= tennantNameLowerFirst %>.
+     * DELETE  /<%= tenantNamePluralLowerFirst %>/:id : delete the "id" <%= tenantNameLowerFirst %>.
      *
-     * @param id the id of the <%= tennantNameLowerFirst %> to delete
+     * @param id the id of the <%= tenantNameLowerFirst %> to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/<%= tennantNamePluralLowerFirst %>/{id}")
+    @DeleteMapping("/<%= tenantNamePluralLowerFirst %>/{id}")
     @Timed
-    public ResponseEntity<Void> delete<%= tennantNameUpperFirst %>(@PathVariable Long id) {
-        log.debug("REST request to delete <%= tennantNameUpperFirst %> : {}", id);
-        String <%= tennantNameLowerFirst %>Name = <%= tennantNameLowerFirst %>Service.findOne(id).getName();
-        <%= tennantNameLowerFirst %>Service.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, <%= tennantNameLowerFirst %>Name)).build();
+    public ResponseEntity<Void> delete<%= tenantNameUpperFirst %>(@PathVariable Long id) {
+        log.debug("REST request to delete <%= tenantNameUpperFirst %> : {}", id);
+        String <%= tenantNameLowerFirst %>Name = <%= tenantNameLowerFirst %>Service.findOne(id).getName();
+        <%= tenantNameLowerFirst %>Service.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, <%= tenantNameLowerFirst %>Name)).build();
     }
 
 }

@@ -9,53 +9,53 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('<%= tennantNameSpinalCased %>', {
+        .state('<%= tenantNameSpinalCased %>', {
             parent: 'entity',
-            url: '/<%= tennantNameSpinalCased %>',
+            url: '/<%= tenantNameSpinalCased %>',
             data: {
                 authorities: ['ROLE_ADMIN'],
-                pageTitle: '<%=angularAppName%>.<%= tennantNameLowerFirst %>.home.title'
+                pageTitle: '<%=angularAppName%>.<%= tenantNameLowerFirst %>.home.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNamePluralLowerFirst %>.html',
-                    controller: '<%= tennantNameUpperFirst %>Controller',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNamePluralLowerFirst %>.html',
+                    controller: '<%= tenantNameUpperFirst %>Controller',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('<%= tennantNameLowerFirst %>');
+                    $translatePartialLoader.addPart('<%= tenantNameLowerFirst %>');
                     $translatePartialLoader.addPart('global');
                     return $translate.refresh();
                 }]
             }
         })
-        .state('<%= tennantNameSpinalCased %>-detail', {
-            parent: '<%= tennantNameSpinalCased %>',
+        .state('<%= tenantNameSpinalCased %>-detail', {
+            parent: '<%= tenantNameSpinalCased %>',
             url: '/view/{id}',
             data: {
                 authorities: ['ROLE_ADMIN'],
-                pageTitle: '<%=angularAppName%>.<%= tennantNameLowerFirst %>.detail.title'
+                pageTitle: '<%=angularAppName%>.<%= tenantNameLowerFirst %>.detail.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-detail.html',
-                    controller: '<%= tennantNameUpperFirst %>DetailController',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNameSpinalCased %>-detail.html',
+                    controller: '<%= tenantNameUpperFirst %>DetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('<%= tennantNameLowerFirst %>');
+                    $translatePartialLoader.addPart('<%= tenantNameLowerFirst %>');
                     return $translate.refresh();
                 }],
-                entity: ['$stateParams', '<%= tennantNameUpperFirst %>', function($stateParams, <%= tennantNameUpperFirst %>) {
-                    return <%= tennantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', '<%= tenantNameUpperFirst %>', function($stateParams, <%= tenantNameUpperFirst %>) {
+                    return <%= tenantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || '<%= tennantNameLowerFirst %>',
+                        name: $state.current.name || '<%= tenantNameLowerFirst %>',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -63,22 +63,22 @@
                 }]
             }
         })
-        .state('<%= tennantNameSpinalCased %>-detail.edit', {
-            parent: '<%= tennantNameSpinalCased %>-detail',
+        .state('<%= tenantNameSpinalCased %>-detail.edit', {
+            parent: '<%= tenantNameSpinalCased %>-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_ADMIN']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
-                    controller: '<%= tennantNameUpperFirst %>DialogController',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNameSpinalCased %>-dialog.html',
+                    controller: '<%= tenantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['<%= tennantNameUpperFirst %>', function(<%= tennantNameUpperFirst %>) {
-                            return <%= tennantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
+                        entity: ['<%= tenantNameUpperFirst %>', function(<%= tenantNameUpperFirst %>) {
+                            return <%= tenantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -88,16 +88,16 @@
                 });
             }]
         })
-        .state('<%= tennantNameSpinalCased %>.new', {
-            parent: '<%= tennantNameSpinalCased %>',
+        .state('<%= tenantNameSpinalCased %>.new', {
+            parent: '<%= tenantNameSpinalCased %>',
             url: '/new',
             data: {
                 authorities: ['ROLE_ADMIN']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
-                    controller: '<%= tennantNameUpperFirst %>DialogController',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNameSpinalCased %>-dialog.html',
+                    controller: '<%= tenantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
@@ -110,56 +110,56 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('<%= tennantNameSpinalCased %>', null, { reload: '<%= tennantNameSpinalCased %>' });
+                    $state.go('<%= tenantNameSpinalCased %>', null, { reload: '<%= tenantNameSpinalCased %>' });
                 }, function() {
-                    $state.go('<%= tennantNameSpinalCased %>');
+                    $state.go('<%= tenantNameSpinalCased %>');
                 });
             }]
         })
-        .state('<%= tennantNameSpinalCased %>.edit', {
-            parent: '<%= tennantNameSpinalCased %>',
+        .state('<%= tenantNameSpinalCased %>.edit', {
+            parent: '<%= tenantNameSpinalCased %>',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_ADMIN']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-dialog.html',
-                    controller: '<%= tennantNameUpperFirst %>DialogController',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNameSpinalCased %>-dialog.html',
+                    controller: '<%= tenantNameUpperFirst %>DialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['<%= tennantNameUpperFirst %>', function(<%= tennantNameUpperFirst %>) {
-                            return <%= tennantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
+                        entity: ['<%= tenantNameUpperFirst %>', function(<%= tenantNameUpperFirst %>) {
+                            return <%= tenantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('<%= tennantNameSpinalCased %>', null, { reload: '<%= tennantNameSpinalCased %>' });
+                    $state.go('<%= tenantNameSpinalCased %>', null, { reload: '<%= tenantNameSpinalCased %>' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('<%= tennantNameSpinalCased %>.delete', {
-            parent: '<%= tennantNameSpinalCased %>',
+        .state('<%= tenantNameSpinalCased %>.delete', {
+            parent: '<%= tenantNameSpinalCased %>',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_ADMIN']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/<%= tennantNameSpinalCased %>/<%= tennantNameSpinalCased %>-delete-dialog.html',
-                    controller: '<%= tennantNameUpperFirst %>DeleteController',
+                    templateUrl: 'app/entities/<%= tenantNameSpinalCased %>/<%= tenantNameSpinalCased %>-delete-dialog.html',
+                    controller: '<%= tenantNameUpperFirst %>DeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['<%= tennantNameUpperFirst %>', function(<%= tennantNameUpperFirst %>) {
-                            return <%= tennantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
+                        entity: ['<%= tenantNameUpperFirst %>', function(<%= tenantNameUpperFirst %>) {
+                            return <%= tenantNameUpperFirst %>.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('<%= tennantNameSpinalCased %>', null, { reload: '<%= tennantNameSpinalCased %>' });
+                    $state.go('<%= tenantNameSpinalCased %>', null, { reload: '<%= tenantNameSpinalCased %>' });
                 }, function() {
                     $state.go('^');
                 });

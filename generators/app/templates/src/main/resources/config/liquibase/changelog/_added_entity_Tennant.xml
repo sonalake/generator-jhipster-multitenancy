@@ -15,10 +15,10 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity <%= tennantNameUpperFirst %>.
+        Added the entity <%= tenantNameUpperFirst %>.
     -->
     <changeSet id="<%= changelogDate %>-1" author="jhipster">
-        <createTable tableName="<%= tennantDbName %>">
+        <createTable tableName="<%= tenantDbName %>">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -26,38 +26,38 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="<%= tennantDbName %>_contact_id" type="bigint">
+            <column name="<%= tenantDbName %>_contact_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
 
         <addColumn tableName="jhi_user">
-            <column name="<%= tennantDbName %>_id" type="bigint">
+            <column name="<%= tenantDbName %>_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
 
-        <loadData tableName="<%= tennantDbName %>"
+        <loadData tableName="<%= tenantDbName %>"
                   encoding="UTF-8"
-                  file="config/liquibase/<%= tennantDbName %>.csv"
+                  file="config/liquibase/<%= tenantDbName %>.csv"
                   separator=";">
         </loadData>
 
-        <addForeignKeyConstraint baseColumnNames="<%= tennantDbName %>_contact_id"
-                                 baseTableName="<%= tennantDbName %>"
-                                 constraintName="fk_<%= tennantDbName %>_<%= tennantDbName %>_contact_id"
+        <addForeignKeyConstraint baseColumnNames="<%= tenantDbName %>_contact_id"
+                                 baseTableName="<%= tenantDbName %>"
+                                 constraintName="fk_<%= tenantDbName %>_<%= tenantDbName %>_contact_id"
                                  referencedTableName="jhi_user"
                                  referencedColumnNames="id"/>
 
-        <addForeignKeyConstraint baseColumnNames="<%= tennantDbName %>_id"
+        <addForeignKeyConstraint baseColumnNames="<%= tenantDbName %>_id"
                                  baseTableName="jhi_user"
-                                 constraintName="fk_user_<%= tennantDbName %>"
-                                 referencedTableName="<%= tennantDbName %>"
+                                 constraintName="fk_user_<%= tenantDbName %>"
+                                 referencedTableName="<%= tenantDbName %>"
                                  referencedColumnNames="id"/>
 
         <rollback>
-            truncate <%= tennantDbName %>
+            truncate <%= tenantDbName %>
         </rollback>
     </changeSet>
 </databaseChangeLog>

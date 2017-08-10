@@ -11,11 +11,11 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * A <%= tennantNameUpperFirst %>.
+ * A <%= tenantNameUpperFirst %>.
  */
 @Entity
-@Table(name = "<%= tennantNameLowerFirst %>")
-public class <%= tennantNameUpperFirst %> implements Serializable {
+@Table(name = "<%= tenantNameLowerFirst %>")
+public class <%= tenantNameUpperFirst %> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,13 +27,13 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "<%= tennantNameLowerFirst %>")
+    @OneToMany(mappedBy = "<%= tenantNameLowerFirst %>")
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "<%= tennantNameLowerFirst %>", allowSetters = true)
-    private User <%= tennantNameLowerFirst %>Contact;
+    @JsonIgnoreProperties(value = "<%= tenantNameLowerFirst %>", allowSetters = true)
+    private User <%= tenantNameLowerFirst %>Contact;
 
     public Long getId() {
         return id;
@@ -47,7 +47,7 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
         return name;
     }
 
-    public <%= tennantNameUpperFirst %> name(String name) {
+    public <%= tenantNameUpperFirst %> name(String name) {
         this.name = name;
         return this;
     }
@@ -60,17 +60,17 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
         return users;
     }
 
-    public <%= tennantNameUpperFirst %> users(Set<User> users) {
+    public <%= tenantNameUpperFirst %> users(Set<User> users) {
         this.users = users;
         return this;
     }
 
-    public <%= tennantNameUpperFirst %> addUser(User user) {
+    public <%= tenantNameUpperFirst %> addUser(User user) {
         this.users.add(user);
         return this;
     }
 
-    public <%= tennantNameUpperFirst %> removeUser(User user) {
+    public <%= tenantNameUpperFirst %> removeUser(User user) {
         this.users.remove(user);
         return this;
     }
@@ -79,17 +79,17 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
         this.users = users;
     }
 
-    public User get<%= tennantNameUpperFirst %>Contact() {
-        return <%= tennantNameLowerFirst %>Contact;
+    public User get<%= tenantNameUpperFirst %>Contact() {
+        return <%= tenantNameLowerFirst %>Contact;
     }
 
-    public <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>Contact(User user) {
-        this.<%= tennantNameLowerFirst %>Contact = user;
+    public <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>Contact(User user) {
+        this.<%= tenantNameLowerFirst %>Contact = user;
         return this;
     }
 
-    public void set<%= tennantNameUpperFirst %>Contact(User user) {
-        this.<%= tennantNameLowerFirst %>Contact = user;
+    public void set<%= tenantNameUpperFirst %>Contact(User user) {
+        this.<%= tenantNameLowerFirst %>Contact = user;
     }
 
     @Override
@@ -100,11 +100,11 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %> = (<%= tennantNameUpperFirst %>) o;
-        if (<%= tennantNameLowerFirst %>.id == null || id == null) {
+        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = (<%= tenantNameUpperFirst %>) o;
+        if (<%= tenantNameLowerFirst %>.id == null || id == null) {
             return false;
         }
-        return Objects.equals(id, <%= tennantNameLowerFirst %>.id);
+        return Objects.equals(id, <%= tenantNameLowerFirst %>.id);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class <%= tennantNameUpperFirst %> implements Serializable {
 
     @Override
     public String toString() {
-        return "<%= tennantNameUpperFirst %>{" +
+        return "<%= tenantNameUpperFirst %>{" +
             "id=" + id +
             ", name='" + name + "'" +
             '}';

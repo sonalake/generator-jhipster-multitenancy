@@ -2,9 +2,9 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.<%=javaAppName%>;
 
-import <%=packageName%>.domain.<%= tennantNameUpperFirst %>;
-import <%=packageName%>.repository.<%= tennantNameUpperFirst %>Repository;
-import <%=packageName%>.service.<%= tennantNameUpperFirst %>Service;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
+import <%=packageName%>.repository.<%= tenantNameUpperFirst %>Repository;
+import <%=packageName%>.service.<%= tenantNameUpperFirst %>Service;
 import <%=packageName%>.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -30,22 +30,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Test class for the <%= tennantNameUpperFirst %>Resource REST controller.
+ * Test class for the <%= tenantNameUpperFirst %>Resource REST controller.
  *
- * @see <%= tennantNameUpperFirst %>Resource
+ * @see <%= tenantNameUpperFirst %>Resource
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = <%= javaAppName %>.class)
-public class <%= tennantNameUpperFirst %>ResourceIntTest {
+public class <%= tenantNameUpperFirst %>ResourceIntTest {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     @Autowired
-    private <%= tennantNameUpperFirst %>Repository <%= tennantNameLowerFirst %>Repository;
+    private <%= tenantNameUpperFirst %>Repository <%= tenantNameLowerFirst %>Repository;
 
     @Autowired
-    private <%= tennantNameUpperFirst %>Service <%= tennantNameLowerFirst %>Service;
+    private <%= tenantNameUpperFirst %>Service <%= tenantNameLowerFirst %>Service;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -59,15 +59,15 @@ public class <%= tennantNameUpperFirst %>ResourceIntTest {
     @Autowired
     private EntityManager em;
 
-    private MockMvc rest<%= tennantNameUpperFirst %>MockMvc;
+    private MockMvc rest<%= tenantNameUpperFirst %>MockMvc;
 
-    private <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %>;
+    private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        <%= tennantNameUpperFirst %>Resource <%= tennantNameLowerFirst %>Resource = new <%= tennantNameUpperFirst %>Resource(<%= tennantNameLowerFirst %>Service);
-        this.rest<%= tennantNameUpperFirst %>MockMvc = MockMvcBuilders.standaloneSetup(<%= tennantNameLowerFirst %>Resource)
+        <%= tenantNameUpperFirst %>Resource <%= tenantNameLowerFirst %>Resource = new <%= tenantNameUpperFirst %>Resource(<%= tenantNameLowerFirst %>Service);
+        this.rest<%= tenantNameUpperFirst %>MockMvc = MockMvcBuilders.standaloneSetup(<%= tenantNameLowerFirst %>Resource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -79,173 +79,173 @@ public class <%= tennantNameUpperFirst %>ResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static <%= tennantNameUpperFirst %> createEntity(EntityManager em) {
-        <%= tennantNameUpperFirst %> <%= tennantNameLowerFirst %> = new <%= tennantNameUpperFirst %>()
+    public static <%= tenantNameUpperFirst %> createEntity(EntityManager em) {
+        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = new <%= tenantNameUpperFirst %>()
             .name(DEFAULT_NAME);
         em.flush();
-        return <%= tennantNameLowerFirst %>;
+        return <%= tenantNameLowerFirst %>;
     }
 
     @Before
     public void initTest() {
-        <%= tennantNameLowerFirst %> = createEntity(em);
+        <%= tenantNameLowerFirst %> = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void create<%= tennantNameUpperFirst %>() throws Exception {
-        int databaseSizeBeforeCreate = <%= tennantNameLowerFirst %>Repository.findAll().size();
+    public void create<%= tenantNameUpperFirst %>() throws Exception {
+        int databaseSizeBeforeCreate = <%= tenantNameLowerFirst %>Repository.findAll().size();
 
-        // Create the <%= tennantNameUpperFirst %>
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(post("/api/<%= tennantNamePluralLowerFirst %>")
+        // Create the <%= tenantNameUpperFirst %>
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(post("/api/<%= tenantNamePluralLowerFirst %>")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(<%= tennantNameLowerFirst %>)))
+            .content(TestUtil.convertObjectToJsonBytes(<%= tenantNameLowerFirst %>)))
             .andExpect(status().isCreated());
 
-        // Validate the <%= tennantNameUpperFirst %> in the database
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeCreate + 1);
-        <%= tennantNameUpperFirst %> test<%= tennantNameUpperFirst %> = <%= tennantNameLowerFirst %>List.get(<%= tennantNameLowerFirst %>List.size() - 1);
-        assertThat(test<%= tennantNameUpperFirst %>.getName()).isEqualTo(DEFAULT_NAME);
+        // Validate the <%= tenantNameUpperFirst %> in the database
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeCreate + 1);
+        <%= tenantNameUpperFirst %> test<%= tenantNameUpperFirst %> = <%= tenantNameLowerFirst %>List.get(<%= tenantNameLowerFirst %>List.size() - 1);
+        assertThat(test<%= tenantNameUpperFirst %>.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
     @Transactional
-    public void create<%= tennantNameUpperFirst %>WithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = <%= tennantNameLowerFirst %>Repository.findAll().size();
+    public void create<%= tenantNameUpperFirst %>WithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = <%= tenantNameLowerFirst %>Repository.findAll().size();
 
-        // Create the <%= tennantNameUpperFirst %> with an existing ID
-        <%= tennantNameLowerFirst %>.setId(1L);
+        // Create the <%= tenantNameUpperFirst %> with an existing ID
+        <%= tenantNameLowerFirst %>.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(post("/api/<%= tennantNamePluralLowerFirst %>")
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(post("/api/<%= tenantNamePluralLowerFirst %>")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(<%= tennantNameLowerFirst %>)))
+            .content(TestUtil.convertObjectToJsonBytes(<%= tenantNameLowerFirst %>)))
             .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeCreate);
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = <%= tennantNameLowerFirst %>Repository.findAll().size();
+        int databaseSizeBeforeTest = <%= tenantNameLowerFirst %>Repository.findAll().size();
         // set the field null
-        <%= tennantNameLowerFirst %>.setName(null);
+        <%= tenantNameLowerFirst %>.setName(null);
 
-        // Create the <%= tennantNameUpperFirst %>, which fails.
+        // Create the <%= tenantNameUpperFirst %>, which fails.
 
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(post("/api/<%= tennantNamePluralLowerFirst %>")
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(post("/api/<%= tenantNamePluralLowerFirst %>")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(<%= tennantNameLowerFirst %>)))
+            .content(TestUtil.convertObjectToJsonBytes(<%= tenantNameLowerFirst %>)))
             .andExpect(status().isBadRequest());
 
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeTest);
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
-    public void getAll<%= tennantNamePluralUpperFirst %>() throws Exception {
+    public void getAll<%= tenantNamePluralUpperFirst %>() throws Exception {
         // Initialize the database
-        <%= tennantNameLowerFirst %>Repository.saveAndFlush(<%= tennantNameLowerFirst %>);
+        <%= tenantNameLowerFirst %>Repository.saveAndFlush(<%= tenantNameLowerFirst %>);
 
-        // Get all the <%= tennantNameLowerFirst %>List
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(get("/api/<%= tennantNamePluralLowerFirst %>?sort=id,desc"))
+        // Get all the <%= tenantNameLowerFirst %>List
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(get("/api/<%= tenantNamePluralLowerFirst %>?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(<%= tennantNameLowerFirst %>.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(<%= tenantNameLowerFirst %>.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
     @Transactional
-    public void get<%= tennantNameUpperFirst %>() throws Exception {
+    public void get<%= tenantNameUpperFirst %>() throws Exception {
         // Initialize the database
-        <%= tennantNameLowerFirst %>Repository.saveAndFlush(<%= tennantNameLowerFirst %>);
+        <%= tenantNameLowerFirst %>Repository.saveAndFlush(<%= tenantNameLowerFirst %>);
 
-        // Get the <%= tennantNameLowerFirst %>
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(get("/api/<%= tennantNamePluralLowerFirst %>/{id}", <%= tennantNameLowerFirst %>.getId()))
+        // Get the <%= tenantNameLowerFirst %>
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(get("/api/<%= tenantNamePluralLowerFirst %>/{id}", <%= tenantNameLowerFirst %>.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(<%= tennantNameLowerFirst %>.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(<%= tenantNameLowerFirst %>.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
     @Transactional
-    public void getNonExisting<%= tennantNameUpperFirst %>() throws Exception {
-        // Get the <%= tennantNameLowerFirst %>
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(get("/api/<%= tennantNamePluralLowerFirst %>/{id}", Long.MAX_VALUE))
+    public void getNonExisting<%= tenantNameUpperFirst %>() throws Exception {
+        // Get the <%= tenantNameLowerFirst %>
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(get("/api/<%= tenantNamePluralLowerFirst %>/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void update<%= tennantNameUpperFirst %>() throws Exception {
+    public void update<%= tenantNameUpperFirst %>() throws Exception {
         // Initialize the database
-        <%= tennantNameLowerFirst %>Service.save(<%= tennantNameLowerFirst %>);
+        <%= tenantNameLowerFirst %>Service.save(<%= tenantNameLowerFirst %>);
 
-        int databaseSizeBeforeUpdate = <%= tennantNameLowerFirst %>Repository.findAll().size();
+        int databaseSizeBeforeUpdate = <%= tenantNameLowerFirst %>Repository.findAll().size();
 
-        // Update the <%= tennantNameLowerFirst %>
-        <%= tennantNameUpperFirst %> updated<%= tennantNameUpperFirst %> = <%= tennantNameLowerFirst %>Repository.findOne(<%= tennantNameLowerFirst %>.getId());
-        updated<%= tennantNameUpperFirst %>
+        // Update the <%= tenantNameLowerFirst %>
+        <%= tenantNameUpperFirst %> updated<%= tenantNameUpperFirst %> = <%= tenantNameLowerFirst %>Repository.findOne(<%= tenantNameLowerFirst %>.getId());
+        updated<%= tenantNameUpperFirst %>
             .name(UPDATED_NAME);
 
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(put("/api/<%= tennantNamePluralLowerFirst %>")
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(put("/api/<%= tenantNamePluralLowerFirst %>")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updated<%= tennantNameUpperFirst %>)))
+            .content(TestUtil.convertObjectToJsonBytes(updated<%= tenantNameUpperFirst %>)))
             .andExpect(status().isOk());
 
-        // Validate the <%= tennantNameUpperFirst %> in the database
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeUpdate);
-        <%= tennantNameUpperFirst %> test<%= tennantNameUpperFirst %> = <%= tennantNameLowerFirst %>List.get(<%= tennantNameLowerFirst %>List.size() - 1);
-        assertThat(test<%= tennantNameUpperFirst %>.getName()).isEqualTo(UPDATED_NAME);
+        // Validate the <%= tenantNameUpperFirst %> in the database
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeUpdate);
+        <%= tenantNameUpperFirst %> test<%= tenantNameUpperFirst %> = <%= tenantNameLowerFirst %>List.get(<%= tenantNameLowerFirst %>List.size() - 1);
+        assertThat(test<%= tenantNameUpperFirst %>.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test
     @Transactional
-    public void updateNonExisting<%= tennantNameUpperFirst %>() throws Exception {
-        int databaseSizeBeforeUpdate = <%= tennantNameLowerFirst %>Repository.findAll().size();
+    public void updateNonExisting<%= tenantNameUpperFirst %>() throws Exception {
+        int databaseSizeBeforeUpdate = <%= tenantNameLowerFirst %>Repository.findAll().size();
 
-        // Create the <%= tennantNameUpperFirst %>
+        // Create the <%= tenantNameUpperFirst %>
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(put("/api/<%= tennantNamePluralLowerFirst %>")
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(put("/api/<%= tenantNamePluralLowerFirst %>")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(<%= tennantNameLowerFirst %>)))
+            .content(TestUtil.convertObjectToJsonBytes(<%= tenantNameLowerFirst %>)))
             .andExpect(status().isCreated());
 
-        // Validate the <%= tennantNameUpperFirst %> in the database
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeUpdate + 1);
+        // Validate the <%= tenantNameUpperFirst %> in the database
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
     @Transactional
-    public void delete<%= tennantNameUpperFirst %>() throws Exception {
+    public void delete<%= tenantNameUpperFirst %>() throws Exception {
         // Initialize the database
-        <%= tennantNameLowerFirst %>Service.save(<%= tennantNameLowerFirst %>);
+        <%= tenantNameLowerFirst %>Service.save(<%= tenantNameLowerFirst %>);
 
-        int databaseSizeBeforeDelete = <%= tennantNameLowerFirst %>Repository.findAll().size();
+        int databaseSizeBeforeDelete = <%= tenantNameLowerFirst %>Repository.findAll().size();
 
-        // Get the <%= tennantNameLowerFirst %>
-        rest<%= tennantNameUpperFirst %>MockMvc.perform(delete("/api/<%= tennantNamePluralLowerFirst %>/{id}", <%= tennantNameLowerFirst %>.getId())
+        // Get the <%= tenantNameLowerFirst %>
+        rest<%= tenantNameUpperFirst %>MockMvc.perform(delete("/api/<%= tenantNamePluralLowerFirst %>/{id}", <%= tenantNameLowerFirst %>.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<<%= tennantNameUpperFirst %>> <%= tennantNameLowerFirst %>List = <%= tennantNameLowerFirst %>Repository.findAll();
-        assertThat(<%= tennantNameLowerFirst %>List).hasSize(databaseSizeBeforeDelete - 1);
+        List<<%= tenantNameUpperFirst %>> <%= tenantNameLowerFirst %>List = <%= tenantNameLowerFirst %>Repository.findAll();
+        assertThat(<%= tenantNameLowerFirst %>List).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(<%= tennantNameUpperFirst %>.class);
+        TestUtil.equalsVerifier(<%= tenantNameUpperFirst %>.class);
     }
 }

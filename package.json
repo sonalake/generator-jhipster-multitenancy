@@ -1,5 +1,5 @@
 {
-  "name": "generator-jhipster-multi-tennancy",
+  "name": "generator-jhipster-multitenancy",
   "version": "0.1.0",
   "description": "Sample JHipster module, generates a \"fortune cookie\" page in your JHipster application",
   "homepage": "https://github.com/jdubois/generator-jhipster-fortune",

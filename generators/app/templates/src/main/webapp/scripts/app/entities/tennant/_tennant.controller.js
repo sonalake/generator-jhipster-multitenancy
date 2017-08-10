@@ -3,21 +3,21 @@
 
     angular
         .module('<%=angularAppName%>')
-        .controller('<%= tennantNameUpperFirst %>Controller', <%= tennantNameUpperFirst %>Controller);
+        .controller('<%= tenantNameUpperFirst %>Controller', <%= tenantNameUpperFirst %>Controller);
 
-    <%= tennantNameUpperFirst %>Controller.$inject = ['<%= tennantNameUpperFirst %>'];
+    <%= tenantNameUpperFirst %>Controller.$inject = ['<%= tenantNameUpperFirst %>'];
 
-    function <%= tennantNameUpperFirst %>Controller(<%= tennantNameUpperFirst %>) {
+    function <%= tenantNameUpperFirst %>Controller(<%= tenantNameUpperFirst %>) {
 
         var vm = this;
 
-        vm.<%= tennantNamePluralLowerFirst %> = [];
+        vm.<%= tenantNamePluralLowerFirst %> = [];
 
         loadAll();
 
         function loadAll() {
-            <%= tennantNameUpperFirst %>.query(function(result) {
-                vm.<%= tennantNamePluralLowerFirst %> = result;
+            <%= tenantNameUpperFirst %>.query(function(result) {
+                vm.<%= tenantNamePluralLowerFirst %> = result;
                 vm.searchQuery = null;
             });
         }

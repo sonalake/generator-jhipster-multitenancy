@@ -3,14 +3,14 @@
 
     angular
         .module('<%=angularAppName%>')
-        .controller('<%= tennantNameUpperFirst %>DialogController', <%= tennantNameUpperFirst %>DialogController);
+        .controller('<%= tenantNameUpperFirst %>DialogController', <%= tenantNameUpperFirst %>DialogController);
 
-    <%= tennantNameUpperFirst %>DialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', '<%= tennantNameUpperFirst %>', 'User'];
+    <%= tenantNameUpperFirst %>DialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', '<%= tenantNameUpperFirst %>', 'User'];
 
-    function <%= tennantNameUpperFirst %>DialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, <%= tennantNameUpperFirst %>, User) {
+    function <%= tenantNameUpperFirst %>DialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, <%= tenantNameUpperFirst %>, User) {
         var vm = this;
 
-        vm.<%= tennantNameLowerFirst %> = entity;
+        vm.<%= tenantNameLowerFirst %> = entity;
         vm.clear = clear;
         vm.save = save;
         vm.users = User.query();
@@ -25,15 +25,15 @@
 
         function save () {
             vm.isSaving = true;
-            if (vm.<%= tennantNameLowerFirst %>.id !== null) {
-                <%= tennantNameUpperFirst %>.update(vm.<%= tennantNameLowerFirst %>, onSaveSuccess, onSaveError);
+            if (vm.<%= tenantNameLowerFirst %>.id !== null) {
+                <%= tenantNameUpperFirst %>.update(vm.<%= tenantNameLowerFirst %>, onSaveSuccess, onSaveError);
             } else {
-                <%= tennantNameUpperFirst %>.save(vm.<%= tennantNameLowerFirst %>, onSaveSuccess, onSaveError);
+                <%= tenantNameUpperFirst %>.save(vm.<%= tenantNameLowerFirst %>, onSaveSuccess, onSaveError);
             }
         }
 
         function onSaveSuccess (result) {
-            $scope.$emit('<%=angularAppName%>:<%= tennantNameLowerFirst %>Update', result);
+            $scope.$emit('<%=angularAppName%>:<%= tenantNameLowerFirst %>Update', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }

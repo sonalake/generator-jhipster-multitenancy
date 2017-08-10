@@ -3,18 +3,18 @@
 
     angular
         .module('<%=angularAppName%>')
-        .controller('<%= tennantNameUpperFirst %>DetailController', <%= tennantNameUpperFirst %>DetailController);
+        .controller('<%= tenantNameUpperFirst %>DetailController', <%= tenantNameUpperFirst %>DetailController);
 
-    <%= tennantNameUpperFirst %>DetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', '<%= tennantNameUpperFirst %>', 'User'];
+    <%= tenantNameUpperFirst %>DetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', '<%= tenantNameUpperFirst %>', 'User'];
 
-    function <%= tennantNameUpperFirst %>DetailController($scope, $rootScope, $stateParams, previousState, entity, <%= tennantNameUpperFirst %>, User) {
+    function <%= tenantNameUpperFirst %>DetailController($scope, $rootScope, $stateParams, previousState, entity, <%= tenantNameUpperFirst %>, User) {
         var vm = this;
 
-        vm.<%= tennantNameLowerFirst %> = entity;
+        vm.<%= tenantNameLowerFirst %> = entity;
         vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('<%=angularAppName%>:<%= tennantNameLowerFirst %>Update', function(event, result) {
-            vm.<%= tennantNameLowerFirst %> = result;
+        var unsubscribe = $rootScope.$on('<%=angularAppName%>:<%= tenantNameLowerFirst %>Update', function(event, result) {
+            vm.<%= tenantNameLowerFirst %> = result;
         });
         $scope.$on('$destroy', unsubscribe);
     }
