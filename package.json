@@ -1,12 +1,12 @@
 {
   "name": "generator-jhipster-multitenancy",
   "version": "0.1.0",
-  "description": "Sample JHipster module, generates a \"fortune cookie\" page in your JHipster application",
-  "homepage": "https://github.com/jdubois/generator-jhipster-fortune",
+  "description": "A JHipster module to enable multitenancy in your application",
+  "homepage": "https://bitbucket.org/jduggan_sonalake/generator-jhipster-multitenancy",
   "author": {
-    "name": "Julien Dubois",
-    "email": "julien.dubois@gmail.com",
-    "url": "http://www.julien-dubois.com/"
+    "name": "Jonathan Duggan",
+    "email": "jonathan.duggan@sonalake.com",
+    "url": "http://sonalake.com/"
   },
   "files": [
     "generators"
@@ -16,6 +16,17 @@
     "yeoman-generator",
     "jhipster-module"
   ],
+  "scripts": {
+    "test": "mocha test/*"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://jduggan_sonalake/generator-jhipster-multitenancy.git"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/jduggan_sonalake/generator-jhipster-multitenancy/issues"
+  },
   "dependencies": {
     "chalk": "1.1.3",
     "generator-jhipster": "^4.6.2",
@@ -44,12 +55,5 @@
     "mocha": "3.2.0",
     "yeoman-assert": "3.0.0",
     "yeoman-test": "1.6.0"
-  },
-  "scripts": {
-    "test": "mocha test/*"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/jdubois/generator-jhipster-fortune/issues"
   }
 }
