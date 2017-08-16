@@ -1,9 +1,11 @@
 # Multitenancy Management
 A [JHipster](http://jhipster.github.io/) module to enable multitenancy in your application
 
-<p>Multitenancy management provides you with the out of the box functionality that you need to make your application multitenanted. This module provides the ability to easily provision new tenants, the division between all tenants and their data, and the administration required to manage a multitenanted application.</p>
-<p>Multitenancy management is a JHipster module designed to be used in a JHipster application. </p>
-<p>Multitenancy management will provide hibernate filtering on the backend to enforce data partitioning. The rules of this filtering will be based on the users role. On the frontend, the module will come with a suite of views to provide tenant provisioning, and tenant user management.</p>
+Multitenancy management provides you with the out of the box functionality that you need to make your application multitenanted. This module provides the ability to easily provision new tenants, the division between all tenants and their data, and the administration required to manage a multitenanted application.
+
+Multitenancy management is a JHipster module designed to be used in a JHipster application. 
+
+Multitenancy management will provide hibernate filtering on the backend to enforce data partitioning. The rules of this filtering will be based on the users role. On the frontend, the module will come with a suite of views to provide tenant provisioning, and tenant user management.
 
 ##Getting Started
 
