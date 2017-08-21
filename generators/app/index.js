@@ -32,8 +32,13 @@ module.exports = JhipsterGenerator.extend({
     },
 
     prompting() {
+        const isInstalled = this.config.get('isInstalled');
         const done = this.async();
 
+        if(isInstalled) {
+             this.log(chalk.blue('This module is already installed!'));
+             process.exit(1);
+        }
         if (jhipsterVar.clientFramework !== 'angular1') {
             this.log(chalk.red('Error! The JHipster multitenancy module only works with AngularJS 1'));
             process.exit(1);
@@ -68,6 +73,12 @@ module.exports = JhipsterGenerator.extend({
             done();
         });
     },
+
+    configuring: {
+            saveConfig() {
+                   this.config.set('isInstalled', true);
+            }
+        },
 
     writing() {
         // function to use directly template
