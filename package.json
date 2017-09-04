@@ -25,7 +25,7 @@
     "url": "https://jduggan_sonalake/generator-jhipster-multitenancy.git"
   },
   "bugs": {
-    "url": "https://bitbucket.org/jduggan_sonalake/generator-jhipster-multitenancy/issues"
+    "url": "https://dev.sonalake.com/jira/projects/JMT/issues?filter=allopenissues"
   },
   "dependencies": {
     "chalk": "1.1.3",
