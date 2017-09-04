@@ -1,10 +1,10 @@
 {
-  "generator-jhipster-module": {
-    "promptValues": {
-      "githubName": "jdubois",
-      "authorName": "Julien Dubois",
-      "authorEmail": "julien.dubois@gmail.com",
-      "authorUrl": "https://jhipster.github.io"
+    "generator-jhipster-module": {
+        "promptValues": {
+            "githubName": "jduggan_sonalake",
+            "authorName": "Jonathan Duggan",
+            "authorEmail": "jonathan.duggan@sonalake.com",
+            "authorUrl": "https://bitbucket.org/jduggan_sonalake/"
+        }
     }
-  }
 }
