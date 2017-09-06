@@ -11,6 +11,9 @@ As this is a [JHipster](http://jhipster.github.io/) module, you need to have JHi
 
 ```bash
 npm install -g generator-jhipster-multitenancy
+
+# To update this module
+npm update -g generator-jhipster-module
 ```
 
 To run this generator in your local environment, run the command below. This will refresh, if you make any changes.

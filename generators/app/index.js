@@ -39,8 +39,8 @@ module.exports = JhipsterGenerator.extend({
              this.log(chalk.blue('This module is already installed!'));
              process.exit(1);
         }
-        if (jhipsterVar.clientFramework !== 'angular1') {
-            this.log(chalk.red('Error! The JHipster multitenancy module only works with AngularJS 1'));
+        if (jhipsterVar.clientFramework !== 'angular2') {
+            this.log(chalk.red('Error! The JHipster multitenancy module only works with Angular 4'));
             process.exit(1);
         }
         if (jhipsterVar.databaseType !== 'sql') {
@@ -144,7 +144,7 @@ module.exports = JhipsterGenerator.extend({
         let logMsg =
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
-        if (this.clientFramework === 'angular1') {
+        if (this.clientFramework === 'angular2') {
             logMsg =
                 `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
         }
@@ -152,12 +152,12 @@ module.exports = JhipsterGenerator.extend({
             if (err) {
                 this.warning('Install of dependencies failed!');
                 this.log(logMsg);
-            } else if (this.clientFramework === 'angular1') {
+            } else if (this.clientFramework === 'angular2') {
                 this.spawnCommand('gulp', ['install']);
             }
         };
         const installConfig = {
-            bower: this.clientFramework === 'angular1',
+            bower: this.clientFramework === 'angular2',
             npm: this.clientPackageManager !== 'yarn',
             yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
