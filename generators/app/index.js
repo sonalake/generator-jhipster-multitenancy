@@ -118,7 +118,10 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/java/package/repository/_tenantRepository.java', `${javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
         this.template('src/main/java/package/service/_tenantService.java', `${javaDir}service/${this.tenantNameUpperFirst}Service.java`);
         this.template('src/main/java/package/web/rest/_tenantResource.java', `${javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`);
+
         this.template('src/test/java/package/web/rest/_tenantResourceIntTest.java', `${testDir}/web/rest/${this.tenantNameUpperFirst}ResourceIntTest.java`);
+        this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
+
         this.template('src/main/resources/config/liquibase/_tenant.csv', `${resourceDir}config/liquibase/${this.tenantDbName}.csv`);
 
         this.changelogDate = jhipsterFunc.dateFormatForLiquibase();
