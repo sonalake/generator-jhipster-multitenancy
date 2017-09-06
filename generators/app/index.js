@@ -104,6 +104,7 @@ module.exports = JhipsterGenerator.extend({
 
         /* tenant variables */
         this.tenantName = _.camelCase(this.props.tenantName);
+        this.tenantNameUpperCase = _.toUpper(this.tenantName);
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
         this.tenantNamePluralLowerFirst = pluralize(_.lowerFirst(this.tenantName));
@@ -122,21 +123,22 @@ module.exports = JhipsterGenerator.extend({
 
         this.changelogDate = jhipsterFunc.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_added_entity_tenant.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}_added_entity_${this.tenantNameUpperFirst}.xml`);
+        this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         jhipsterFunc.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.tenantNameUpperFirst}`);
 
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.controller.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.service.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}//${this.tenantNameSpinalCased}.service.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.state.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.state.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.controller.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.html`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.controller.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.html`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.controller.js`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.html`);
-        this.template('src/main/webapp/scripts/app/entities/tenant/_tenants.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNamePluralSpinalCased}.html`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.controller.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.service.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}//${this.tenantNameSpinalCased}.service.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.state.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.state.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.controller.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.html`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.controller.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.html`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.controller.js`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.html`);
+//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenants.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNamePluralSpinalCased}.html`);
 
-        jhipsterFunc.addEntityToMenu(this.tenantNameLowerFirst, true, this.clientFramework);
-        jhipsterFunc.addEntityTranslationKey(this.tenantNameLowerFirst, this.tenantNameUpperFirst, 'en');
+//        jhipsterFunc.addEntityToMenu(this.tenantNameLowerFirst, true, this.clientFramework);
+//        jhipsterFunc.addEntityTranslationKey(this.tenantNameLowerFirst, this.tenantNameUpperFirst, 'en');
         this.template('src/main/webapp/i18n/en/_tenant.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}.json`);
     },
 

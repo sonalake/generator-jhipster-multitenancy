@@ -1,0 +1,6 @@
+name
+ROLE_ADMIN
+ROLE_USER
+ROLE_<%= tenantNameUpperCase %>_ADMIN
+ROLE_<%= tenantNameUpperCase %>_USER
+
