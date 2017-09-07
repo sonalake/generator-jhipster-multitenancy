@@ -35,9 +35,9 @@ module.exports = JhipsterGenerator.extend({
         const isInstalled = this.config.get('isInstalled');
         const done = this.async();
 
-        if(isInstalled) {
-             this.log(chalk.blue('This module is already installed!'));
-             process.exit(1);
+        if (isInstalled) {
+            this.log(chalk.blue('This module is already installed!'));
+            process.exit(1);
         }
         if (jhipsterVar.clientFramework !== 'angular2') {
             this.log(chalk.red('Error! The JHipster multitenancy module only works with Angular 4'));
@@ -58,11 +58,11 @@ module.exports = JhipsterGenerator.extend({
                 name: 'tenantName',
                 message: 'What is the alias given tenants in your application?',
                 default: 'Company',
-                validate: function(input) {
-                   if(_.toLower(input) === "account"){
+                validate: function (input) {
+                    if (_.toLower(input) === "account") {
                         return input + " is a reserved word.";
-                   }
-                   return true;
+                    }
+                    return true;
                 }
             }
         ];
@@ -75,10 +75,11 @@ module.exports = JhipsterGenerator.extend({
     },
 
     configuring: {
-            saveConfig() {
-                   this.config.set('isInstalled', true);
-            }
-        },
+        saveConfig() {
+            //                   this.config.set('isInstalled', true);
+
+        }
+    },
 
     writing() {
         // function to use directly template
@@ -112,40 +113,37 @@ module.exports = JhipsterGenerator.extend({
         this.tenantDbName = _.snakeCase(this.tenantNameLowerFirst);
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         this.tenantNamePluralSpinalCased = _.kebabCase(this.tenantNamePluralLowerFirst);
+        
+        // copy .json entity file to project
+        this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
+        this.tenantJson = jhipsterFunc.getEntityJson(this.tenantNameUpperFirst);
+        // overwrite the placeholder text with the alias set by user
+        this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
+        this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
-        this.template('src/main/java/package/domain/_tenant.java', `${javaDir}domain/${this.tenantNameUpperFirst}.java`);
-        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
-        this.template('src/main/java/package/repository/_tenantRepository.java', `${javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
-        this.template('src/main/java/package/service/_tenantService.java', `${javaDir}service/${this.tenantNameUpperFirst}Service.java`);
-        this.template('src/main/java/package/web/rest/_tenantResource.java', `${javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`);
-
-        this.template('src/test/java/package/web/rest/_tenantResourceIntTest.java', `${testDir}/web/rest/${this.tenantNameUpperFirst}ResourceIntTest.java`);
+        // update user object and associated tests
+        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);        
         this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
 
-        this.template('src/main/resources/config/liquibase/_tenant.csv', `${resourceDir}config/liquibase/${this.tenantDbName}.csv`);
-
         this.changelogDate = jhipsterFunc.dateFormatForLiquibase();
-        this.template('src/main/resources/config/liquibase/changelog/_added_entity_tenant.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}_added_entity_${this.tenantNameUpperFirst}.xml`);
+        this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
-        jhipsterFunc.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.tenantNameUpperFirst}`);
-
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.controller.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.service.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}//${this.tenantNameSpinalCased}.service.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant.state.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}.state.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.controller.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-delete-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-delete-dialog.html`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.controller.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-detail.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-detail.html`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.controller.js', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.controller.js`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenant-dialog.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNameSpinalCased}-dialog.html`);
-//        this.template('src/main/webapp/scripts/app/entities/tenant/_tenants.html', `${webappDir}app/entities/${this.tenantNameSpinalCased}/${this.tenantNamePluralSpinalCased}.html`);
-
-//        jhipsterFunc.addEntityToMenu(this.tenantNameLowerFirst, true, this.clientFramework);
-//        jhipsterFunc.addEntityTranslationKey(this.tenantNameLowerFirst, this.tenantNameUpperFirst, 'en');
-        this.template('src/main/webapp/i18n/en/_tenant.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}.json`);
+        jhipsterFunc.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
+        
+        this.regenerateTenant = function (tenantName) {
+            this.composeWith('jhipster:entity', {
+                regenerate: true,
+                'skip-install': true,
+                'skip-client': false,
+                'skip-server': false,
+                'no-fluent-methods': false,
+                'skip-user-management': false,
+                arguments: [tenantName],
+            });
+        }
     },
-
     install() {
+        this.regenerateTenant(this.tenantNameLowerFirst);
         let logMsg =
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 

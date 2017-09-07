@@ -1,0 +1,33 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "users",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-many",
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "<%= tenantNameLowerFirst %>"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "tenantContact",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "changelogDate",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "tenant",
+    "pagination": "no"
+}
