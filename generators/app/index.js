@@ -109,6 +109,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameLowerCase = _.toLower(this.tenantName);        
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
+        this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         
         // copy .json entity file to project
         this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
