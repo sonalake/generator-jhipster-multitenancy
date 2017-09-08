@@ -30,7 +30,6 @@ module.exports = JhipsterGenerator.extend({
             this.log(`Welcome to the ${chalk.bold.yellow('JHipster multitenancy')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
         }
     },
-
     prompting() {
         const isInstalled = this.config.get('isInstalled');
         const done = this.async();
@@ -73,14 +72,12 @@ module.exports = JhipsterGenerator.extend({
             done();
         });
     },
-
     configuring: {
         saveConfig() {
             //                   this.config.set('isInstalled', true);
 
         }
     },
-
     writing() {
         // function to use directly template
         this.template = function (source, destination) {
@@ -126,6 +123,9 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         jhipsterFunc.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
+
+        // copy over aspect
+        this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);        
         
         this.regenerateTenant = function (tenantName) {
             this.composeWith('jhipster:entity', {
