@@ -8,13 +8,13 @@
     -->
     <changeSet id="<%= changelogDate %>-1" author="jhipster">
          <addColumn tableName="jhi_user">
-            <column name="company_id" type="bigint"/>
+            <column name="<%= tenantNameLowerCase %>_id" type="bigint"/>
          </addColumn>
-        <!-- <addForeignKeyConstraint baseColumnNames="tenant_id"
+        <!-- <addForeignKeyConstraint baseColumnNames="<%= tenantNameLowerCase %>_id"
                                  baseTableName="jhi_user"
-                                 constraintName="fk_user_tenant_id"
+                                 constraintName="fk_user_<%= tenantNameLowerCase %>_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="tenant"/> -->
+                                 referencedTableName="<%= tenantNameLowerCase %>"/> -->
 
     </changeSet>
 </databaseChangeLog>

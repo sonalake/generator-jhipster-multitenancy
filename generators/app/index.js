@@ -106,13 +106,9 @@ module.exports = JhipsterGenerator.extend({
         /* tenant variables */
         this.tenantName = _.camelCase(this.props.tenantName);
         this.tenantNameUpperCase = _.toUpper(this.tenantName);
+        this.tenantNameLowerCase = _.toLower(this.tenantName);        
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
-        this.tenantNamePluralLowerFirst = pluralize(_.lowerFirst(this.tenantName));
-        this.tenantNamePluralUpperFirst = pluralize(_.upperFirst(this.tenantName));
-        this.tenantDbName = _.snakeCase(this.tenantNameLowerFirst);
-        this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
-        this.tenantNamePluralSpinalCased = _.kebabCase(this.tenantNamePluralLowerFirst);
         
         // copy .json entity file to project
         this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
