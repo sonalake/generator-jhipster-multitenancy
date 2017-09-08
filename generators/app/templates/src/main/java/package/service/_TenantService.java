@@ -1,7 +1,9 @@
 package <%=packageName%>.service;
 
 import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
+import <%=packageName%>.domain.User;
 import <%=packageName%>.repository.<%= tenantNameUpperFirst %>Repository;
+import <%=packageName%>.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +21,11 @@ public class <%= tenantNameUpperFirst %>Service {
     private final Logger log = LoggerFactory.getLogger(<%= tenantNameUpperFirst %>Service.class);
 
     private final <%= tenantNameUpperFirst %>Repository <%= tenantNameLowerFirst %>Repository;
+    private final UserRepository userRepository;
 
-    public <%= tenantNameUpperFirst %>Service(<%= tenantNameUpperFirst %>Repository <%= tenantNameLowerFirst %>Repository) {
+    public <%= tenantNameUpperFirst %>Service(<%= tenantNameUpperFirst %>Repository <%= tenantNameLowerFirst %>Repository, , UserRepository userRepository) {
         this.<%= tenantNameLowerFirst %>Repository = <%= tenantNameLowerFirst %>Repository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -32,7 +36,14 @@ public class <%= tenantNameUpperFirst %>Service {
      */
     public <%= tenantNameUpperFirst %> save(<%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
         log.debug("Request to save <%= tenantNameUpperFirst %> : {}", <%= tenantNameLowerFirst %>);
-        return <%= tenantNameLowerFirst %>Repository.save(<%= tenantNameLowerFirst %>);
+        // save new user
+        User user = userRepository.save(<%= tenantNameLowerFirst %>.get<%= tenantNameUpperFirst %>Contact());
+        // save the <%= tenantNameUpperFirst %>
+        <%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>Repository.save(<%= tenantNameLowerFirst %>);
+        // update the user with the <%= tenantNameLowerFirst %>
+        user.set<%= tenantNameUpperFirst %>(<%= tenantNameLowerFirst %>);
+        userRepository.save(user);
+        return <%= tenantNameLowerFirst %>;
     }
 
     /**
