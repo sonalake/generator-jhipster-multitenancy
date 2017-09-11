@@ -1,33 +1,56 @@
-# Multitenancy Management
-A [JHipster](http://jhipster.github.io/) module to enable multitenancy in your application
+# generator-jhipster-multitenancy
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+> JHipster module, 
 
-Multitenancy management provides you with the out of the box functionality that you need to make your application multitenanted. This module provides the ability to easily provision new tenants, the division between all tenants and their data, and the administration required to manage a multitenanted application.
+# Introduction
 
-Multitenancy management will provide hibernate filtering on the backend to enforce data partitioning. The rules of this filtering will be based on the users role. On the frontend, the module will come with a suite of views to provide tenant provisioning, and tenant user management.
+This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
 
-##Getting Started
+# Prerequisites
 
-As this is a [JHipster](http://jhipster.github.io/) module, you need to have JHipster and its related tools already installed.
+As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
+
+- [Installing JHipster](https://jhipster.github.io/installation.html)
+
+# Installation
+
+## With Yarn
+
+To install this module:
+
+```bash
+yarn global add generator-jhipster-multitenancy
+```
+
+To update this module:
+
+```bash
+yarn global upgrade generator-jhipster-multitenancy
+```
+
+## With NPM
+
+To install this module:
 
 ```bash
 npm install -g generator-jhipster-multitenancy
-
-# To update this module
-npm update -g generator-jhipster-module
 ```
 
-To run this generator in your local environment, run the command below. This will refresh, if you make any changes.
+To update this module:
 
 ```bash
-cd generator-jhipster-multitenancy
-npm link
+npm update -g generator-jhipster-multitenancy
 ```
 
-## Running
+# Usage
 
-Then run the module on a JHipster generated application:
+# License
 
-```bash
-yo jhipster-multitenancy
-```
 
+
+[npm-image]: https://img.shields.io/npm/v/generator-jhipster-multitenancy.svg
+[npm-url]: https://npmjs.org/package/generator-jhipster-multitenancy
+[travis-image]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy.svg?branch=master
+[travis-url]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy
+[daviddm-image]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy

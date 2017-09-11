@@ -1,10 +1,10 @@
 {
-    "generator-jhipster-module": {
-        "promptValues": {
-            "githubName": "jduggan_sonalake",
-            "authorName": "Jonathan Duggan",
-            "authorEmail": "jonathan.duggan@sonalake.com",
-            "authorUrl": "https://bitbucket.org/jduggan_sonalake/"
-        }
+  "generator-jhipster-module": {
+    "promptValues": {
+      "githubName": "mairead_mccabe",
+      "authorName": "Mairead McCabe",
+      "authorEmail": "mairead.mccabe@sonalake.com",
+      "authorUrl": "https://bitbucket.org/jduggan_sonalake/"
     }
+  }
 }
