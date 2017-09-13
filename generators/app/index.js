@@ -114,6 +114,12 @@ module.exports = JhipsterGenerator.extend({
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+        
+        try {
+            this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
     },
 
     install() {
