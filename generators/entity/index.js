@@ -63,23 +63,6 @@ module.exports = JhipsterGenerator.extend({
         }
     },
     writing: {
-        updateFiles() {
-            // read config from .yo-rc.json
-            this.baseName = this.jhipsterAppConfig.baseName;
-            this.packageName = this.jhipsterAppConfig.packageName;
-            this.packageFolder = this.jhipsterAppConfig.packageFolder;
-            this.clientFramework = this.jhipsterAppConfig.clientFramework;
-            this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
-            this.buildTool = this.jhipsterAppConfig.buildTool;
-
-            // use function in generator-base.js from generator-jhipster
-            this.angularAppName = this.getAngularAppName();
-
-            // use constants from generator-constants.js
-            const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
-            const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-            const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
-        },
         editJSON() {
             if (this.options.name != undefined) {
                 // if entity does exisit we should have the entity json
@@ -89,10 +72,26 @@ module.exports = JhipsterGenerator.extend({
                     // if not generated it
                     this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' doesn\'t exisit. Please generate using yo jhipster:entity'));
                 } else {
-                    // if it does add relationship 
-                    this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
+                    // check if entity has relationship already
+                    this.entities = this.config.get("tenantisedEntities");
+                    if(this.entities != undefined && this.entities.indexOf(this.options.name)) {
+                        this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' already has been tenant-ised'));
+                    }
+
+                    // get entity json config 
                     this.tenantName = this.config.get("tenantName")
                     this.relationships = this.entityJson.relationships;
+
+                    // if any relationship exisits already in the entity to the tenant remove it and regenerated
+                    for (var i = this.relationships.length-1; i >= 0; i--) {
+                        console.log(this.relationships[i]);
+                        if(this.relationships[i].otherEntityName == this.tenantName) {
+                            console.log("splice");
+                            this.relationships.splice(i);
+                        }
+                    }
+
+                    this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
                     this.real = {
                         "relationshipName": this.tenantName,
                         "otherEntityName": this.tenantName,
@@ -107,6 +106,13 @@ module.exports = JhipsterGenerator.extend({
                     this.relationships.push(this.real);
                     this.entityJson.relationships = this.relationships;
                     this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+                    
+                    if(this.entities == undefined) {
+                        this.config.set("tenantisedEntities", [this.options.name]);
+                    } else {
+                        this.entities.push(this.options.name);
+                        this.config.set("tenantisedEntities", this.entities);
+                    }
                 }
             }
         },
