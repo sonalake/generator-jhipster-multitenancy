@@ -10,6 +10,18 @@ const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
 
 module.exports = JhipsterGenerator.extend({
+    constructor: function (...args) { // eslint-disable-line object-shorthand
+        generator.apply(this, args);
+
+        // This makes `name` a required argument.
+        this.argument('name', {
+            type: String,
+            required: true,
+            description: 'Entity name'
+        });
+
+        this.name = this.options.name;
+    },
     initializing: {
         readConfig() {
             this.jhipsterAppConfig = this.getJhipsterAppConfig();
@@ -25,28 +37,6 @@ module.exports = JhipsterGenerator.extend({
                 this.env.error(chalk.red.bold('ERROR!') + ' Please run the Multitenancy generator first');
             }
         }
-    },
-
-    prompting() {
-        const done = this.async();
-        this.prompt([
-            {
-                type: 'list',
-                name: 'continue',
-                message: 'Do you want to Tenantise an entity?',
-                choices: ['yes', 'no']
-            },
-            {
-                // when: 'continue.yes',
-                when: (p) => p.continue === 'yes',
-                type: 'input',
-                name: 'entity',
-                message: 'Name the entity you wish to tenantise.'
-            }
-        ]).then((props) => {
-            this.props = props;
-            done();
-        });
     },
     writing: {
         updateFiles() {
@@ -66,20 +56,29 @@ module.exports = JhipsterGenerator.extend({
             const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
             const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
         },
-        writeFiles() {
-            console.log("props", this.props);
-
-            if (this.props.continue === 'yes') {
+        editJSON() {
+            // if (this.props.continue === 'yes') {
                 // if entity does exisit we should have the entity json
-                this.entityJson = this.getEntityJson(this.props.entity);
+                this.entityJson = this.getEntityJson(this.name);
 
                 console.log("json", this.entityJson);
                 if(this.entityJson == undefined) {
                      // if not generated it
-                    this.log(chalk.yellow('Entity ' +  chalk.bold(this.props.entity) +' doesn\'t exisit. Will generate'));
+                    this.log(chalk.yellow('Entity ' +  chalk.bold(this.name) +' doesn\'t exisit. Will generate'));
+                    this.composeWith('jhipster:entity', {
+                        regenerate: false,
+                        'skip-install': true,
+                        'skip-client': false,
+                        'skip-server': false,
+                        'no-fluent-methods': false,
+                        'skip-user-management': false,
+                        arguments: [this.name],
+                    });
+                    this.entityJson = this.getEntityJson(this.name);
+                    console.log("foo", this.entityJson);
                 } else {
                     // if it does add relationship 
-                    this.log(chalk.white('Entity ' +  chalk.bold(this.props.entity) +' found. Adding relationship'));
+                    this.log(chalk.white('Entity ' +  chalk.bold(this.name) +' found. Adding relationship'));
                     this.tenantName = this.config.get("tenantName")
                     this.relationships = this.entityJson.relationships;
                     this.real = {
@@ -91,28 +90,27 @@ module.exports = JhipsterGenerator.extend({
                         ],
                         "otherEntityField": "id",
                         "ownerSide": true,
-                        "otherEntityRelationshipName": this.props.entity
+                        "otherEntityRelationshipName": this.name
                     };
                     this.relationships.push(this.real);
                     this.entityJson.relationships = this.relationships;
                     console.log("asdas",this.entityJson);
-                    this.fs.writeJSON(`.jhipster/${this.props.entity}.json`, this.entityJson, null, 4);
+                    this.fs.writeJSON(`.jhipster/${this.name}.json`, this.entityJson, null, 4);
                 }
-               
-
-
-                // function to use directly template
-                this.template = function (source, destination) {
-                    this.fs.copyTpl(
-                        this.templatePath(source),
-                        this.destinationPath(destination),
-                        this
-                    );
-                };
-            }
         },
     },
-
+    install() {
+        // regenerate the tenant-ised entity
+        this.composeWith('jhipster:entity', {
+            regenerate: true,
+            'skip-install': true,
+            'skip-client': false,
+            'skip-server': false,
+            'no-fluent-methods': false,
+            'skip-user-management': false,
+            arguments: [this.name],
+        });
+    },
     end() {
 
     }
