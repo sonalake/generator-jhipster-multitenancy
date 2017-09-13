@@ -123,6 +123,7 @@ module.exports = JhipsterGenerator.extend({
     },
 
     install() {
+        this.config.set('tenantName', this.tenantName);        
         this.composeWith('jhipster:entity', {
             regenerate: true,
             'skip-install': true,

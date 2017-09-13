@@ -21,10 +21,9 @@ module.exports = JhipsterGenerator.extend({
             this.log(chalk.white('Running ' + chalk.bold('JHipster Multitenacy:entity') + ' Generator! ' + chalk.yellow('v' + packagejs.version + '\n')));
         },
         validate() {
-            // this shouldn't be run directly
-            // if (!this.entityConfig) {
-            //     this.env.error(chalk.red.bold('ERROR!') + ' This sub generator should be used only from JHipster and cannot be run directly...\n');
-            // }
+            if(this.config.get("tenantName") == undefined) {
+                this.env.error(chalk.red.bold('ERROR!') + ' Please run the Multitenancy generator first');
+            }
         }
     },
 
@@ -81,7 +80,23 @@ module.exports = JhipsterGenerator.extend({
                 } else {
                     // if it does add relationship 
                     this.log(chalk.white('Entity ' +  chalk.bold(this.props.entity) +' found. Adding relationship'));
-                    
+                    this.tenantName = this.config.get("tenantName")
+                    this.relationships = this.entityJson.relationships;
+                    this.real = {
+                        "relationshipName": this.tenantName,
+                        "otherEntityName": this.tenantName,
+                        "relationshipType": "many-to-one",
+                        "relationshipValidateRules": [
+                            "required"
+                        ],
+                        "otherEntityField": "id",
+                        "ownerSide": true,
+                        "otherEntityRelationshipName": this.props.entity
+                    };
+                    this.relationships.push(this.real);
+                    this.entityJson.relationships = this.relationships;
+                    console.log("asdas",this.entityJson);
+                    this.fs.writeJSON(`.jhipster/${this.props.entity}.json`, this.entityJson, null, 4);
                 }
                
 
