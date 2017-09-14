@@ -103,9 +103,14 @@ module.exports = JhipsterGenerator.extend({
         this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
         // overwrite the placeholder text with the alias set by user
         this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
+        this.tenantJson.relationships[1].relationshipName = this.tenantNameLowerFirst+"Contact";
+        this.tenantJson.entityTableName = this.tenantNameLowerFirst;
+        // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
         // update user object and associated tests
+        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/service/UserService.java', `${javaDir}service/UserService.java`);
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
 
