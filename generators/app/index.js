@@ -97,7 +97,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
 
         // copy .json entity file to project
-        this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
+        this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
         this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
         // overwrite the placeholder text with the alias set by user
         this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
