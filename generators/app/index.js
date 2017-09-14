@@ -101,6 +101,9 @@ module.exports = JhipsterGenerator.extend({
         this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
         // overwrite the placeholder text with the alias set by user
         this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
+        this.tenantJson.relationships[1].relationshipName = this.tenantNameLowerFirst+"Contact";
+        this.tenantJson.entityTableName = this.tenantNameLowerFirst;
+        // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
         // update user object and associated tests
