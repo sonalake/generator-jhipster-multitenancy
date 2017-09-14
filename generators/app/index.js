@@ -107,6 +107,8 @@ module.exports = JhipsterGenerator.extend({
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
         // update user object and associated tests
+        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/service/UserService.java', `${javaDir}service/UserService.java`);
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
 
