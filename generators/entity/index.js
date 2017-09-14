@@ -107,7 +107,6 @@ module.exports = JhipsterGenerator.extend({
                     this.relationships = this.entityJson.relationships;
                     // if any relationship exisits already in the entity to the tenant remove it and regenerated
                     for (var i = this.relationships.length-1; i >= 0; i--) {
-                        console.log(this.relationships[i]);
                         if(this.relationships[i].otherEntityName == this.tenantName) {
                             this.relationships.splice(i);
                         }
