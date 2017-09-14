@@ -108,7 +108,23 @@ module.exports = JhipsterGenerator.extend({
 
         // update user object and associated tests
         this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.template('src/main/java/package/service/UserService.java', `${javaDir}service/UserService.java`);
+        this.needle =  "public User createUser(UserDTO userDTO) {"+
+           "User user = new User();";
+        this.replace =  "public User createUser(UserDTO userDTO) {"+
+           "User user = new User();"+
+           "user.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
+
+        this.rewriteFile({
+            file: `${javaDir}service/UserService.java`,
+            needle: this.needle,
+            splicable: [ 
+                this.replace
+            ]
+        }, this);
+
+        // this.rewriteFile(`${javaDir}service/UserService.java`, this.needle, this.replace);
+        // this.replaceContent(`${javaDir}service/UserService.java`, this.needle, this.replace, false);
+        // this.template('src/main/java/package/service/UserService.java', `${javaDir}service/UserService.java`);
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
 
