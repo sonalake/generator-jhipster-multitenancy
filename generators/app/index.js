@@ -108,23 +108,27 @@ module.exports = JhipsterGenerator.extend({
 
         // update user object and associated tests
         this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.needle =  "public User createUser(UserDTO userDTO) {"+
-           "User user = new User();";
-        this.replace =  "public User createUser(UserDTO userDTO) {"+
-           "User user = new User();"+
-           "user.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
+        
+        // update create and update methods in user service to take into account the tenant
+        this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
+        this.createNew =  "    public User createUser(UserDTO userDTO) {\n"+
+           "\t\tUser user = new User();\n"+
+           "\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
+        this.replaceContent(`${javaDir}service/UserService.java`,this.createOld,this.createNew,false);
 
-        this.rewriteFile({
-            file: `${javaDir}service/UserService.java`,
-            needle: this.needle,
-            splicable: [ 
-                this.replace
-            ]
-        }, this);
-
-        // this.rewriteFile(`${javaDir}service/UserService.java`, this.needle, this.replace);
-        // this.replaceContent(`${javaDir}service/UserService.java`, this.needle, this.replace, false);
-        // this.template('src/main/java/package/service/UserService.java', `${javaDir}service/UserService.java`);
+        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
+            "        return Optional.of(userRepository\n"+
+                "            .findOne(userDTO.getId()))\n"+
+                "            .map(user -> {\n"+
+                "                user.setLogin(userDTO.getLogin());";
+        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
+            "\t\treturn Optional.of(userRepository\n"+
+                "\t\t\t.findOne(userDTO.getId()))\n"+
+                "\t\t\t.map(user -> {\n"+
+                    "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+
+                    "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
+        this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
+        
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
 
