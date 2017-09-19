@@ -12,24 +12,26 @@ util.inherits(JhipsterGenerator, BaseGenerator);
 module.exports = JhipsterGenerator.extend({
     constructor: function (...args) {
         generator.apply(this, args);
-
+        this.isError = false;
         this.argument('name', {
             type: String,
             required: false,
             description: 'Entity name'
         });
         this.skipPrompt = false;
-        if(this.options.name == undefined) {
+        if (this.options.name == undefined) {
             // if name wasn't passed in check what entity was just generated
             this.options.name = this.options.entityConfig.entityTableName;
             // if the entity generated was the tenant exit
-            if(this.options.name == this.config.get("tenantName")) {
-                this.error(' Tenant entity does not need to be tenant-ised');
+            if (this.options.name == this.config.get("tenantName")) {
+                this.isError = true;
+                chalk.yellow(' Tenant entity does not need to be tenant-ised');
             }
             // check if entity has relationship already
             this.entities = this.config.get("tenantisedEntities");
-            if(this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
-                this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' already has been tenant-ised'));
+            if (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
+                this.isError = true;
+                chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' already has been tenant-ised');
             }
         } else {
             this.skipPrompt = true;
@@ -52,6 +54,7 @@ module.exports = JhipsterGenerator.extend({
         }
     },
     prompting() {
+        if (!this.isError) {
             const done = this.async();
             this.prompt([
                 {
@@ -65,7 +68,7 @@ module.exports = JhipsterGenerator.extend({
                     when: this.options.name != undefined && this.skipPrompt == false,
                     type: 'list',
                     name: 'continue',
-                    message: 'Do you want to tenantise the entity ' + this.options.name +'?',
+                    message: 'Do you want to tenantise the entity ' + this.options.name + '?',
                     choices: ['yes', 'no']
                 },
                 {
@@ -78,70 +81,76 @@ module.exports = JhipsterGenerator.extend({
                 if (this.options.name == undefined) {
                     this.options.name = props.entity;
                 }
-                if(this.skipPrompt) {
+                if (this.skipPrompt) {
                     this.options.continue = 'yes';
                 } else {
                     this.options.continue = props.continue;
                 }
                 done();
             });
+        }
     },
     writing: {
         editJSON() {
-            if (this.options.continue == 'yes') {
-                // if entity does exisit we should have the entity json
-                this.entityJson = this.getEntityJson(this.options.name);
+            if (!this.isError) {
+                if (this.options.continue == 'yes') {
+                    // if entity does exisit we should have the entity json
+                    this.entityJson = this.getEntityJson(this.options.name);
 
-                if (this.entityJson == undefined) {
-                    // if not generated it
-                    this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' doesn\'t exisit. Please generate using yo jhipster:entity'));
-                } else {
-                    // check if entity has relationship already
-                    this.entities = this.config.get("tenantisedEntities");
-                    if(this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
-                        this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' already has been tenant-ised'));
-                    }
+                    if (this.entityJson == undefined) {
+                        // if not generated it
+                        this.error(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' doesn\'t exisit. Please generate using yo jhipster:entity'));
+                    } else {
+                        // check if entity has relationship already
+                        this.entities = this.config.get("tenantisedEntities");
+                        if (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
+                            this.isError = true;
+                            chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' already has been tenant-ised');
+                        }
+                        if(!this.isError) {
+                        // get entity json config 
+                        this.tenantName = this.config.get("tenantName")
+                        this.relationships = this.entityJson.relationships;
+                        // if any relationship exisits already in the entity to the tenant remove it and regenerated
+                        for (var i = this.relationships.length - 1; i >= 0; i--) {
+                            if (this.relationships[i].otherEntityName == this.tenantName) {
+                                this.relationships.splice(i);
+                            }
+                        }
 
-                    // get entity json config 
-                    this.tenantName = this.config.get("tenantName")
-                    this.relationships = this.entityJson.relationships;
-                    // if any relationship exisits already in the entity to the tenant remove it and regenerated
-                    for (var i = this.relationships.length-1; i >= 0; i--) {
-                        if(this.relationships[i].otherEntityName == this.tenantName) {
-                            this.relationships.splice(i);
+                        this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
+                        this.real = {
+                            "relationshipName": this.tenantName,
+                            "otherEntityName": this.tenantName,
+                            "relationshipType": "many-to-one",
+                            "relationshipValidateRules": [
+                                "required"
+                            ],
+                            "otherEntityField": "id",
+                            "ownerSide": true,
+                            "otherEntityRelationshipName": this.options.name
+                        };
+                        this.relationships.push(this.real);
+                        this.entityJson.relationships = this.relationships;
+                        this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+
+                        if (this.entities == undefined) {
+                            this.config.set("tenantisedEntities", [this.options.name]);
+                        } else {
+                            this.entities.push(this.options.name);
+                            this.config.set("tenantisedEntities", this.entities);
                         }
                     }
-
-                    this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
-                    this.real = {
-                        "relationshipName": this.tenantName,
-                        "otherEntityName": this.tenantName,
-                        "relationshipType": "many-to-one",
-                        "relationshipValidateRules": [
-                            "required"
-                        ],
-                        "otherEntityField": "id",
-                        "ownerSide": true,
-                        "otherEntityRelationshipName": this.options.name
-                    };
-                    this.relationships.push(this.real);
-                    this.entityJson.relationships = this.relationships;
-                    this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
-                    
-                    if(this.entities == undefined) {
-                        this.config.set("tenantisedEntities", [this.options.name]);
-                    } else {
-                        this.entities.push(this.options.name);
-                        this.config.set("tenantisedEntities", this.entities);
                     }
+                } else {
+                    this.isError = true;
+                    chalk.yellow('Exit subgenerator');
                 }
-            } else {
-                this.error('Exit subgenerator');
             }
         },
     },
     install() {
-        if (this.options.name != undefined) {
+        if (this.options.name != undefined && !this.isError) {
             // regenerate the tenant-ised entity
             this.composeWith('jhipster:entity', {
                 regenerate: true,
