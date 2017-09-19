@@ -4,7 +4,7 @@ import <%=packageName%>.config.Constants;
 
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
-import <%=packageName%>.domain.Company;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
