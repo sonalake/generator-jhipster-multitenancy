@@ -31,10 +31,10 @@ public class <%= tenantNameUpperFirst %>Aspect {
      * Skip filter if user has ROLE_ADMIN, they can view all <%= tenantNameUpperFirst %>
      *
      */
-    @Before("execution(* com.sonalake.multitenancy.service.UserService.*(..))")
+    @Before("execution(* <%=packageName%>.service.UserService.*(..))")
     public void beforeExecution() throws Throwable {
         // admin users results should NOT be filtered
-        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) && !SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
             String login = SecurityUtils.getCurrentUserLogin();
             User user = userRepository.findOneByLogin(login).get();
             Filter filter = entityManager.unwrap(Session.class).enableFilter("USER_FILTER");
