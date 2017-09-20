@@ -143,7 +143,10 @@ public class UserResourceIntTest {
     @WithMockUser()
     public void createUser() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
-       
+        // create <%= tenantNameLowerFirst %> object
+        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = <%= tenantNameUpperFirst %>ResourceIntTest.createEntity(em);
+        em.persist(<%= tenantNameLowerFirst %>);
+
         // Create the User
         Set<String> authorities = new HashSet<>();
         authorities.add("ROLE_USER");
