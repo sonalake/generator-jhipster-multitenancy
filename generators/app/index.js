@@ -102,10 +102,6 @@ module.exports = JhipsterGenerator.extend({
         this.tenantJson.entityTableName = this.tenantNameLowerFirst;
         // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
-
-        // update user object and associated tests
-        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
         
         // update create and update methods in user service to take into account the tenant
         this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
@@ -113,20 +109,27 @@ module.exports = JhipsterGenerator.extend({
            "\t\tUser user = new User();\n"+
            "\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
         this.replaceContent(`${javaDir}service/UserService.java`,this.createOld,this.createNew,false);
-
-        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "        return Optional.of(userRepository\n"+
-                "            .findOne(userDTO.getId()))\n"+
-                "            .map(user -> {\n"+
+    
+        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+"        return Optional.of(userRepository\n"+
+                "            .findOne(userDTO.getId()))\n"+"            .map(user -> {\n"+
                 "                user.setLogin(userDTO.getLogin());";
-        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "\t\treturn Optional.of(userRepository\n"+
-                "\t\t\t.findOne(userDTO.getId()))\n"+
-                "\t\t\t.map(user -> {\n"+
-                    "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+
-                    "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
+        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+"\t\treturn Optional.of(userRepository\n"+
+                "\t\t\t.findOne(userDTO.getId()))\n"+"\t\t\t.map(user -> {\n"+
+                "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+"\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
         this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
-        
+
+        // ensure if user is in role ROLE_TENANT_* that compant is set, if not ensure company is null
+        this.userResourceCreateOld = "        } else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {\n"+
+            "            return ResponseEntity.badRequest()\n"+"                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"emailexists\", \"Email already in use\"))\n"
+                "                .body(null);\n"+"        }"
+        this.userResourceCreateNew = "\t\t} else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {\n"+
+        "\t\t\treturn ResponseEntity.badRequest()\n"+"\t\t\t\t.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"emailexists\", \"Email already in use\"))\n"+
+            "\t\t\t\t.body(null);\n"+"\t\t} else if ((managedUserVM.getAuthorities().contains(AuthoritiesConstants.ADMIN) || managedUserVM.getAuthorities().contains(AuthoritiesConstants.USER) && managedUserVM.get"+this.tenantNameUpperFirst+"() != null)\n"+
+            "\t\t\t|| (managedUserVM.getAuthorities().contains(\"ROLE_"+this.tenantNameSpinalCased+"_ADMIN\") || managedUserVM.getAuthorities().contains(\"ROLE_"+this.tenantNameUpperCase+"_USER\") && managedUserVM.get"+this.tenantNameUpperFirst+"() == null)) {\n"+
+            "\t\t\t\treturn ResponseEntity.badRequest()\n"+
+            "\t\t\t\t.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"invalidrole\", \"Invalid Role\"))\n";
+        this.replaceContent(`${javaDir}web/rest/UserResource.java`,this.userResourceCreateOld,this.userResourceCreateNew,false);
+            
         this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
@@ -135,6 +138,10 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
+
+        // update user object and associated tests
+        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);

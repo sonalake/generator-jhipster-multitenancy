@@ -143,10 +143,7 @@ public class UserResourceIntTest {
     @WithMockUser()
     public void createUser() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
-        // create company object
-        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = <%= tenantNameUpperFirst %>ResourceIntTest.createEntity(em);
-        em.persist(<%= tenantNameLowerFirst %>);
-
+       
         // Create the User
         Set<String> authorities = new HashSet<>();
         authorities.add("ROLE_USER");
@@ -164,7 +161,7 @@ public class UserResourceIntTest {
             null,
             null,
             null,
-            authorities, <%= tenantNameLowerFirst %>);
+            authorities, null);
 
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -181,7 +178,62 @@ public class UserResourceIntTest {
         assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
-        assertThat(testUser.get<%= tenantNameUpperFirst %>().getName()).isEqualTo(<%= tenantNameLowerFirst %>.getName());
+    }
+
+    @Test
+    @Transactional
+    public void create<%=tenantNameUpperFirst%>UserNo<%=tenantNameUpperFirst%>() throws Exception {
+        // Create the User
+        Set<String> authorities = new HashSet<>();
+        authorities.add("ROLE_<%= tenantNameUpperCase %>_USER");
+        ManagedUserVM managedUserVM = new ManagedUserVM(
+            null,
+            DEFAULT_LOGIN,
+            DEFAULT_PASSWORD,
+            DEFAULT_FIRSTNAME,
+            DEFAULT_LASTNAME,
+            DEFAULT_EMAIL,
+            true,
+            DEFAULT_IMAGEURL,
+            DEFAULT_LANGKEY,
+            null,
+            null,
+            null,
+            null,
+            authorities, null);
+
+        restUserMockMvc.perform(post("/api/users")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void create<%=tenantNameUpperFirst%>AdminNo<%=tenantNameUpperFirst%>() throws Exception {
+        // Create the User
+        Set<String> authorities = new HashSet<>();
+        authorities.add("ROLE_<%= tenantNameUpperCase %>_ADMIN");
+        ManagedUserVM managedUserVM = new ManagedUserVM(
+            null,
+            DEFAULT_LOGIN,
+            DEFAULT_PASSWORD,
+            DEFAULT_FIRSTNAME,
+            DEFAULT_LASTNAME,
+            DEFAULT_EMAIL,
+            true,
+            DEFAULT_IMAGEURL,
+            DEFAULT_LANGKEY,
+            null,
+            null,
+            null,
+            null,
+            authorities, null);
+
+        restUserMockMvc.perform(post("/api/users")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
