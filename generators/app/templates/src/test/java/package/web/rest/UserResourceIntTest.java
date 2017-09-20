@@ -1,6 +1,6 @@
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.FooApp;
+import <%=packageName%>.<%=baseName%>App;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
