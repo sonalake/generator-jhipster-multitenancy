@@ -130,9 +130,10 @@ module.exports = JhipsterGenerator.extend({
                     "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
         this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
         
-        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
-        this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
-
+        this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
+        this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
+        this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
+           
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
