@@ -1,6 +1,6 @@
 package <%=packageName%>.web.rest.vm;
 
-import <%=packageName%>.domain.Company;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 import <%=packageName%>.service.dto.UserDTO;
 import javax.validation.constraints.Size;
 
