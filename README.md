@@ -1,20 +1,22 @@
 # generator-jhipster-multitenancy
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> JHipster module, 
+> JHipster module to enable multitenancy in your application
 
-# Introduction
+**Note:** This module does not support Angular 1 yet and hence will not work if you are using JHipster 4 with Angular1.
+
+## Usage
 
 This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
 
-# Prerequisites
-
-As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
-
 - [Installing JHipster](https://jhipster.github.io/installation.html)
 
-# Installation
+## Installation
 
-## With Yarn
+As this is a [JHipster](http://jhipster.github.io/) module, we expect you have [JHipster and its related tools already installed](http://jhipster.github.io/installation.html).
+
+This module requires Jhipster version greater than 3.0 in order to work
+
+### With Yarn
 
 To install this module:
 
@@ -28,7 +30,7 @@ To update this module:
 yarn global upgrade generator-jhipster-multitenancy
 ```
 
-## With NPM
+### With NPM
 
 To install this module:
 
@@ -42,10 +44,7 @@ To update this module:
 npm update -g generator-jhipster-multitenancy
 ```
 
-# Usage
-
-# License
-
+## License
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-multitenancy.svg
