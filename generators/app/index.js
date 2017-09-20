@@ -72,12 +72,9 @@ module.exports = JhipsterGenerator.extend({
         };
 
         // read config from .yo-rc.json
-        this.baseName = this.jhipsterAppConfig.baseName;
+        this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
         this.packageName = this.jhipsterAppConfig.packageName;
         this.packageFolder = this.jhipsterAppConfig.packageFolder;
-        this.clientFramework = this.jhipsterAppConfig.clientFramework;
-        this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
-        this.buildTool = this.jhipsterAppConfig.buildTool;
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -108,6 +105,7 @@ module.exports = JhipsterGenerator.extend({
 
         // update user object and associated tests
         this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
         
         // update create and update methods in user service to take into account the tenant
         this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
@@ -129,9 +127,10 @@ module.exports = JhipsterGenerator.extend({
                     "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
         this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
         
-        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
-        this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
-
+        this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
+        this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
+        this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
+           
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
