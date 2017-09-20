@@ -108,6 +108,7 @@ module.exports = JhipsterGenerator.extend({
 
         // update user object and associated tests
         this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
         
         // update create and update methods in user service to take into account the tenant
         this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";

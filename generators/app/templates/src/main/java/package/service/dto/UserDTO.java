@@ -65,13 +65,13 @@ public class UserDTO {
             user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
             user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
             user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet()), user.get<%= tenantNameUpperFirst %>());
     }
 
     public UserDTO(Long id, String login, String firstName, String lastName,
         String email, boolean activated, String imageUrl, String langKey,
         String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
-        Set<String> authorities) {
+        Set<String> authorities,  <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
 
         this.id = id;
         this.login = login;
@@ -86,6 +86,7 @@ public class UserDTO {
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
         this.authorities = authorities;
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {

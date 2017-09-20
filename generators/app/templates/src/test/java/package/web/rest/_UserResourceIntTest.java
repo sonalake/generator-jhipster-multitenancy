@@ -3,6 +3,7 @@ package <%=packageName%>.web.rest;
 import <%=packageName%>.FooApp;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.service.MailService;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -139,8 +140,12 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void createUser() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
+        // create company object
+        <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = <%= tenantNameUpperFirst %>ResourceIntTest.createEntity(em);
+        em.persist(company);
 
         // Create the User
         Set<String> authorities = new HashSet<>();
@@ -159,7 +164,7 @@ public class UserResourceIntTest {
             null,
             null,
             null,
-            authorities);
+            authorities, <%= tenantNameLowerFirst %>);
 
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -176,10 +181,12 @@ public class UserResourceIntTest {
         assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+        assertThat(testUser.get<%= tenantNameUpperFirst %>().getName()).isEqualTo(<%= tenantNameLowerFirst %>.getName());
     }
 
     @Test
     @Transactional
+    @WithMockUser()
     public void createUserWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -199,7 +206,7 @@ public class UserResourceIntTest {
             null,
             null,
             null,
-            authorities);
+            authorities, null);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc.perform(post("/api/users")
@@ -214,6 +221,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -235,7 +243,7 @@ public class UserResourceIntTest {
             null,
             null,
             null,
-            authorities);
+            authorities, null);
 
         // Create the User
         restUserMockMvc.perform(post("/api/users")
@@ -250,6 +258,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -271,7 +280,7 @@ public class UserResourceIntTest {
             null,
             null,
             null,
-            authorities);
+            authorities, null);
 
         // Create the User
         restUserMockMvc.perform(post("/api/users")
@@ -286,6 +295,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void getAllUsers() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -305,6 +315,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void getUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -323,6 +334,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void getNonExistingUser() throws Exception {
         restUserMockMvc.perform(get("/api/users/unknown"))
             .andExpect(status().isNotFound());
@@ -330,6 +342,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void updateUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -354,7 +367,7 @@ public class UserResourceIntTest {
             updatedUser.getCreatedDate(),
             updatedUser.getLastModifiedBy(),
             updatedUser.getLastModifiedDate(),
-            authorities);
+            authorities, null);
 
         restUserMockMvc.perform(put("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -374,6 +387,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void updateUserLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -398,7 +412,7 @@ public class UserResourceIntTest {
             updatedUser.getCreatedDate(),
             updatedUser.getLastModifiedBy(),
             updatedUser.getLastModifiedDate(),
-            authorities);
+            authorities, null);
 
         restUserMockMvc.perform(put("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -419,6 +433,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
         userRepository.saveAndFlush(user);
@@ -453,7 +468,7 @@ public class UserResourceIntTest {
             updatedUser.getCreatedDate(),
             updatedUser.getLastModifiedBy(),
             updatedUser.getLastModifiedDate(),
-            authorities);
+            authorities, null);
 
         restUserMockMvc.perform(put("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -463,6 +478,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -497,7 +513,7 @@ public class UserResourceIntTest {
             updatedUser.getCreatedDate(),
             updatedUser.getLastModifiedBy(),
             updatedUser.getLastModifiedDate(),
-            authorities);
+            authorities, null);
 
         restUserMockMvc.perform(put("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -507,6 +523,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void deleteUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -524,6 +541,7 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser()
     public void getAllAuthorities() throws Exception {
         restUserMockMvc.perform(get("/api/users/authorities")
             .accept(TestUtil.APPLICATION_JSON_UTF8)
@@ -570,7 +588,7 @@ public class UserResourceIntTest {
             null,
             DEFAULT_LOGIN,
             null,
-            Stream.of(AuthoritiesConstants.USER).collect(Collectors.toSet()));
+            Stream.of(AuthoritiesConstants.USER).collect(Collectors.toSet()), null);
         User user = userMapper.userDTOToUser(userDTO);
         assertThat(user.getId()).isEqualTo(DEFAULT_ID);
         assertThat(user.getLogin()).isEqualTo(DEFAULT_LOGIN);
@@ -641,5 +659,4 @@ public class UserResourceIntTest {
         assertThat(authorityA).isEqualTo(authorityB);
         assertThat(authorityA.hashCode()).isEqualTo(authorityB.hashCode());
     }
-
 }
