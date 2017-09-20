@@ -145,7 +145,7 @@ public class UserResourceIntTest {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
         // create company object
         <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %> = <%= tenantNameUpperFirst %>ResourceIntTest.createEntity(em);
-        em.persist(company);
+        em.persist(<%= tenantNameLowerFirst %>);
 
         // Create the User
         Set<String> authorities = new HashSet<>();
