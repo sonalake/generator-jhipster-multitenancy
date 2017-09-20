@@ -72,12 +72,9 @@ module.exports = JhipsterGenerator.extend({
         };
 
         // read config from .yo-rc.json
-        this.baseName = this.jhipsterAppConfig.baseName;
+        this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
         this.packageName = this.jhipsterAppConfig.packageName;
         this.packageFolder = this.jhipsterAppConfig.packageFolder;
-        this.clientFramework = this.jhipsterAppConfig.clientFramework;
-        this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
-        this.buildTool = this.jhipsterAppConfig.buildTool;
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();

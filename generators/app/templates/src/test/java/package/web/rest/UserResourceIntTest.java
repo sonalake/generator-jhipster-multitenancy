@@ -1,6 +1,6 @@
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.FooApp;
+import <%=packageName%>.<%=baseName%>App;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see UserResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = FooApp.class)
+@SpringBootTest(classes = <%=baseName%>App.class)
 public class UserResourceIntTest {
 
     private static final Long DEFAULT_ID = 1L;
