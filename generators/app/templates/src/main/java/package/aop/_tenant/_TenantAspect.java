@@ -31,7 +31,7 @@ public class <%= tenantNameUpperFirst %>Aspect {
      * Skip filter if user has ROLE_ADMIN, they can view all <%= tenantNameUpperFirst %>
      *
      */
-    @Before("execution(* <%=packageName%>.service.UserService.*(..))")
+    @Before("execution(* <%=packageName%>.service.UserRepository.*(..))" )
     public void beforeExecution() throws Throwable {
         // admin users results should NOT be filtered
         if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) && !SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
