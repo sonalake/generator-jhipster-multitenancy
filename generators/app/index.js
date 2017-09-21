@@ -150,7 +150,7 @@ module.exports = JhipsterGenerator.extend({
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
                          '<div class="form-group" *ngIf="languages && languages.length > 0">',
                          `<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
-            <label jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</label>
+            <label jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</label>
             <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
                 <option [ngValue]="null"></option> 
                 <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}">{{${this.tenantNameLowerFirst}.name}}</option>
@@ -161,9 +161,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);     
         this.template('src/main/webapp/user-management/_user.model.ts', `${webappDir}app/shared/user/user.model.ts`);        
 
-        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/user-management.json`, (jsonObj) => {
-                jsonObj.userManagement[this.tenantNameLowerCase] = this.tenantNameUpperFirst;
-            }, this);
+        this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`,`${this.tenantNameUpperFirst}`,'addGlobalTranslationKey', true);
 
         
         try {
