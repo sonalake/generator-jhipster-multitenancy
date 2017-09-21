@@ -5,7 +5,7 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const jhipsterUtils = require('./../../node_modules/generator-jhipster/generators/utils');
+const jhipsterUtils = require('generator-jhipster/generators/utils');
 
 const _ = require('lodash');
 const pluralize = require('pluralize');
