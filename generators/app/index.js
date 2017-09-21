@@ -142,26 +142,20 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
 
         //user management UI
-        jhipsterUtils.rewriteFile({
-            file: `${webappDir}app/admin/user-management/user-management-detail.component.html`,
-            needle: '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
-            splicable: 
-        [`<dt><span jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</span></dt>
-        <dd>{{user.${this.tenantNameLowerFirst}}}</dd>`
-        ]
-        }, this);
+        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-detail.component.html`,
+                         '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
+                         `<dt><span jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</span></dt>
+        <dd>{{user.${this.tenantNameLowerFirst}}}</dd>`);
 
-        jhipsterUtils.rewriteFile({
-            file: `${webappDir}app/admin/user-management/user-management-dialog.component.html`,
-            needle: '<div class="form-group" *ngIf="languages && languages.length > 0">',
-            splicable: [`<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
+        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
+                         '<div class="form-group" *ngIf="languages && languages.length > 0">',
+                         `<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
             <label jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</label>
             <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
                 <option [ngValue]="null"></option> 
                 <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}">{{${this.tenantNameLowerFirst}.name}}</option>
             </select>
-        </div>`]
-        }, this);
+        </div>`);
 
         this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${webappDir}app/admin/user-management/user-management-dialog.component.ts`);        
         this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);     
