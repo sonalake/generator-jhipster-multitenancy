@@ -1,0 +1,5 @@
+        } else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
+                .body(null);
+        } else {

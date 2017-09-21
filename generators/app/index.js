@@ -5,6 +5,7 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const fs = require('fs-extra');
 
 const _ = require('lodash');
 const pluralize = require('pluralize');
@@ -71,6 +72,15 @@ module.exports = JhipsterGenerator.extend({
             );
         };
 
+        this.readFiles = function (orig, updated, file) {
+            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');   
+            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');        
+            var re = new RegExp("<%= tenantNameUpperFirst %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperFirst);
+            var re = new RegExp("<%= tenantNameUpperCase %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperCase);
+            this.replaceContent(file,this.old,this.update,false);
+        }
         // read config from .yo-rc.json
         this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
         this.packageName = this.jhipsterAppConfig.packageName;
@@ -103,33 +113,10 @@ module.exports = JhipsterGenerator.extend({
         // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
         
-        // update create and update methods in user service to take into account the tenant
-        this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
-        this.createNew =  "    public User createUser(UserDTO userDTO) {\n"+
-           "\t\tUser user = new User();\n"+
-           "\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.createOld,this.createNew,false);
-    
-        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+"        return Optional.of(userRepository\n"+
-                "            .findOne(userDTO.getId()))\n"+"            .map(user -> {\n"+
-                "                user.setLogin(userDTO.getLogin());";
-        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+"\t\treturn Optional.of(userRepository\n"+
-                "\t\t\t.findOne(userDTO.getId()))\n"+"\t\t\t.map(user -> {\n"+
-                "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+"\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
+        this.readFiles('txt/UserServiceCreateOld.txt', 'txt/UserServiceCreateNew.txt',`${javaDir}service/UserService.java` );
+        this.readFiles('txt/UserServiceUpdateOld.txt', 'txt/UserServiceUpdateNew.txt',`${javaDir}service/UserService.java` );
+        this.readFiles('txt/UserResourceCreateOld.txt', 'txt/UserResourceCreateNew.txt',`${javaDir}web/rest/UserResource.java` );
 
-        // ensure if user is in role ROLE_TENANT_* that compant is set, if not ensure company is null
-        this.userResourceCreateOld = "        } else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {\n"+
-            "            return ResponseEntity.badRequest()\n"+"                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"emailexists\", \"Email already in use\"))\n"
-                "                .body(null);\n"+"        }"
-        this.userResourceCreateNew = "\t\t} else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {\n"+
-        "\t\t\treturn ResponseEntity.badRequest()\n"+"\t\t\t\t.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"emailexists\", \"Email already in use\"))\n"+
-            "\t\t\t\t.body(null);\n"+"\t\t} else if ((managedUserVM.getAuthorities().contains(AuthoritiesConstants.ADMIN) || managedUserVM.getAuthorities().contains(AuthoritiesConstants.USER) && managedUserVM.get"+this.tenantNameUpperFirst+"() != null)\n"+
-            "\t\t\t|| (managedUserVM.getAuthorities().contains(\"ROLE_"+this.tenantNameSpinalCased+"_ADMIN\") || managedUserVM.getAuthorities().contains(\"ROLE_"+this.tenantNameUpperCase+"_USER\") && managedUserVM.get"+this.tenantNameUpperFirst+"() == null)) {\n"+
-            "\t\t\t\treturn ResponseEntity.badRequest()\n"+
-            "\t\t\t\t.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, \"invalidrole\", \"Invalid Role\"))\n";
-        this.replaceContent(`${javaDir}web/rest/UserResource.java`,this.userResourceCreateOld,this.userResourceCreateNew,false);
-            
         this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
