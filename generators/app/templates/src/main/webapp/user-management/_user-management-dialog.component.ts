@@ -37,7 +37,7 @@ export class UserMgmtDialogComponent implements OnInit {
         this.authorities = [];
         this.userService.authorities().subscribe((authorities) => {
             this.splitAuthorities(authorities);
-            this.authorities = this.defaultAuthorities;
+            this.on<%= tenantNameUpperFirst %>Change();
         });
         this.languageHelper.getAll().then((languages) => {
             this.languages = languages;
@@ -56,6 +56,7 @@ export class UserMgmtDialogComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.remove<%= tenantNameUpperFirst %>Roles();
         if (this.user.id !== null) {
             this.userService.update(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
         } else {
@@ -73,8 +74,8 @@ export class UserMgmtDialogComponent implements OnInit {
         this.isSaving = false;
     }
 
-    public on<%= tenantNameUpperFirst %>Change(<%= tenantNameLowerFirst %>) {
-        if (<%= tenantNameLowerFirst %>.value === '') {
+    public on<%= tenantNameUpperFirst %>Change() {
+        if (this.user.<%= tenantNameLowerFirst %> === null) {
             this.authorities = this.defaultAuthorities;
         } else {
             this.authorities = this.<%= tenantNameLowerFirst %>Authorities;
@@ -89,6 +90,19 @@ export class UserMgmtDialogComponent implements OnInit {
                 this.<%= tenantNameLowerFirst %>Authorities.push(a);
             }
         });
+    }
+
+    // if the user <%= tenantNameLowerFirst %> is set to null, ROLE_<%= tenantNameUpperCase %>_ADMIN and ROLE_<%= tenantNameUpperCase %>_USER are not allowed
+    private remove<%= tenantNameUpperFirst %>Roles() {
+        if (this.user.<%= tenantNameLowerFirst %> === null) {
+            let index;
+            if ((index = this.user.authorities.indexOf('ROLE_<%= tenantNameUpperCase %>_ADMIN')) > -1) {
+                this.user.authorities.splice(index, 1);
+            }
+            if ((index = this.user.authorities.indexOf('ROLE_<%= tenantNameUpperCase %>_USER')) > -1) {
+                this.user.authorities.splice(index, 1);
+            }
+        }
     }
 }
 

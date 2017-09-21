@@ -156,9 +156,9 @@ module.exports = JhipsterGenerator.extend({
             needle: '<div class="form-group" *ngIf="languages && languages.length > 0">',
             splicable: [`<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
             <label jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</label>
-            <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change($event.target)">
-                <option></option>
-                <option *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}" [ngValue]="${this.tenantNameLowerFirst}">{{${this.tenantNameLowerFirst}.name}}</option>
+            <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
+                <option [ngValue]="null"></option> 
+                <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}">{{${this.tenantNameLowerFirst}.name}}</option>
             </select>
         </div>`]
         }, this);

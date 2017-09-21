@@ -34,7 +34,7 @@
                     <button class="btn btn-success btn-sm" (click)="setActive(user, false)" *ngIf="user.activated"
                             [disabled]="currentAccount.login === user.login" jhiTranslate="userManagement.activated">Activated</button>
                 </td>
-                <td>{{user.<%= tenantNameLowerFirst %>}}</td>
+                <td>{{user.<%= tenantNameLowerFirst %>?.name}}</td>
                 <td>{{user.langKey}}</td>
                 <td>
                     <div *ngFor="let authority of user.authorities">
