@@ -144,8 +144,8 @@ module.exports = JhipsterGenerator.extend({
         //user management UI
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-detail.component.html`,
                          '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
-                         `<dt><span jhiTranslate="userManagement.${this.tenantNameLowerFirst}">${this.tenantNameUpperFirst}</span></dt>
-        <dd>{{user.${this.tenantNameLowerFirst}}}</dd>`);
+                         `<dt><span jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</span></dt>
+        <dd>{{user.${this.tenantNameLowerFirst}?.name}}</dd>`);
 
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
                          '<div class="form-group" *ngIf="languages && languages.length > 0">',

@@ -56,8 +56,8 @@ export class UserMgmtDialogComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.remove<%= tenantNameUpperFirst %>Roles();
         if (this.user.id !== null) {
+            this.remove<%= tenantNameUpperFirst %>Roles();
             this.userService.update(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
         } else {
             this.userService.create(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
