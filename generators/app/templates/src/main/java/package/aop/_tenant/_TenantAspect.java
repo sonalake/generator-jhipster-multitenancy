@@ -37,7 +37,7 @@ public class <%= tenantNameUpperFirst %>Aspect {
         if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) && !SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
             String login = SecurityUtils.getCurrentUserLogin();
             User user = userRepository.findOneByLogin(login).get();
-            Filter filter = entityManager.unwrap(Session.class).enableFilter("USER_FILTER");
+            Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
             filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
         }
     }

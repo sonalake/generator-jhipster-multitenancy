@@ -23,8 +23,8 @@ import java.util.Set;
 @Entity
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@FilterDef(name = "USER_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
-@Filter(name = "USER_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
+@FilterDef(name = "<%= tenantNameUpperCase %>_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
+@Filter(name = "<%= tenantNameUpperCase %>_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
