@@ -73,8 +73,8 @@ module.exports = JhipsterGenerator.extend({
         };
 
         this.readFiles = function (orig, updated, file) {
-            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');   
-            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');        
+            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');
+            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');
             var re = new RegExp("<%= tenantNameUpperFirst %>", 'g');
             this.update = this.update.replace(re,this.tenantNameUpperFirst);
             var re = new RegExp("<%= tenantNameUpperCase %>", 'g');
@@ -94,7 +94,7 @@ module.exports = JhipsterGenerator.extend({
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
         const testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
-        
+
         /* tenant variables */
         this.tenantName = _.camelCase(this.props.tenantName);
         this.tenantNameUpperCase = _.toUpper(this.tenantName);
@@ -112,15 +112,14 @@ module.exports = JhipsterGenerator.extend({
         this.tenantJson.entityTableName = this.tenantNameLowerFirst;
         // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
-        
+
         this.readFiles('txt/UserServiceCreateOld.txt', 'txt/UserServiceCreateNew.txt',`${javaDir}service/UserService.java` );
         this.readFiles('txt/UserServiceUpdateOld.txt', 'txt/UserServiceUpdateNew.txt',`${javaDir}service/UserService.java` );
-        this.readFiles('txt/UserResourceCreateOld.txt', 'txt/UserResourceCreateNew.txt',`${javaDir}web/rest/UserResource.java` );
 
         this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
-           
+
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
@@ -132,7 +131,7 @@ module.exports = JhipsterGenerator.extend({
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
-        
+
         try {
             this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
         } catch (err) {
@@ -140,7 +139,7 @@ module.exports = JhipsterGenerator.extend({
         }
     },
     install() {
-        this.config.set('tenantName', this.tenantName);        
+        this.config.set('tenantName', this.tenantName);
         this.composeWith('jhipster:entity', {
             regenerate: true,
             'skip-install': true,
