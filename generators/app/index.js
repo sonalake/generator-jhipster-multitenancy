@@ -5,8 +5,6 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const jhipsterUtils = require('generator-jhipster/generators/utils');
-
 const _ = require('lodash');
 const pluralize = require('pluralize');
 
@@ -150,7 +148,7 @@ module.exports = JhipsterGenerator.extend({
 
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
                          '<div class="form-group" *ngIf="languages && languages.length > 0">',
-                         `<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
+                         `<div class="form-group" *ngIf="!currentAccount.${this.tenantNameLowerFirst} && ${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
             <label jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</label>
             <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
                 <option [ngValue]="null"></option> 
@@ -159,12 +157,11 @@ module.exports = JhipsterGenerator.extend({
         </div>`);
 
         this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${webappDir}app/admin/user-management/user-management-dialog.component.ts`);        
-        this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);     
+        this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);
         this.template('src/main/webapp/user-management/_user.model.ts', `${webappDir}app/shared/user/user.model.ts`);        
 
         this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`,`${this.tenantNameUpperFirst}`,'addGlobalTranslationKey', this.enableTranslation);
 
-        
         try {
             this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
         } catch (err) {

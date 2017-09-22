@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { UserModalService } from './user-modal.service';
-import { JhiLanguageHelper, User, UserService, ResponseWrapper } from '../../shared';
+import { JhiLanguageHelper, User, UserService, ResponseWrapper, Principal } from '../../shared';
 
 import { <%= tenantNameUpperFirst %> } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.service';
@@ -16,6 +16,7 @@ import { <%= tenantNameUpperFirst %>Service } from './../../entities/<%= tenantN
 })
 export class UserMgmtDialogComponent implements OnInit {
 
+    currentAccount: any;
     user: User;
     languages: any[];
     authorities: any[];
@@ -27,12 +28,17 @@ export class UserMgmtDialogComponent implements OnInit {
     constructor(
         public activeModal: NgbActiveModal,
         private languageHelper: JhiLanguageHelper,
+        private principal: Principal,
         private userService: UserService,
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
         private eventManager: JhiEventManager
     ) {}
 
     ngOnInit() {
+        this.principal.identity().then((account) => {
+            this.currentAccount = account;
+        });
+
         this.isSaving = false;
         this.authorities = [];
         this.userService.authorities().subscribe((authorities) => {
@@ -56,6 +62,9 @@ export class UserMgmtDialogComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        if (this.currentAccount.<%= tenantNameLowerFirst %>) {
+            this.user.<%= tenantNameLowerFirst %> = this.currentAccount.<%= tenantNameLowerFirst %>;
+        }
         if (this.user.id !== null) {
             this.remove<%= tenantNameUpperFirst %>Roles();
             this.userService.update(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
