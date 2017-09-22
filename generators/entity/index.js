@@ -30,7 +30,7 @@ module.exports = JhipsterGenerator.extend({
             if ((this.options.name == this.config.get("tenantName"))
                 || (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0)) {
                 this.isValid = false;
-                this.log(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
+                this.log(chalk.green('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
             }
         } else {
             this.skipPrompt = true;

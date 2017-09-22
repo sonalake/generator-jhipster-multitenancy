@@ -5,6 +5,7 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const fs = require('fs-extra');
 const _ = require('lodash');
 const pluralize = require('pluralize');
 
@@ -17,6 +18,27 @@ module.exports = JhipsterGenerator.extend({
             this.jhipsterAppConfig = this.getJhipsterAppConfig();
             if (!this.jhipsterAppConfig) {
                 this.error('Can\'t read .yo-rc.json');
+            }
+            // Expose some of the jhipster config vars for the templates
+            for (const property in this.jhipsterAppConfig) {
+                this[property] = this.jhipsterAppConfig[property];
+            }
+
+            // set some appropriate defaults (i.e. what jhipster does)
+            if (this.enableTranslation === undefined) {
+                this.enableTranslation = true;
+            }
+            if (this.nativeLanguage === undefined) {
+                this.nativeLanguage = 'en';
+            }
+            if (this.languages === undefined) {
+                this.languages = ['en', 'fr'];
+            }
+            // set primary key type
+            if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
+                this.pkType = 'String';
+            } else {
+                this.pkType = 'Long';
             }
         },
         displayLogo() {
@@ -32,25 +54,6 @@ module.exports = JhipsterGenerator.extend({
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
                 this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
-            }
-        },
-        setupClientVars() {
-            // Expose some of the jhipster config vars for the templates
-            this.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
-            this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
-            this.nativeLanguage = this.jhipsterAppConfig.nativeLanguage;
-            this.languages = this.jhipsterAppConfig.languages;
-            this.databaseType = this.jhipsterAppConfig.databaseType;
-
-            // set some appropriate defaults (i.e. what jhipster does)
-            if (this.enableTranslation === undefined) {
-                this.enableTranslation = true;
-            }
-            if (this.nativeLanguage === undefined) {
-                this.nativeLanguage = 'en';
-            }
-            if (this.languages === undefined) {
-                this.languages = ['en', 'fr'];
             }
         }
     },
@@ -89,11 +92,15 @@ module.exports = JhipsterGenerator.extend({
             );
         };
 
-        // read config from .yo-rc.json
-        this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
-        this.packageName = this.jhipsterAppConfig.packageName;
-        this.packageFolder = this.jhipsterAppConfig.packageFolder;
-        this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
+        this.readFiles = function (orig, updated, file) {
+            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');
+            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');
+            var re = new RegExp("<%= tenantNameUpperFirst %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperFirst);
+            var re = new RegExp("<%= tenantNameUpperCase %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperCase);
+            this.replaceContent(file,this.old,this.update,false);
+        }
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -111,6 +118,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
+        this.mainClass = this.getMainClassName();
         this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
 
         // copy .json entity file to project
@@ -124,36 +132,19 @@ module.exports = JhipsterGenerator.extend({
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
         // update user object and associated tests
-        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
-        
-        // update create and update methods in user service to take into account the tenant
-        this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
-        this.createNew =  "    public User createUser(UserDTO userDTO) {\n"+
-           "\t\tUser user = new User();\n"+
-           "\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.createOld,this.createNew,false);
+        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
+        this.template('src/main/java/package/repository/_UserRepository.java', `${javaDir}repository/UserRepository.java`);
+        this.template('src/main/java/package/service/dto/_UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/service/_UserService.java', `${javaDir}service/UserService.java`);
+        this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
+        this.template('src/main/java/package/web/rest/_UserResource.java', `${javaDir}web/rest/UserResource.java`);
 
-        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "        return Optional.of(userRepository\n"+
-                "            .findOne(userDTO.getId()))\n"+
-                "            .map(user -> {\n"+
-                "                user.setLogin(userDTO.getLogin());";
-        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "\t\treturn Optional.of(userRepository\n"+
-                "\t\t\t.findOne(userDTO.getId()))\n"+
-                "\t\t\t.map(user -> {\n"+
-                    "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+
-                    "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
-        
-        this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
+        //integration tests
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
 
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
-        this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
 
         // copy over aspect
