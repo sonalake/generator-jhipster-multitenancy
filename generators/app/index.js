@@ -6,6 +6,7 @@ const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const fs = require('fs-extra');
+const jhipsterUtils = require('generator-jhipster/generators/utils');
 
 const _ = require('lodash');
 const pluralize = require('pluralize');
@@ -91,6 +92,7 @@ module.exports = JhipsterGenerator.extend({
         } else {
             this.pkType = 'Long';
         }
+        this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -109,9 +111,10 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         this.mainClass = this.getMainClassName();
+        this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
 
         // copy .json entity file to project
-        this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
+        this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
         this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
         // overwrite the placeholder text with the alias set by user
         this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
@@ -138,6 +141,30 @@ module.exports = JhipsterGenerator.extend({
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+
+        //user management UI
+        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-detail.component.html`,
+                         '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
+                         `<dt><span jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</span></dt>
+        <dd>{{user.${this.tenantNameLowerFirst}?.name}}</dd>`);
+
+        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
+                         '<div class="form-group" *ngIf="languages && languages.length > 0">',
+                         `<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
+            <label jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</label>
+            <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
+                <option [ngValue]="null"></option> 
+                <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}">{{${this.tenantNameLowerFirst}.name}}</option>
+            </select>
+        </div>`);
+
+        this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${webappDir}app/admin/user-management/user-management-dialog.component.ts`);        
+        this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);     
+        this.template('src/main/webapp/user-management/_user.model.ts', `${webappDir}app/shared/user/user.model.ts`);        
+
+        this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`,`${this.tenantNameUpperFirst}`,'addGlobalTranslationKey', this.enableTranslation);
+
+        
 
         try {
             this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
