@@ -154,7 +154,7 @@ module.exports = JhipsterGenerator.extend({
                     file: `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`+'/aop/'+this.tenantName+'/'+_.upperFirst(this.tenantName)+'Aspect.java',
                     needle: '    public void beforeExecution() throws Throwable {',
                     splicable: [
-                        '&& foolapoo'
+                        '&& fdfdfdf'
                     ]
                 }, this);
             }

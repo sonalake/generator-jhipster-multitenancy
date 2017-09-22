@@ -16,7 +16,7 @@ import org.hibernate.Filter;
 @Aspect
 @Component
 public class <%= tenantNameUpperFirst %>Aspect {
- 
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -27,16 +27,17 @@ public class <%= tenantNameUpperFirst %>Aspect {
 
     /**
      * Run method if User service is hit.
-     * Filter users based on which <%= tenantNameUpperFirst %> the user is associated with.
-     * Skip filter if user has ROLE_ADMIN, they can view all <%= tenantNameUpperFirst %>
+     * Filter users based on which <%= tenantNameLowerFirst %> the user is associated with.
+     * Skip filter if user has no <%= tenantNameLowerFirst %>
      *
      */
-    @Before("execution(* <%=packageName%>.service.UserRepository.*(..))" )
+    @Before("execution(* <%=packageName%>.repository.UserRepository.*(..))" )
     public void beforeExecution() throws Throwable {
-        // admin users results should NOT be filtered
-        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) && !SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
-            String login = SecurityUtils.getCurrentUserLogin();
-            User user = userRepository.findOneByLogin(login).get();
+        // filter users results if they have a <%= tenantNameLowerFirst %>
+        String login = SecurityUtils.getCurrentUserLogin();
+        User user = userRepository.findOneByLogin(login).get();
+
+        if (user.get<%= tenantNameUpperFirst %>() != null) {
             Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
             filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
         }
