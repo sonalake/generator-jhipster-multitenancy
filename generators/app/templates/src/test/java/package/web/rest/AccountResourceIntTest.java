@@ -1,6 +1,6 @@
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.<%=baseName%>App;
+import <%=packageName%>.<%=mainClass%>;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.repository.AuthorityRepository;
@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see AccountResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = <%=baseName%>App.class)
+@SpringBootTest(classes = <%=mainClass%>.class)
 public class AccountResourceIntTest {
 
     @Autowired
