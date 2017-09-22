@@ -81,10 +81,16 @@ module.exports = JhipsterGenerator.extend({
             this.update = this.update.replace(re,this.tenantNameUpperCase);
             this.replaceContent(file,this.old,this.update,false);
         }
-        // read config from .yo-rc.json
-        this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
-        this.packageName = this.jhipsterAppConfig.packageName;
-        this.packageFolder = this.jhipsterAppConfig.packageFolder;
+        // read app config from .yo-rc.json
+        for(property in this.jhipsterAppConfig){
+            this[property] = this.jhipsterAppConfig[property];
+        }
+        //set primary key type
+        if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
+            this.pkType = 'String';
+        } else {
+            this.pkType = 'Long';
+        }
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -113,21 +119,22 @@ module.exports = JhipsterGenerator.extend({
         // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
-        this.readFiles('txt/UserServiceCreateOld.txt', 'txt/UserServiceCreateNew.txt',`${javaDir}service/UserService.java` );
-        this.readFiles('txt/UserServiceUpdateOld.txt', 'txt/UserServiceUpdateNew.txt',`${javaDir}service/UserService.java` );
+        // update user object and associated tests
+        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
+        this.template('src/main/java/package/repository/_UserRepository.java', `${javaDir}repository/UserRepository.java`);
+        this.template('src/main/java/package/service/dto/_UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/service/_UserService.java', `${javaDir}service/UserService.java`);
+        this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
+        this.template('src/main/java/package/web/rest/_UserResource.java', `${javaDir}web/rest/UserResource.java`);
+        this.template('src/main/java/package/web/rest/_AccountResource.java', `${javaDir}web/rest/AccountResource.java`);
 
-        this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
+        //integration tests
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
 
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
-        this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
-
-        // update user object and associated tests
-        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);

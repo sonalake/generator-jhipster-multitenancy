@@ -1,3 +1,0 @@
-    public User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());

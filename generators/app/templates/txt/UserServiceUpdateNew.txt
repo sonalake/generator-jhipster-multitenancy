@@ -1,6 +1,0 @@
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
-        return Optional.of(userRepository
-            .findOne(userDTO.getId()))
-            .map(user -> {
-                user.setLogin(userDTO.getLogin());
-                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
