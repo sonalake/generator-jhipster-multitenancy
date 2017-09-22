@@ -108,6 +108,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
+        this.mainClass = this.getMainClassName();
 
         // copy .json entity file to project
         this.copy('.jhipster/_tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
@@ -126,7 +127,6 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/java/package/service/_UserService.java', `${javaDir}service/UserService.java`);
         this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
         this.template('src/main/java/package/web/rest/_UserResource.java', `${javaDir}web/rest/UserResource.java`);
-        this.template('src/main/java/package/web/rest/_AccountResource.java', `${javaDir}web/rest/AccountResource.java`);
 
         //integration tests
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);

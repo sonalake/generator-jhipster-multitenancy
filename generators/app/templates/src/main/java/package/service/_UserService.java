@@ -164,7 +164,7 @@ public class UserService {
     }
 
     public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmailIgnoreCase(mail)
+        return userRepository.findOneByEmail(mail)
             .filter(User::getActivated)
             .map(user -> {
                 user.setResetKey(RandomUtil.generateResetKey());
@@ -222,12 +222,12 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-        user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
+		user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
         <%_ if (databaseType === 'sql' || databaseType === 'mongodb') { _%>
         user.setImageUrl(userDTO.getImageUrl());
         <%_ } _%>
         if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
+            user.setLangKey("<%= nativeLanguage %>"); // default language
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
@@ -306,7 +306,7 @@ public class UserService {
                 <%_ } _%>
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
-                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
+				user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
                 <%_ if (databaseType === 'sql' || databaseType === 'mongodb') { _%>
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
