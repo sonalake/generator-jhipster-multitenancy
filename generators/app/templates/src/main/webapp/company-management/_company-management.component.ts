@@ -39,6 +39,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
     page: any;
     previousPage: any;
     routeData: any;
+    links: any;
     reverse: any;
     predicate: any;
     totalItems: any;
@@ -47,6 +48,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
 
     constructor(
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
+        private parseLinks: JhiParseLinks,
         private alertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal,
@@ -85,9 +87,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
             page: this.page - 1,
             size: this.itemsPerPage,
             sort: this.sort()}<% } %>).subscribe(
-            (res: ResponseWrapper) => {
-                this.<%= tenantNamePluralLowerFirst %> = res.json;
-            },
+            (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
             (res: ResponseWrapper) => this.onError(res.json)
         );
     }
@@ -125,6 +125,13 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
 
     registerChangeIn<%= tenantNamePluralUpperFirst %>() {
         this.eventSubscriber = this.eventManager.subscribe('<%= tenantNameLowerFirst %>ListModification', (response) => this.loadAll());
+    }
+
+    private onSuccess(data, headers) {
+        this.links = this.parseLinks.parse(headers.get('link'));
+        this.totalItems = headers.get('X-Total-Count');
+        this.queryCount = this.totalItems;
+        this.<%= tenantNamePluralLowerFirst %> = data;
     }
 
     private onError(error) {
