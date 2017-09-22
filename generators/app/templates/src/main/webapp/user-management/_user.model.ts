@@ -1,4 +1,5 @@
-import { <%= tenantNameUpperFirst %> } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.model';
+import { <%= tenantNameUpperFirst %> } from './../../admin/<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
+
 export class User {
     public id?: any;
     public login?: string;

@@ -7,8 +7,8 @@ import { JhiEventManager } from 'ng-jhipster';
 import { UserModalService } from './user-modal.service';
 import { JhiLanguageHelper, User, UserService, ResponseWrapper } from '../../shared';
 
-import { <%= tenantNameUpperFirst %> } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.model';
-import { <%= tenantNameUpperFirst %>Service } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.service';
+import { <%= tenantNameUpperFirst %> } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
+import { <%= tenantNameUpperFirst %>Service } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.service';
 
 @Component({
     selector: 'jhi-user-mgmt-dialog',
@@ -22,7 +22,7 @@ export class UserMgmtDialogComponent implements OnInit {
     <%= tenantNameLowerFirst %>Authorities: any[] = [];
     defaultAuthorities: any[] = [];
     isSaving: Boolean;
-    <%= tenantNamePlural %>: <%= tenantNameUpperFirst %>[];
+    <%= tenantNamePluralLowerFirst %>: <%= tenantNameUpperFirst %>[];
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -45,7 +45,7 @@ export class UserMgmtDialogComponent implements OnInit {
 
         this.<%= tenantNameLowerFirst %>Service.query().subscribe(
             (res: ResponseWrapper) => {
-                this.<%= tenantNamePlural %> = res.json;
+                this.<%= tenantNamePluralLowerFirst %> = res.json;
             }
         );
     }

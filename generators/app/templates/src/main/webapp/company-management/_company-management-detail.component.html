@@ -1,0 +1,17 @@
+<div *ngIf="<%= tenantNameLowerFirst %>">
+    <h2>
+        <span jhiTranslate="<%= tenantNameLowerFirst %>Management.detail.title"><%= tenantNameUpperFirst %></span> [<b>{{<%= tenantNameLowerFirst %>.name}}</b>]
+    </h2>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="<%= tenantNameLowerFirst %>Management.name">Name</span></dt>
+        <dd>
+            <span>{{<%= tenantNameLowerFirst %>.name}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            routerLink="/<%= tenantNameLowerFirst %>-management"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+</div>

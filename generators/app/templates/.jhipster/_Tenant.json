@@ -29,5 +29,5 @@
     "dto": "no",
     "service": "serviceClass",
     "entityTableName": "tenant",
-    "pagination": "no"
+    "pagination": "pagination"
 }
