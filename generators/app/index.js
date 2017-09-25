@@ -84,6 +84,9 @@ module.exports = JhipsterGenerator.extend({
             this.pkType = 'Long';
         }
         this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
+        this.angularXAppName = this.getAngularXAppName();
+        this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
+        this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -103,15 +106,16 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         this.mainClass = this.getMainClassName();
         this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
-        console.log("package", this.packageFolder);
         this.tenantisedEntitesResources = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..))\")`;
+        this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
+        this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
+
 
         // copy .json entity file to project
         this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
         this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
         // overwrite the placeholder text with the alias set by user
         this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
-        this.tenantJson.relationships[1].relationshipName = this.tenantNameLowerFirst+"Contact";
         this.tenantJson.entityTableName = this.tenantNameLowerFirst;
         // rewrite the json config file for the tenant
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
@@ -144,11 +148,11 @@ module.exports = JhipsterGenerator.extend({
 
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
                          '<div class="form-group" *ngIf="languages && languages.length > 0">',
-                         `<div class="form-group" *ngIf="${this.tenantNamePlural} && ${this.tenantNamePlural}.length > 0">
+                         `<div class="form-group" *ngIf="${this.tenantNamePluralLowerFirst} && ${this.tenantNamePluralLowerFirst}.length > 0">
             <label jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</label>
             <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
                 <option [ngValue]="null"></option> 
-                <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePlural}">{{${this.tenantNameLowerFirst}.name}}</option>
+                <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePluralLowerFirst}">{{${this.tenantNameLowerFirst}.name}}</option>
             </select>
         </div>`);
 
@@ -163,13 +167,77 @@ module.exports = JhipsterGenerator.extend({
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
+
+        // tenant-management
+        this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.route.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-modal.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
+
+        this.template('src/main/webapp/_admin.module.ts', `${webappDir}app/admin/admin.module.ts`);
+        
+        this.template('src/main/webapp/_admin.route.ts', `${webappDir}app/admin/admin.route.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-route-access-service.ts', `${webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
+        
+        this.rewriteFile(`${webappDir}app/admin/index.ts`, 
+            `export * from './admin.route';`, 
+        `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
+
+        
+        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
+            'jhipster-needle-add-element-to-admin-menu', 
+            `<li [hidden]="has${this.tenantNameUpperFirst}()">
+                        <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
+                            <i class="fa fa-" aria-hidden="true"></i>&nbsp;
+                            <span jhiTranslate="global.menu.admin.${this.tenantNameLowerFirst}-management">${this.tenantNameUpperFirst} Management</span>
+                        </a>
+                    </li>`);
+
+        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.ts`,
+                        `getImageUrl() {`,
+                        `has${this.tenantNameUpperFirst}() {
+            return this.principal.get${this.tenantNameUpperFirst}() ? true : false;
+        }`);
+
+        this.rewriteFile(`${webappDir}app/shared/auth/principal.service.ts`,
+                        `getImageUrl(): String {`,
+                        `get${this.tenantNameUpperFirst}(): String {
+        return this.isIdentityResolved() ? this.userIdentity.${this.tenantNameLowerFirst} : null;
+    }\n`);
+
+        this.template('src/main/webapp/tenant-management/_tenant-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
+
+        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => { 
+                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`; 
+            }, this);
+
+        this.replaceContent(`${webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
+        this.rewriteFile(`${webappDir}app/app.module.ts`,`customHttpProvider(),`,`${this.tenantNameUpperFirst}RouteAccessService,`);
+
+        this.rewriteFile(`${webappDir}app/shared/index.ts`,`export * from './auth/user-route-access-service';`,`export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`);
+
     },
     install() {
         this.config.set('tenantName', this.tenantName);
         this.composeWith('jhipster:entity', {
             regenerate: true,
             'skip-install': true,
-            'skip-client': false,
+            'skip-client': true,
             'skip-server': false,
             'no-fluent-methods': false,
             'skip-user-management': false,
