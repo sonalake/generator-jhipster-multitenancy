@@ -1,6 +1,5 @@
 package <%=packageName%>.aop.company;
 
-import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.SecurityUtils;
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.domain.User;
