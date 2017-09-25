@@ -123,15 +123,10 @@ module.exports = JhipsterGenerator.extend({
         this.mainClass = this.getMainClassName();
         this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
         this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
+        this.changelogDate = this.dateFormatForLiquibase();
 
         // copy .json entity file to project
-        this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
-        this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
-        // overwrite the placeholder text with the alias set by user
-        this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
-        this.tenantJson.entityTableName = this.tenantNameLowerFirst;
-        // rewrite the json config file for the tenant
-        this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
+        this.template('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
 
         // update user object and associated tests
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
@@ -145,7 +140,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
 
-        this.changelogDate = this.dateFormatForLiquibase();
+
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
 
@@ -189,12 +184,12 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/tenant-management/_tenant.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
 
         this.template('src/main/webapp/_admin.module.ts', `${webappDir}app/admin/admin.module.ts`);
-        
+
         this.template('src/main/webapp/_admin.route.ts', `${webappDir}app/admin/admin.route.ts`);
         this.template('src/main/webapp/tenant-management/_tenant-route-access-service.ts', `${webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
-        
-        this.rewriteFile(`${webappDir}app/admin/index.ts`, 
-            `export * from './admin.route';`, 
+
+        this.rewriteFile(`${webappDir}app/admin/index.ts`,
+            `export * from './admin.route';`,
         `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component';
@@ -204,9 +199,9 @@ module.exports = JhipsterGenerator.extend({
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
 
-        
-        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
-            'jhipster-needle-add-element-to-admin-menu', 
+
+        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`,
+            'jhipster-needle-add-element-to-admin-menu',
             `<li [hidden]="has${this.tenantNameUpperFirst}()">
                         <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
                             <i class="fa fa-" aria-hidden="true"></i>&nbsp;
@@ -228,8 +223,8 @@ module.exports = JhipsterGenerator.extend({
 
         this.template('src/main/webapp/tenant-management/_tenant-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
 
-        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => { 
-                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`; 
+        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => {
+                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`;
             }, this);
 
         this.replaceContent(`${webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
