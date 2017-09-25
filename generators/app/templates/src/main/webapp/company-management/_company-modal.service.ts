@@ -23,7 +23,7 @@ import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
 
 @Injectable()
-export class <%= tenantNameUpperFirst %>PopupService {
+export class <%= tenantNameUpperFirst %>ModalService {
     private ngbModalRef: NgbModalRef;
 
     constructor(

@@ -36,7 +36,7 @@ import {
     UserResolve,
     UserModalService,
     <%= tenantNameUpperFirst %>Service,
-    <%= tenantNameUpperFirst %>PopupService
+    <%= tenantNameUpperFirst %>ModalService
 } from './';
 
 @NgModule({
@@ -86,7 +86,7 @@ import {
         UserModalService,
         <%= tenantNameUpperFirst %>ResolvePagingParams,
         <%= tenantNameUpperFirst %>Service,
-        <%= tenantNameUpperFirst %>PopupService
+        <%= tenantNameUpperFirst %>ModalService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

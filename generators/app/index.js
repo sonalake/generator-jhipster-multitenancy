@@ -191,7 +191,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/company-management/_company-management.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`);
         this.template('src/main/webapp/company-management/_company-management.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`);
         this.template('src/main/webapp/company-management/_company-management.route.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`);
-        this.template('src/main/webapp/company-management/_company-popup.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-popup.service.ts`);
+        this.template('src/main/webapp/company-management/_company-modal.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`);
         this.template('src/main/webapp/company-management/_company.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`);
         this.template('src/main/webapp/company-management/_company.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
 
@@ -202,14 +202,14 @@ module.exports = JhipsterGenerator.extend({
         
         this.rewriteFile(`${webappDir}app/admin/index.ts`, 
             `export * from './admin.route';`, 
-            `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
+        `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-popup.service';
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-popup.service';`);
+        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
 
         this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
             `<li *ngIf="!inProduction">`, 

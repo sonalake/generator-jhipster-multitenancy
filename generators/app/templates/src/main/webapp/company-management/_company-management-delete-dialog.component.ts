@@ -22,7 +22,7 @@ import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
-import { <%= tenantNameUpperFirst %>PopupService } from './<%= tenantNameLowerFirst %>-popup.service';
+import { <%= tenantNameUpperFirst %>ModalService } from './<%= tenantNameLowerFirst %>-modal.service';
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
 
 @Component({
@@ -64,12 +64,12 @@ export class <%= tenantNameUpperFirst %>DeleteDialogComponent implements OnInit,
 
     constructor(
         private route: ActivatedRoute,
-        private <%= tenantNameLowerFirst %>PopupService: <%= tenantNameUpperFirst %>PopupService
+        private <%= tenantNameLowerFirst %>ModalService: <%= tenantNameUpperFirst %>ModalService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
-            this.<%= tenantNameLowerFirst %>PopupService.open(<%= tenantNameUpperFirst %>MgmtDeleteDialogComponent as Component, params['id']);
+            this.<%= tenantNameLowerFirst %>ModalService.open(<%= tenantNameUpperFirst %>MgmtDeleteDialogComponent as Component, params['id']);
         });
     }
 

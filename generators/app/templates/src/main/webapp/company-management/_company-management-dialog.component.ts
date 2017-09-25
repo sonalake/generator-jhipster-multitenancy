@@ -25,7 +25,7 @@ import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
-import { <%= tenantNameUpperFirst %>PopupService } from './<%= tenantNameLowerFirst %>-popup.service';
+import { <%= tenantNameUpperFirst %>ModalService } from './<%= tenantNameLowerFirst %>-modal.service';
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
 import { User, UserService } from '../../shared';
 import { ResponseWrapper } from '../../shared';
@@ -110,16 +110,16 @@ export class <%= tenantNameUpperFirst %>DialogComponent implements OnInit, OnDes
 
     constructor(
         private route: ActivatedRoute,
-        private <%= tenantNameLowerFirst %>PopupService: <%= tenantNameUpperFirst %>PopupService
+        private <%= tenantNameLowerFirst %>ModalService: <%= tenantNameUpperFirst %>ModalService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
             if ( params['id'] ) {
-                this.<%= tenantNameLowerFirst %>PopupService
+                this.<%= tenantNameLowerFirst %>ModalService
                     .open(<%= tenantNameUpperFirst %>MgmtDialogComponent as Component, params['id']);
             } else {
-                this.<%= tenantNameLowerFirst %>PopupService
+                this.<%= tenantNameLowerFirst %>ModalService
                     .open(<%= tenantNameUpperFirst %>MgmtDialogComponent as Component);
             }
         });
