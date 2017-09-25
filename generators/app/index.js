@@ -93,6 +93,9 @@ module.exports = JhipsterGenerator.extend({
             this.pkType = 'Long';
         }
         this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
+        this.angularXAppName = this.getAngularXAppName();
+        this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
+        this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -203,13 +206,11 @@ module.exports = JhipsterGenerator.extend({
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
 
+        
+        this.addElementToAdminMenu(`${this.tenantNameLowerFirst}-management`, '', this.enableTranslation, this.clientFramework);
         this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
-            `<li *ngIf="!inProduction">`, 
-            `<li [hidden]="has${this.tenantNameUpperFirst}()">
-            <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()"> 
-                <span jhiTranslate="global.menu.admin.${this.tenantNameLowerFirst}Management">${this.tenantNamePluralUpperFirst} Management</span> 
-            </a> 
-        </li> `);
+            `<a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">`, 
+            `<li [hidden]="has${this.tenantNameUpperFirst}()">`);
 
         this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.ts`,
                         `getImageUrl() {`,
@@ -226,7 +227,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/company-management/_company-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
 
         jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => { 
-                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}Management`] = `${this.tenantNamePluralUpperFirst} Management`; 
+                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`; 
             }, this);
 
         this.replaceContent(`${webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
