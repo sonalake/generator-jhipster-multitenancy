@@ -146,10 +146,37 @@ module.exports = JhipsterGenerator.extend({
                     this.log(chalk.yellow('Exiting sub generator'));
                 }
             }
+        },
+        addEntityToAspect() {
+            if (this.isValid) {
+                var foo = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..)`;
+                en = this.config.get("tenantisedEntities");
+                en.forEach(function (entity) {
+                    addEntity = ` && execution(* com.sonalake.multitenancy.web.rest.` + _.upperFirst(entity) + `Resource.*(..)`
+                    foo = foo.concat(addEntity);
+                });
+                foo = foo.concat(`\")`);
+                this.tenantisedEntitesResources = foo;
+                // replace aspect
+               
+                /* tenant variables */
+                this.tenantName = _.camelCase(this.tenantName);
+                this.tenantNameUpperCase = _.toUpper(this.tenantName);
+                this.tenantNameLowerCase = _.toLower(this.tenantName);
+                this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
+                this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
+                this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
+                // read app config from .yo-rc.json
+                for (property in this.jhipsterAppConfig) {
+                    this[property] = this.jhipsterAppConfig[property];
+                }
+                const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
+                this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+            }
         }
     },
     install() {
-        if(this.options.name != undefined && this.isValid) {
+        if (this.options.name != undefined && this.isValid) {
             // regenerate the tenant-ised entity
             this.composeWith('jhipster:entity', {
                 regenerate: true,

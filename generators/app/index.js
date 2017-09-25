@@ -73,15 +73,6 @@ module.exports = JhipsterGenerator.extend({
             );
         };
 
-        this.readFiles = function (orig, updated, file) {
-            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');
-            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');
-            var re = new RegExp("<%= tenantNameUpperFirst %>", 'g');
-            this.update = this.update.replace(re,this.tenantNameUpperFirst);
-            var re = new RegExp("<%= tenantNameUpperCase %>", 'g');
-            this.update = this.update.replace(re,this.tenantNameUpperCase);
-            this.replaceContent(file,this.old,this.update,false);
-        }
         // read app config from .yo-rc.json
         for(property in this.jhipsterAppConfig){
             this[property] = this.jhipsterAppConfig[property];
@@ -112,6 +103,8 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         this.mainClass = this.getMainClassName();
         this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
+        console.log("package", this.packageFolder);
+        this.tenantisedEntitesResources = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..))\")`;
 
         // copy .json entity file to project
         this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
