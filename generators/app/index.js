@@ -5,6 +5,7 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const fs = require('fs-extra');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 
 const _ = require('lodash');
@@ -72,19 +73,25 @@ module.exports = JhipsterGenerator.extend({
             );
         };
 
-        // this.configOptions = this.options.configOptions || {};
-        // this.databaseType = this.getDBTypeFromDBValue(this.options.db) || this.configOptions.databaseType || this.config.get('databaseType');
-
-        // read config from .yo-rc.json
-        this.baseName = _.upperFirst(this.jhipsterAppConfig.baseName);
-        this.packageName = this.jhipsterAppConfig.packageName;
-        this.packageFolder = this.jhipsterAppConfig.packageFolder;
-        this.clientFramework = this.jhipsterAppConfig.clientFramework;
-        this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
-        this.buildTool = this.jhipsterAppConfig.buildTool;
-        this.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
-        this.authenticationType = this.jhipsterAppConfig.authenticationType;
-        this.databaseType = this.jhipsterAppConfig.databaseType;
+        this.readFiles = function (orig, updated, file) {
+            this.old = fs.readFileSync(this.templatePath(orig), 'utf8');
+            this.update = fs.readFileSync(this.templatePath(updated), 'utf8');
+            var re = new RegExp("<%= tenantNameUpperFirst %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperFirst);
+            var re = new RegExp("<%= tenantNameUpperCase %>", 'g');
+            this.update = this.update.replace(re,this.tenantNameUpperCase);
+            this.replaceContent(file,this.old,this.update,false);
+        }
+        // read app config from .yo-rc.json
+        for(property in this.jhipsterAppConfig){
+            this[property] = this.jhipsterAppConfig[property];
+        }
+        //set primary key type
+        if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
+            this.pkType = 'String';
+        } else {
+            this.pkType = 'Long';
+        }
         this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
 
         // use function in generator-base.js from generator-jhipster
@@ -95,7 +102,7 @@ module.exports = JhipsterGenerator.extend({
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
         const testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
-        
+
         /* tenant variables */
         this.tenantName = _.camelCase(this.props.tenantName);
         this.tenantNameUpperCase = _.toUpper(this.tenantName);
@@ -103,6 +110,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
         this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
+        this.mainClass = this.getMainClassName();
         this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
         this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
 
@@ -117,36 +125,19 @@ module.exports = JhipsterGenerator.extend({
         this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
 
         // update user object and associated tests
-        this.template('src/main/java/package/service/dto/UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
-        this.template('src/main/java/package/web/vm/ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
-        
-        // update create and update methods in user service to take into account the tenant
-        this.createOld =  "    public User createUser(UserDTO userDTO) {\n        User user = new User();";
-        this.createNew =  "    public User createUser(UserDTO userDTO) {\n"+
-           "\t\tUser user = new User();\n"+
-           "\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.createOld,this.createNew,false);
+        this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
+        this.template('src/main/java/package/repository/_UserRepository.java', `${javaDir}repository/UserRepository.java`);
+        this.template('src/main/java/package/service/dto/_UserDTO.java', `${javaDir}service/dto/UserDTO.java`);
+        this.template('src/main/java/package/service/_UserService.java', `${javaDir}service/UserService.java`);
+        this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${javaDir}web/rest/vm/ManagedUserVM.java`);
+        this.template('src/main/java/package/web/rest/_UserResource.java', `${javaDir}web/rest/UserResource.java`);
 
-        this.updateOld = "    public Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "        return Optional.of(userRepository\n"+
-                "            .findOne(userDTO.getId()))\n"+
-                "            .map(user -> {\n"+
-                "                user.setLogin(userDTO.getLogin());";
-        this.updateNew = "\tpublic Optional<UserDTO> updateUser(UserDTO userDTO) {\n"+
-            "\t\treturn Optional.of(userRepository\n"+
-                "\t\t\t.findOne(userDTO.getId()))\n"+
-                "\t\t\t.map(user -> {\n"+
-                    "\t\t\t\tuser.setLogin(userDTO.getLogin());\n"+
-                    "\t\t\t\tuser.set"+this.tenantNameUpperFirst+"(userDTO.get"+this.tenantNameUpperFirst+"());";
-        this.replaceContent(`${javaDir}service/UserService.java`,this.updateOld,this.updateNew,false);
-        
-        this.template('src/main/java/package/domain/User.java', `${javaDir}domain/User.java`);
+        //integration tests
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
-           
+
         this.changelogDate = this.dateFormatForLiquibase();
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
-        this.template('src/main/resources/config/liquibase/authorities.csv', `${resourceDir}config/liquibase/authorities.csv`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
 
         // copy over aspect
@@ -175,6 +166,7 @@ module.exports = JhipsterGenerator.extend({
         this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`,`${this.tenantNameUpperFirst}`,'addGlobalTranslationKey', this.enableTranslation);
 
         
+
         try {
             this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
         } catch (err) {
@@ -244,7 +236,7 @@ module.exports = JhipsterGenerator.extend({
 
     },
     install() {
-        this.config.set('tenantName', this.tenantName);        
+        this.config.set('tenantName', this.tenantName);
         this.composeWith('jhipster:entity', {
             regenerate: true,
             'skip-install': true,

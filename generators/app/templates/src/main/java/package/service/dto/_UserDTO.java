@@ -1,8 +1,26 @@
+<%#
+ Copyright 2013-2017 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see http://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
 package <%=packageName%>.service.dto;
 
 import <%=packageName%>.config.Constants;
-
-import <%=packageName%>.domain.Authority;
+<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+import <%=packageName%>.domain.Authority;<% } %>
 import <%=packageName%>.domain.User;
 import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 
@@ -10,7 +28,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.*;
+<%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
 import java.time.Instant;
+<%_ } _%>
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,11 +39,15 @@ import java.util.stream.Collectors;
  */
 public class UserDTO {
 
-    private Long id;
+    private <% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> id;
 
+    <%_ let columnMax = 50;
+        if (enableSocialSignIn) {
+            columnMax = 100;
+        } _%>
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = <%=columnMax %>)
     private String login;
 
     @Size(max = 50)
@@ -35,14 +59,17 @@ public class UserDTO {
     @Email
     @Size(min = 5, max = 100)
     private String email;
+    <%_ if (databaseType === 'sql' || databaseType === 'mongodb') { _%>
 
     @Size(max = 256)
     private String imageUrl;
+    <%_ } _%>
 
     private boolean activated = false;
 
     @Size(min = 2, max = 5)
     private String langKey;
+    <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
 
     private String createdBy;
 
@@ -51,9 +78,10 @@ public class UserDTO {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
+    <%_ } _%>
 
     private Set<String> authorities;
-    
+
     private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
 
     public UserDTO() {
@@ -62,16 +90,17 @@ public class UserDTO {
 
     public UserDTO(User user) {
         this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
-            user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
+            user.getEmail(), user.getActivated(),<% if (databaseType === 'sql' || databaseType === 'mongodb') { %> user.getImageUrl(), <% } %>user.getLangKey(),<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
             user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
             user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet()), user.get<%= tenantNameUpperFirst %>());
+                .collect(Collectors.toSet()), user.get<%= tenantNameUpperFirst %>());<% } else { %>
+            user.getAuthorities());<% } %>
     }
 
-    public UserDTO(Long id, String login, String firstName, String lastName,
-        String email, boolean activated, String imageUrl, String langKey,
+    public UserDTO(<% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> id, String login, String firstName, String lastName,
+        String email, boolean activated,<% if (databaseType === 'sql' || databaseType === 'mongodb') { %> String imageUrl, <% } %>String langKey,<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>
         String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
-        Set<String> authorities,  <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
+        <% } %>Set<String> authorities, <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
 
         this.id = id;
         this.login = login;
@@ -79,12 +108,16 @@ public class UserDTO {
         this.lastName = lastName;
         this.email = email;
         this.activated = activated;
+        <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
         this.imageUrl = imageUrl;
+        <%_ } _%>
         this.langKey = langKey;
+        <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
+        <%_ } _%>
         this.authorities = authorities;
         this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
@@ -97,11 +130,11 @@ public class UserDTO {
         this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
-    public Long getId() {
+    public <% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(<% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> id) {
         this.id = id;
     }
 
@@ -124,10 +157,12 @@ public class UserDTO {
     public String getEmail() {
         return email;
     }
+    <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
 
     public String getImageUrl() {
         return imageUrl;
     }
+    <%_ } _%>
 
     public boolean isActivated() {
         return activated;
@@ -136,6 +171,7 @@ public class UserDTO {
     public String getLangKey() {
         return langKey;
     }
+    <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
 
     public String getCreatedBy() {
         return createdBy;
@@ -156,6 +192,7 @@ public class UserDTO {
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+    <%_ } _%>
 
     public Set<String> getAuthorities() {
         return authorities;
@@ -167,14 +204,14 @@ public class UserDTO {
             "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
+            ", email='" + email + '\'' +<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>
+            ", imageUrl='" + imageUrl + '\'' +<% } %>
             ", activated=" + activated +
-            ", langKey='" + langKey + '\'' +
+            ", langKey='" + langKey + '\'' +<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>
             ", createdBy=" + createdBy +
             ", createdDate=" + createdDate +
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
-            ", lastModifiedDate=" + lastModifiedDate +
+            ", lastModifiedDate=" + lastModifiedDate +<% } %>
             ", authorities=" + authorities +
             "}";
     }
