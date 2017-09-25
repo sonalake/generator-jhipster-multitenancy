@@ -207,10 +207,14 @@ module.exports = JhipsterGenerator.extend({
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
 
         
-        this.addElementToAdminMenu(`${this.tenantNameLowerFirst}-management`, '', this.enableTranslation, this.clientFramework);
         this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
-            `<a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">`, 
-            `<li [hidden]="has${this.tenantNameUpperFirst}()">`);
+            'jhipster-needle-add-element-to-admin-menu', 
+            `<li [hidden]="has${this.tenantNameUpperFirst}()">
+            <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
+                <i class="fa fa-" aria-hidden="true"></i>&nbsp;
+                <span jhiTranslate="global.menu.admin.${this.tenantNameLowerFirst}-management">${this.tenantNameUpperFirst} Management</span>
+            </a>
+        </li>`);
 
         this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.ts`,
                         `getImageUrl() {`,
