@@ -50,13 +50,13 @@ export class UserMgmtDialogComponent implements OnInit {
         private userService: UserService,
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
         private eventManager: JhiEventManager
-    ) {}
-
-    ngOnInit() {
+    ) {
         this.principal.identity().then((account) => {
             this.currentAccount = account;
         });
+    }
 
+    ngOnInit() {
         this.isSaving = false;
         this.authorities = [];
         this.userService.authorities().subscribe((authorities) => {
