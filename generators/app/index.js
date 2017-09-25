@@ -176,24 +176,24 @@ module.exports = JhipsterGenerator.extend({
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
 
-        // company-management
-        this.template('src/main/webapp/company-management/_company-management-delete-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.html`);
-        this.template('src/main/webapp/company-management/_company-management-delete-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`);
-        this.template('src/main/webapp/company-management/_company-management-detail.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`);
-        this.template('src/main/webapp/company-management/_company-management-detail.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`);
-        this.template('src/main/webapp/company-management/_company-management-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`);
-        this.template('src/main/webapp/company-management/_company-management-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`);
-        this.template('src/main/webapp/company-management/_company-management.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`);
-        this.template('src/main/webapp/company-management/_company-management.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`);
-        this.template('src/main/webapp/company-management/_company-management.route.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`);
-        this.template('src/main/webapp/company-management/_company-modal.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`);
-        this.template('src/main/webapp/company-management/_company.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`);
-        this.template('src/main/webapp/company-management/_company.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
+        // tenant-management
+        this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.component.html', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.component.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.route.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-modal.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant.service.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
 
         this.template('src/main/webapp/_admin.module.ts', `${webappDir}app/admin/admin.module.ts`);
         
         this.template('src/main/webapp/_admin.route.ts', `${webappDir}app/admin/admin.route.ts`);
-        this.template('src/main/webapp/company-management/_company-route-access-service.ts', `${webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
+        this.template('src/main/webapp/tenant-management/_tenant-route-access-service.ts', `${webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
         
         this.rewriteFile(`${webappDir}app/admin/index.ts`, 
             `export * from './admin.route';`, 
@@ -228,7 +228,7 @@ module.exports = JhipsterGenerator.extend({
         return this.isIdentityResolved() ? this.userIdentity.${this.tenantNameLowerFirst} : null;
     }\n`);
 
-        this.template('src/main/webapp/company-management/_company-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
+        this.template('src/main/webapp/tenant-management/_tenant-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
 
         jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => { 
                 jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`; 

@@ -19,7 +19,7 @@
 {
     "<%= tenantNameLowerFirst %>Management": {
         "home": {
-            "title": "Companies",
+            "title": "<%= tenantNamePluralUpperFirst %>",
             "createLabel": "Create a new <%= tenantNameLowerFirst %>",
             "editLabel": "Edit a <%= tenantNameLowerFirst %>"
         },
