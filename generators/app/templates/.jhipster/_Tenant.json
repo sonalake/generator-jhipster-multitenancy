@@ -19,9 +19,9 @@
             ]
         }
     ],
-    "changelogDate": "changelogDate",
+    "changelogDate": "<%= changelogDate %>",
     "dto": "no",
     "service": "serviceClass",
-    "entityTableName": "tenant",
+    "entityTableName": "<%= tenantNameLowerFirst %>",
     "pagination": "pagination"
 }

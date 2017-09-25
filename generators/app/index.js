@@ -5,9 +5,8 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const fs = require('fs-extra');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
-
+const fs = require('fs-extra');
 const _ = require('lodash');
 const pluralize = require('pluralize');
 
@@ -20,6 +19,31 @@ module.exports = JhipsterGenerator.extend({
             this.jhipsterAppConfig = this.getJhipsterAppConfig();
             if (!this.jhipsterAppConfig) {
                 this.error('Can\'t read .yo-rc.json');
+            }
+            // Expose some of the jhipster config vars for the templates
+            for (const property in this.jhipsterAppConfig) {
+                this[property] = this.jhipsterAppConfig[property];
+            }
+
+            this.angularXAppName = this.getAngularXAppName();
+            this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
+            this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
+
+            // set some appropriate defaults (i.e. what jhipster does)
+            if (this.enableTranslation === undefined) {
+                this.enableTranslation = true;
+            }
+            if (this.nativeLanguage === undefined) {
+                this.nativeLanguage = 'en';
+            }
+            if (this.languages === undefined) {
+                this.languages = ['en', 'fr'];
+            }
+            // set primary key type
+            if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
+                this.pkType = 'String';
+            } else {
+                this.pkType = 'Long';
             }
         },
         displayLogo() {
@@ -73,23 +97,6 @@ module.exports = JhipsterGenerator.extend({
             );
         };
 
-        // read app config from .yo-rc.json
-        for(property in this.jhipsterAppConfig){
-            this[property] = this.jhipsterAppConfig[property];
-        }
-        //set primary key type
-        if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
-            this.pkType = 'String';
-        } else {
-            this.pkType = 'Long';
-        }
-        this.enableTranslation = this.jhipsterAppConfig.enableTranslation;
-        this.angularXAppName = this.getAngularXAppName();
-        this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
-        this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
-
-        // use function in generator-base.js from generator-jhipster
-        this.angularAppName = this.getAngularAppName();
 
         // use constants from generator-constants.js
         const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
@@ -109,16 +116,11 @@ module.exports = JhipsterGenerator.extend({
         this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
         this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
         this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
+        this.changelogDate = this.dateFormatForLiquibase();
 
 
         // copy .json entity file to project
-        this.copy('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
-        this.tenantJson = this.getEntityJson(this.tenantNameUpperFirst);
-        // overwrite the placeholder text with the alias set by user
-        this.tenantJson.relationships[0].otherEntityRelationshipName = this.tenantNameLowerFirst;
-        this.tenantJson.entityTableName = this.tenantNameLowerFirst;
-        // rewrite the json config file for the tenant
-        this.fs.writeJSON(`.jhipster/${this.tenantNameUpperFirst}.json`, this.tenantJson, null, 4);
+        this.template('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
 
         // update user object and associated tests
         this.template('src/main/java/package/domain/_User.java', `${javaDir}domain/User.java`);
@@ -132,7 +134,7 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${testDir}/web/rest/UserResourceIntTest.java`);
         this.template('src/test/java/package/web/rest/AccountResourceIntTest.java', `${testDir}/web/rest/AccountResourceIntTest.java`);
 
-        this.changelogDate = this.dateFormatForLiquibase();
+
         this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
         this.addChangelogToLiquibase(`${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints`);
 
@@ -140,21 +142,21 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
         this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);
         
-        //user management UI
-        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-detail.component.html`,
-                         '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
-                         `<dt><span jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</span></dt>
-        <dd>{{user.${this.tenantNameLowerFirst}?.name}}</dd>`);
+        /** ===========================
+         ---       UI Changes       ---
+         =========================== **/
+        // User Management Admin
+        this.template('src/main/webapp/user-management/_user-management-detail.component.html', `${webappDir}app/admin/user-management/user-management-detail.component.html`);
+        this.template('src/main/webapp/user-management/_user-management-dialog.component.html', `${webappDir}app/admin/user-management/user-management-dialog.component.html`);
+        this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${webappDir}app/admin/user-management/user-management-dialog.component.ts`);
+        this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);
+        // Shared Files
+        this.template('src/main/webapp/user/_user.model.ts', `${webappDir}app/shared/user/user.model.ts`);
 
-        this.rewriteFile(`${webappDir}app/admin/user-management/user-management-dialog.component.html`,
-                         '<div class="form-group" *ngIf="languages && languages.length > 0">',
-                         `<div class="form-group" *ngIf="${this.tenantNamePluralLowerFirst} && ${this.tenantNamePluralLowerFirst}.length > 0">
-            <label jhiTranslate="userManagement${this.tenantNameUpperFirst}">${this.tenantNameUpperFirst}</label>
-            <select class="form-control" id="${this.tenantNameLowerFirst}" name="${this.tenantNameLowerFirst}" [(ngModel)]="user.${this.tenantNameLowerFirst}" (change)="on${this.tenantNameUpperFirst}Change()">
-                <option [ngValue]="null"></option> 
-                <option [ngValue]="${this.tenantNameLowerFirst}.id === user.${this.tenantNameLowerFirst}?.id ? user.${this.tenantNameLowerFirst} : ${this.tenantNameLowerFirst}" *ngFor="let ${this.tenantNameLowerFirst} of ${this.tenantNamePluralLowerFirst}">{{${this.tenantNameLowerFirst}.name}}</option>
-            </select>
-        </div>`);
+        /** ===========================
+         ---      I18N Changes      ---
+         =========================== **/
+        this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`, `${this.tenantNameUpperFirst}`, 'addGlobalTranslationKey', this.enableTranslation);
 
         this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${webappDir}app/admin/user-management/user-management-dialog.component.ts`);        
         this.template('src/main/webapp/user-management/_user-management.component.html', `${webappDir}app/admin/user-management/user-management.component.html`);     
@@ -183,12 +185,12 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/tenant-management/_tenant.model.ts', `${webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
 
         this.template('src/main/webapp/_admin.module.ts', `${webappDir}app/admin/admin.module.ts`);
-        
+
         this.template('src/main/webapp/_admin.route.ts', `${webappDir}app/admin/admin.route.ts`);
         this.template('src/main/webapp/tenant-management/_tenant-route-access-service.ts', `${webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
-        
-        this.rewriteFile(`${webappDir}app/admin/index.ts`, 
-            `export * from './admin.route';`, 
+
+        this.rewriteFile(`${webappDir}app/admin/index.ts`,
+            `export * from './admin.route';`,
         `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component';
@@ -198,9 +200,9 @@ module.exports = JhipsterGenerator.extend({
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
         export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`);
 
-        
-        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`, 
-            'jhipster-needle-add-element-to-admin-menu', 
+
+        this.rewriteFile(`${webappDir}app/layouts/navbar/navbar.component.html`,
+            'jhipster-needle-add-element-to-admin-menu',
             `<li [hidden]="has${this.tenantNameUpperFirst}()">
                         <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
                             <i class="fa fa-" aria-hidden="true"></i>&nbsp;
@@ -222,8 +224,8 @@ module.exports = JhipsterGenerator.extend({
 
         this.template('src/main/webapp/tenant-management/_tenant-management.json', `${webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
 
-        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => { 
-                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`; 
+        jhipsterUtils.rewriteJSONFile(`${webappDir}i18n/en/global.json`, (jsonObj) => {
+                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`;
             }, this);
 
         this.replaceContent(`${webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
@@ -232,6 +234,7 @@ module.exports = JhipsterGenerator.extend({
         this.rewriteFile(`${webappDir}app/shared/index.ts`,`export * from './auth/user-route-access-service';`,`export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`);
 
     },
+
     install() {
         this.config.set('tenantName', this.tenantName);
         this.composeWith('jhipster:entity', {

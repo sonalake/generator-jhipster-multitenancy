@@ -1,3 +1,21 @@
+<%#
+ Copyright 2013-2017 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see http://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -5,43 +23,50 @@ import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { UserModalService } from './user-modal.service';
-import { JhiLanguageHelper, User, UserService, ResponseWrapper } from '../../shared';
+import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService, ResponseWrapper, Principal } from '../../shared';
 
 import { <%= tenantNameUpperFirst %> } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.service';
 
 @Component({
-    selector: 'jhi-user-mgmt-dialog',
+    selector: '<%=jhiPrefix%>-user-mgmt-dialog',
     templateUrl: './user-management-dialog.component.html'
 })
 export class UserMgmtDialogComponent implements OnInit {
 
+    currentAccount: any;
     user: User;
     languages: any[];
     authorities: any[];
-    <%= tenantNameLowerFirst %>Authorities: any[] = [];
-    defaultAuthorities: any[] = [];
-    isSaving: Boolean;
     <%= tenantNamePluralLowerFirst %>: <%= tenantNameUpperFirst %>[];
+    isSaving: Boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
+        <%_ if (enableTranslation) { _%>
         private languageHelper: JhiLanguageHelper,
+        <%_ } _%>
+        private principal: Principal,
         private userService: UserService,
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
         private eventManager: JhiEventManager
-    ) {}
+    ) {
+        this.principal.identity().then((account) => {
+            this.currentAccount = account;
+        });
+    }
 
     ngOnInit() {
         this.isSaving = false;
         this.authorities = [];
         this.userService.authorities().subscribe((authorities) => {
-            this.splitAuthorities(authorities);
-            this.on<%= tenantNameUpperFirst %>Change();
+            this.authorities = authorities;
         });
+        <%_ if (enableTranslation) { _%>
         this.languageHelper.getAll().then((languages) => {
             this.languages = languages;
         });
+        <%_ } _%>
 
         this.<%= tenantNameLowerFirst %>Service.query().subscribe(
             (res: ResponseWrapper) => {
@@ -56,10 +81,13 @@ export class UserMgmtDialogComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        if (this.currentAccount.<%= tenantNameLowerFirst %>) {
+            this.user.<%= tenantNameLowerFirst %> = this.currentAccount.<%= tenantNameLowerFirst %>;
+        }
         if (this.user.id !== null) {
-            this.remove<%= tenantNameUpperFirst %>Roles();
             this.userService.update(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
-        } else {
+        } else {<% if (!enableTranslation) { %>
+            this.user.langKey = 'en';<% } %>
             this.userService.create(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
         }
     }
@@ -73,41 +101,10 @@ export class UserMgmtDialogComponent implements OnInit {
     private onSaveError() {
         this.isSaving = false;
     }
-
-    public on<%= tenantNameUpperFirst %>Change() {
-        if (this.user.<%= tenantNameLowerFirst %> === null) {
-            this.authorities = this.defaultAuthorities;
-        } else {
-            this.authorities = this.<%= tenantNameLowerFirst %>Authorities;
-        }
-    }
-
-    private splitAuthorities(authorities) {
-        authorities.forEach((a) => {
-            if (a.toUpperCase().indexOf('<%= tenantNameUpperCase %>') === -1) {
-                this.defaultAuthorities.push(a);
-            } else {
-                this.<%= tenantNameLowerFirst %>Authorities.push(a);
-            }
-        });
-    }
-
-    // if the user <%= tenantNameLowerFirst %> is set to null, ROLE_<%= tenantNameUpperCase %>_ADMIN and ROLE_<%= tenantNameUpperCase %>_USER are not allowed
-    private remove<%= tenantNameUpperFirst %>Roles() {
-        if (this.user.<%= tenantNameLowerFirst %> === null) {
-            let index;
-            if ((index = this.user.authorities.indexOf('ROLE_<%= tenantNameUpperCase %>_ADMIN')) > -1) {
-                this.user.authorities.splice(index, 1);
-            }
-            if ((index = this.user.authorities.indexOf('ROLE_<%= tenantNameUpperCase %>_USER')) > -1) {
-                this.user.authorities.splice(index, 1);
-            }
-        }
-    }
 }
 
 @Component({
-    selector: 'jhi-user-dialog',
+    selector: '<%=jhiPrefix%>-user-dialog',
     template: ''
 })
 export class UserDialogComponent implements OnInit, OnDestroy {
