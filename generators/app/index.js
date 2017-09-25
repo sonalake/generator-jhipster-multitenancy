@@ -106,7 +106,7 @@ module.exports = JhipsterGenerator.extend({
         this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
         this.mainClass = this.getMainClassName();
         this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
-        this.tenantisedEntitesResources = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..))\")`;
+        this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
         this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
         this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
 

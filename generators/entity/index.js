@@ -149,10 +149,14 @@ module.exports = JhipsterGenerator.extend({
         },
         addEntityToAspect() {
             if (this.isValid) {
-                var foo = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..))`;
+                // read app config from .yo-rc.json
+                for (property in this.jhipsterAppConfig) {
+                    this[property] = this.jhipsterAppConfig[property];
+                }
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
                 en = this.config.get("tenantisedEntities");
                 en.forEach(function (entity) {
-                    addEntity = ` || execution(* com.sonalake.multitenancy.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
+                    addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });
                 foo = foo.concat(`\")`);
@@ -166,10 +170,7 @@ module.exports = JhipsterGenerator.extend({
                 this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
                 this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
                 this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
-                // read app config from .yo-rc.json
-                for (property in this.jhipsterAppConfig) {
-                    this[property] = this.jhipsterAppConfig[property];
-                }
+                
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
