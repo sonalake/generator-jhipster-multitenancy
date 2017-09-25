@@ -141,7 +141,8 @@ module.exports = JhipsterGenerator.extend({
 
         // copy over aspect
         this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
-
+        this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);
+        
         //user management UI
         this.rewriteFile(`${webappDir}app/admin/user-management/user-management-detail.component.html`,
                          '<dt><span jhiTranslate="userManagement.createdBy">Created By</span></dt>',
@@ -163,8 +164,6 @@ module.exports = JhipsterGenerator.extend({
         this.template('src/main/webapp/user-management/_user.model.ts', `${webappDir}app/shared/user/user.model.ts`);        
 
         this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`,`${this.tenantNameUpperFirst}`,'addGlobalTranslationKey', this.enableTranslation);
-
-        
 
         try {
             this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');

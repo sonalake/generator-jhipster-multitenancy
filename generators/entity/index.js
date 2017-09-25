@@ -146,19 +146,7 @@ module.exports = JhipsterGenerator.extend({
                     this.log(chalk.yellow('Exiting sub generator'));
                 }
             }
-        },
-        addEntityToAspect() {
-            this.packageFolder = this.jhipsterAppConfig.packageFolder;
-            if (this.isValid) {
-                jhipsterUtils.rewriteFile({
-                    file: `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`+'/aop/'+this.tenantName+'/'+_.upperFirst(this.tenantName)+'Aspect.java',
-                    needle: '    public void beforeExecution() throws Throwable {',
-                    splicable: [
-                        '&& fdfdfdf'
-                    ]
-                }, this);
-            }
-        },
+        }
     },
     install() {
         if(this.options.name != undefined && this.isValid) {
