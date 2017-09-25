@@ -152,7 +152,7 @@ module.exports = JhipsterGenerator.extend({
                 var foo = `@Before(\"execution(* com.sonalake.multitenancy.web.rest.UserResource.*(..))`;
                 en = this.config.get("tenantisedEntities");
                 en.forEach(function (entity) {
-                    addEntity = ` && execution(* com.sonalake.multitenancy.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
+                    addEntity = ` || execution(* com.sonalake.multitenancy.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });
                 foo = foo.concat(`\")`);
