@@ -27,7 +27,6 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>ModalService } from './<%= tenantNameLowerFirst %>-modal.service';
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
-import { User, UserService } from '../../shared';
 import { ResponseWrapper } from '../../shared';
 
 @Component({
@@ -39,21 +38,16 @@ export class <%= tenantNameUpperFirst %>MgmtDialogComponent implements OnInit {
     <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>;
     isSaving: boolean;
     isEditing: boolean;
-    users: User[];
 
     constructor(
         public activeModal: NgbActiveModal,
         private alertService: JhiAlertService,
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
-        private userService: UserService,
         private eventManager: JhiEventManager
     ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.users = [];
-        this.userService.query()
-            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -93,10 +87,6 @@ export class <%= tenantNameUpperFirst %>MgmtDialogComponent implements OnInit {
 
     private onError(error) {
         this.alertService.error(error.message, null, null);
-    }
-
-    trackUserById(index: number, item: User) {
-        return item.id;
     }
 }
 
