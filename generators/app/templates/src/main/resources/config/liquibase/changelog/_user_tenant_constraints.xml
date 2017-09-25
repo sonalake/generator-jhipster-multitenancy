@@ -10,11 +10,5 @@
          <addColumn tableName="jhi_user">
             <column name="<%= tenantNameLowerCase %>_id" type="bigint"/>
          </addColumn>
-        <!-- <addForeignKeyConstraint baseColumnNames="<%= tenantNameLowerCase %>_id"
-                                 baseTableName="jhi_user"
-                                 constraintName="fk_user_<%= tenantNameLowerCase %>_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="<%= tenantNameLowerCase %>"/> -->
-
     </changeSet>
 </databaseChangeLog>
