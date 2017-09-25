@@ -8,12 +8,6 @@
             "otherEntityField": "login",
             "ownerSide": true,
             "otherEntityRelationshipName": "<%= tenantNameLowerFirst %>"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "tenantContact",
-            "otherEntityName": "user",
-            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -29,5 +23,5 @@
     "dto": "no",
     "service": "serviceClass",
     "entityTableName": "tenant",
-    "pagination": "no"
+    "pagination": "pagination"
 }

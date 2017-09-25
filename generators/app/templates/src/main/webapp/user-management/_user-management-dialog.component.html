@@ -112,11 +112,11 @@
             </label>
         </div>
         
-        <div class="form-group" *ngIf="!currentAccount.<%= tenantNameLowerFirst %> && <%= tenantNamePlural %> && <%= tenantNamePlural %>.length > 0">
+        <div class="form-group" *ngIf="!currentAccount.<%= tenantNameLowerFirst %> && <%= tenantNamePluralLowerFirst %> && <%= tenantNamePluralLowerFirst %>.length > 0">
             <label jhiTranslate="userManagement<%= tenantNameUpperFirst %>"><%= tenantNameUpperFirst %></label>
             <select class="form-control" id="<%= tenantNameLowerFirst %>" name="<%= tenantNameLowerFirst %>" [(ngModel)]="user.<%= tenantNameLowerFirst %>">
                 <option [ngValue]="null"></option> 
-                <option [ngValue]="<%= tenantNameLowerFirst %>.id === user.<%= tenantNameLowerFirst %>?.id ? user.<%= tenantNameLowerFirst %> : <%= tenantNameLowerFirst %>" *ngFor="let <%= tenantNameLowerFirst %> of <%= tenantNamePlural %>">{{<%= tenantNameLowerFirst %>.name}}</option>
+                <option [ngValue]="<%= tenantNameLowerFirst %>.id === user.<%= tenantNameLowerFirst %>?.id ? user.<%= tenantNameLowerFirst %> : <%= tenantNameLowerFirst %>" *ngFor="let <%= tenantNameLowerFirst %> of <%= tenantNamePluralLowerFirst %>">{{<%= tenantNameLowerFirst %>.name}}</option>
             </select>
         </div>
 

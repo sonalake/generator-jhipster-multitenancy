@@ -16,7 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { <%= tenantNameUpperFirst %> } from './../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.model';
+import { <%= tenantNameUpperFirst %> } from './../../admin/<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
 
 export class User {
     public id?: any;
