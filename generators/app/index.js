@@ -112,6 +112,7 @@ module.exports = JhipsterGenerator.extend({
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
         const testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
+        const clientTestDir = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
         /* tenant variables */
         this.tenantName = _.camelCase(this.props.tenantName);
@@ -232,6 +233,18 @@ module.exports = JhipsterGenerator.extend({
 
         this.rewriteFile(`${webappDir}app/shared/index.ts`,`export * from './auth/user-route-access-service';`,`export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`);
 
+        //tests
+        this.rewriteFile(`${clientTestDir}e2e/admin/administration.spec.ts`,`it('should load metrics', () => {`,
+            `it('should load ${this.tenantNameLowerFirst} management', () => {
+        navBarPage.clickOnAdmin("${this.tenantNameLowerFirst}-management");
+        const expect1 = /${this.tenantNameLowerFirst}Management.home.title/;
+        element.all(by.css('h2 span')).first().getAttribute('jhiTranslate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
+    });\n`);
+
+        this.template('src/main/webapp/tenant-management/test/_tenant-management-detail.component.spec.ts', `${clientTestDir}spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`);
+        this.template('src/main/webapp/tenant-management/test/_tenant-management.spec.ts', `${clientTestDir}e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`);
     },
 
     install() {
