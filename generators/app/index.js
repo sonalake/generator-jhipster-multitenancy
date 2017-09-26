@@ -67,6 +67,7 @@ module.exports = JhipsterGenerator.extend({
                 this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
             }
         },
+        // checks that the project is compatible with this generator
         validateCompatibility() {
             // validate project has the correct db type
             if (_.toLower(this.databaseType) !== 'sql') {
@@ -207,7 +208,7 @@ module.exports = JhipsterGenerator.extend({
                 'jhipster-needle-add-element-to-admin-menu',
                 `<li [hidden]="has${this.tenantNameUpperFirst}()">
                         <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
-                            <i class="fa fa-" aria-hidden="true"></i>&nbsp;
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.admin.${this.tenantNameLowerFirst}-management">${this.tenantNameUpperFirst} Management</span>
                         </a>
                     </li>`
