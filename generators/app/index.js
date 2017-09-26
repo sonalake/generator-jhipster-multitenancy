@@ -8,7 +8,6 @@ const jhipsterConstants = require('generator-jhipster/generators/generator-const
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 const fs = require('fs-extra');
 const _ = require('lodash');
-const pluralize = require('pluralize');
 const mtUtils = require('../multitenancy-utils');
 
 const JhipsterGenerator = generator.extend({});
@@ -96,27 +95,16 @@ module.exports = JhipsterGenerator.extend({
         };
 
 
-        // use constants from generator-constants.js
+        // setup constants and variables
         const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
         const testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
-
-        /* tenant variables */
-        this.tenantName = _.camelCase(this.props.tenantName);
-        this.tenantNameUpperCase = _.toUpper(this.tenantName);
-        this.tenantNameLowerCase = _.toLower(this.tenantName);
-        this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
-        this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
-        this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
-        this.mainClass = this.getMainClassName();
-        this.tenantNamePlural = pluralize(this.tenantNameLowerFirst);
-        this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
-        this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
-        this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
+        mtUtils.tenantVariables(this.props.tenantName, this);
         this.changelogDate = this.dateFormatForLiquibase();
-
-
+        this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
+        this.mainClass = this.getMainClassName();
+        
         // copy .json entity file to project
         this.template('.jhipster/_Tenant.json', `.jhipster/${this.tenantNameUpperFirst}.json`);
 

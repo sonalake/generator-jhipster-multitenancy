@@ -163,13 +163,7 @@ module.exports = JhipsterGenerator.extend({
                 // replace aspect
                
                 /* tenant variables */
-                this.tenantName = _.camelCase(this.tenantName);
-                this.tenantNameUpperCase = _.toUpper(this.tenantName);
-                this.tenantNameLowerCase = _.toLower(this.tenantName);
-                this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
-                this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
-                this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
-                
+                mtUtils.tenantVariables(this.props.tenantName);                
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
