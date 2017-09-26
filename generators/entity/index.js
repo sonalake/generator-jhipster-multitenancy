@@ -7,6 +7,7 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 const _ = require('lodash');
+const mtUtils = require('../multitenancy-utils');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -150,12 +151,10 @@ module.exports = JhipsterGenerator.extend({
         addEntityToAspect() {
             if (this.isValid) {
                 // read app config from .yo-rc.json
-                for (property in this.jhipsterAppConfig) {
-                    this[property] = this.jhipsterAppConfig[property];
-                }
-                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
+                mtUtils.readConfig(this.jhipsterAppConfig, this);
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;                
                 en = this.config.get("tenantisedEntities");
-                en.forEach(function (entity) {
+                en.forEach((entity) =>  {
                     addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });

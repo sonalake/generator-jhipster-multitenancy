@@ -9,6 +9,7 @@ const jhipsterUtils = require('generator-jhipster/generators/utils');
 const fs = require('fs-extra');
 const _ = require('lodash');
 const pluralize = require('pluralize');
+const mtUtils = require('../multitenancy-utils');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -20,10 +21,7 @@ module.exports = JhipsterGenerator.extend({
             if (!this.jhipsterAppConfig) {
                 this.error('Can\'t read .yo-rc.json');
             }
-            // Expose some of the jhipster config vars for the templates
-            for (const property in this.jhipsterAppConfig) {
-                this[property] = this.jhipsterAppConfig[property];
-            }
+            mtUtils.readConfig(this.jhipsterAppConfig, this);
 
             this.angularXAppName = this.getAngularXAppName();
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
