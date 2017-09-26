@@ -60,6 +60,17 @@ module.exports = JhipsterGenerator.extend({
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
                 this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
             }
+        },
+        validateCompatibility() {
+            // validate project has the correct db type
+            if (_.toLower(this.databaseType) !== 'sql') {
+                this.error('This module currently only supports SQL DB types\n');
+            }
+
+            // validate project has the correct angular version
+            if (_.toLower(this.clientFramework) !== 'angularx') {
+                this.error('This module currently only supports Angular 4+\n');
+            }
         }
     },
 
