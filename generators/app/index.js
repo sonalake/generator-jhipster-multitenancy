@@ -60,7 +60,7 @@ module.exports = JhipsterGenerator.extend({
             const jhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
-                this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
+                this.error(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
             }
         },
         // checks that the project is compatible with this generator
@@ -135,7 +135,6 @@ module.exports = JhipsterGenerator.extend({
             this.template('src/main/java/package/service/dto/_UserDTO.java', `${this.javaDir}service/dto/UserDTO.java`);
             this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${this.javaDir}web/rest/vm/ManagedUserVM.java`);
             this.template('src/main/java/package/web/rest/_UserResource.java', `${this.javaDir}web/rest/UserResource.java`);
-            console.log("version", this.jhipsterAppConfig.jhipsterVersion);
             if(this.jhipsterAppConfig.jhipsterVersion >= '4.8.0') {
                 this.template('src/main/java/package/repository/4.8.0_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
                 this.template('src/main/java/package/service/4.8.0_UserService.java', `${this.javaDir}service/UserService.java`);
