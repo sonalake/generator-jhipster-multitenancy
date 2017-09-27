@@ -18,6 +18,11 @@
 -%>
 import { browser, element, by, $ } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
+<%_
+let elementGetter = `getText()`;
+if (enableTranslation) {
+    elementGetter = `getAttribute('jhiTranslate')`;
+} _%>
 
 describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
 
@@ -70,7 +75,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponentsPage {
     }
 
     getTitle() {
-        return this.title.getAttribute('jhiTranslate');
+        return this.title.<%- elementGetter %>;
     }
 }
 
@@ -81,7 +86,7 @@ export class <%= tenantNameUpperFirst %>MgmtDialogPage {
     nameInput = element(by.css('input#field_name'));
 
     getModalTitle() {
-        return this.modalTitle.getAttribute('jhiTranslate');
+        return this.modalTitle.<%- elementGetter %>;
     }
 
     setNameInput = function (name) {
