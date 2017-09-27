@@ -121,6 +121,7 @@ module.exports = JhipsterGenerator.extend({
             this.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
             this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
             this.testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
+            this.clientTestDir = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
             // template variables
             this.tenantName = _.camelCase(this.props.tenantName);
@@ -227,6 +228,21 @@ module.exports = JhipsterGenerator.extend({
         return this.isIdentityResolved() ? this.userIdentity.${this.tenantNameLowerFirst} : null;
     }\n`
             );
+
+            // UI tests
+            this.rewriteFile(`${this.clientTestDir}e2e/admin/administration.spec.ts`,
+                `it('should load metrics', () => {`,
+                `it('should load ${this.tenantNameLowerFirst} management', () => {
+        navBarPage.clickOnAdmin("${this.tenantNameLowerFirst}-management");
+        const expect1 = /${this.tenantNameLowerFirst}Management.home.title/;
+        element.all(by.css('h2 span')).first().getAttribute('jhiTranslate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
+    });\n`
+            );
+
+            this.template('src/main/webapp/tenant-management/test/_tenant-management-detail.component.spec.ts', `${this.clientTestDir}spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`);
+            this.template('src/main/webapp/tenant-management/test/_tenant-management.spec.ts', `${this.clientTestDir}e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`);
         },
         // makes the necessary changes to the i18n files and adds files for tenant management
         generateLanguageFiles() {
