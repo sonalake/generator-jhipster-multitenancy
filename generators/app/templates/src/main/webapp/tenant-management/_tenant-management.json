@@ -23,9 +23,6 @@
             "createLabel": "Create a new <%= tenantNameLowerFirst %>",
             "editLabel": "Edit a <%= tenantNameLowerFirst %>"
         },
-        "created": "A new <%= tenantNameLowerFirst %> is created with identifier {{ param }}",
-        "updated": "A <%= tenantNameLowerFirst %> is updated with identifier {{ param }}",
-        "deleted": "A <%= tenantNameLowerFirst %> is deleted with identifier {{ param }}",
         "delete": {
             "question": "Are you sure you want to delete <%= tenantNameLowerFirst %> {{ name }}?"
         },
@@ -38,8 +35,13 @@
         "lastModifiedDate": "Modified date",
         "<%= tenantNameLowerFirst %>": "<%= tenantNameUpperFirst %>",
         "<%= tenantNameLowerFirst %>Contact": "Contact",
-        "name": "Name",
-        "contactUser": "Contact User",
-        "contactUserMsg": "Each <%= tenantNameLowerFirst %> requires a user to act as the main contact for the <%= tenantNameLowerFirst %>"
+        "name": "Name"
+    },
+    "<%= angularAppName %>": {
+        "<%= tenantNameLowerFirst %>": {
+            "created": "A new <%= tenantNameLowerFirst %> is created with identifier {{ param }}",
+            "updated": "A <%= tenantNameLowerFirst %> is updated with identifier {{ param }}",
+            "deleted": "A <%= tenantNameLowerFirst %> is deleted with identifier {{ param }}"
+        }
     }
 }

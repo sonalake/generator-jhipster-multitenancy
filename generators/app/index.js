@@ -27,6 +27,7 @@ module.exports = JhipsterGenerator.extend({
             });
 
             this.angularXAppName = this.getAngularXAppName();
+            this.angularAppName = this.getAngularAppName();
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
             this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
 
