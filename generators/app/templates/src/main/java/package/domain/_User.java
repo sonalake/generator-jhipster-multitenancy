@@ -64,8 +64,8 @@ import org.hibernate.annotations.ParamDef;
 @Document(collection = "jhi_user")<% } %><% if (databaseType === 'cassandra') { %>
 @Table(name = "user")<% } %><% if (searchEngine === 'elasticsearch') { %>
 @Document(indexName = "user")<% } %>
-@FilterDef(name = "USER_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
-@Filter(name = "USER_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
+@FilterDef(name = "<%= tenantNameUpperCase %>_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
+@Filter(name = "<%= tenantNameUpperCase %>_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
 public class User<% if (databaseType === 'sql' || databaseType === 'mongodb') { %> extends AbstractAuditingEntity<% } %> implements Serializable {
 
     private static final long serialVersionUID = 1L;
