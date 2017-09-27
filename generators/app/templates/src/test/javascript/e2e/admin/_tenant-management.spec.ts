@@ -43,7 +43,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         <%_ if (enableTranslation) { _%>
         expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/<%= tenantNameLowerFirst %>Management.home.createLabel/);
         <%_ } else { _%>
-        expect(<%= entityInstance %>DialogPage.getModalTitle()).toMatch(/Create new <%= tenantNameUpperFirst %>/);
+        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/Create new <%= tenantNameUpperFirst %>/);
         <%_ } _%>
         <%= tenantNameLowerFirst %>MgmtDialogPage.close();
     });

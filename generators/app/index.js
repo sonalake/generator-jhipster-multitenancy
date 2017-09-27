@@ -5,7 +5,6 @@ const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const jhipsterUtils = require('generator-jhipster/generators/utils');
 const _ = require('lodash');
 const mtUtils = require('../multitenancy-utils');
 
@@ -117,6 +116,7 @@ module.exports = JhipsterGenerator.extend({
             this.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
             this.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
             this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
+            this.angularDir = jhipsterConstants.ANGULAR_DIR;
             this.testDir = jhipsterConstants.SERVER_TEST_SRC_DIR + this.packageFolder;
             this.clientTestDir = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
@@ -158,32 +158,130 @@ module.exports = JhipsterGenerator.extend({
         },
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
-            // User Management Admin
-            this.template('src/main/webapp/user-management/_user-management-detail.component.html', `${this.webappDir}app/admin/user-management/user-management-detail.component.html`);
-            this.template('src/main/webapp/user-management/_user-management-dialog.component.html', `${this.webappDir}app/admin/user-management/user-management-dialog.component.html`);
-            this.template('src/main/webapp/user-management/_user-management-dialog.component.ts', `${this.webappDir}app/admin/user-management/user-management-dialog.component.ts`);
-            this.template('src/main/webapp/user-management/_user-management.component.html', `${this.webappDir}app/admin/user-management/user-management.component.html`);
+            // configs for the template files
+            const files = {
+                userManagement: [
+                    {
+                        path: this.angularDir,
+                        templates: [
+                            { file: 'admin/user-management/_user-management.component.html', method: 'processHtml' },
+                            { file: 'admin/user-management/_user-management-detail.component.html', method: 'processHtml' },
+                            { file: 'admin/user-management/_user-management-dialog.component.ts', method: 'processJs' },
+                            { file: 'admin/user-management/_user-management-dialog.component.html', method: 'processHtml' },
+                        ]
+                    }
+                ],
+                tenantManagement: [
+                    {
+                        path: this.angularDir,
+                        templates: [
+                            {
+                                file: 'admin/tenant-management/_tenant-management.component.html',
+                                method: 'processHtml',
+                                template: true,
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-detail.component.html',
+                                method: 'processHtml',
+                                template: true,
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-dialog.component.html',
+                                method: 'processHtml',
+                                template: true,
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-delete-dialog.component.html',
+                                method: 'processHtml',
+                                template: true,
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.html`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management.route.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant.model.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management.component.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-dialog.component.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-delete-dialog.component.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-detail.component.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant.service.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-modal.service.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`
+                            }
+                        ]
+                    }
+                ],
+                admin: [
+                    {
+                        path: this.angularDir,
+                        templates: [
+                            { file: 'admin/_admin.route.ts', method: 'processJs' },
+                            'admin/_admin.module.ts',
+                        ]
+                    }
+                ],
+                shared: [
+                    {
+                        path: this.angularDir,
+                        templates: [
+                            {
+                                file: 'shared/auth/_tenant-route-access-service.ts',
+                                renameTo: generator => `shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`
+                            },
+                            'shared/user/_user.model.ts'
+                        ]
+                    }
 
-            // Tenant Management Admin
-            this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.html', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.html`);
-            this.template('src/main/webapp/tenant-management/_tenant-management-delete-dialog.component.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.html', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`);
-            this.template('src/main/webapp/tenant-management/_tenant-management-detail.component.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.html', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`);
-            this.template('src/main/webapp/tenant-management/_tenant-management-dialog.component.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-management.component.html', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.html`);
-            this.template('src/main/webapp/tenant-management/_tenant-management.component.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-management.route.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-modal.service.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant.service.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant.model.ts', `${this.webappDir}app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.model.ts`);
+                ],
+                tests: [
+                    {
+                        path: this.clientTestDir,
+                        templates: [
+                            {
+                                file: 'spec/app/admin/_tenant-management-detail.component.spec.ts',
+                                renameTo: generator => `spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`
+                            }
+                        ]
+                    },
+                    {
+                        path: this.clientTestDir,
+                        templates: [
+                            {
+                                file: 'e2e/admin/_tenant-management.spec.ts',
+                                renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
+                            }
+                        ]
+                    },
+                ]
+            };
+            // parse the templates and write files to the appropriate locations
+            this.writeFilesToDisk(files, this, false);
 
+            // Rewrites to existing files
             // Admin Files
-            this.template('src/main/webapp/_admin.module.ts', `${this.webappDir}app/admin/admin.module.ts`);
-
-            this.template('src/main/webapp/_admin.route.ts', `${this.webappDir}app/admin/admin.route.ts`);
-            this.template('src/main/webapp/tenant-management/_tenant-route-access-service.ts', `${this.webappDir}app/shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`);
-
             this.rewriteFile(`${this.webappDir}app/admin/index.ts`,
                 `export * from './admin.route';`,
                 `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
@@ -197,7 +295,6 @@ module.exports = JhipsterGenerator.extend({
             );
 
             // Misc. Files
-            this.template('src/main/webapp/user/_user.model.ts', `${this.webappDir}app/shared/user/user.model.ts`);
             this.rewriteFile(`${this.webappDir}app/shared/index.ts`, `export * from './auth/user-route-access-service';`, `export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`);
             this.replaceContent(`${this.webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
             this.rewriteFile(`${this.webappDir}app/app.module.ts`, `customHttpProvider(),`, `${this.tenantNameUpperFirst}RouteAccessService,`);
@@ -237,17 +334,15 @@ module.exports = JhipsterGenerator.extend({
         });
     });\n`
             );
-
-            this.template('src/main/webapp/tenant-management/test/_tenant-management-detail.component.spec.ts', `${this.clientTestDir}spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`);
-            this.template('src/main/webapp/tenant-management/test/_tenant-management.spec.ts', `${this.clientTestDir}e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`);
         },
         // makes the necessary changes to the i18n files and adds files for tenant management
         generateLanguageFiles() {
-            this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`, `${this.tenantNameUpperFirst}`, 'addGlobalTranslationKey', this.enableTranslation);
-            this.template('src/main/webapp/tenant-management/_tenant-management.json', `${this.webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
-            jhipsterUtils.rewriteJSONFile(`${this.webappDir}i18n/en/global.json`, (jsonObj) => {
-                jsonObj.global.menu.admin[`${this.tenantNameLowerFirst}-management`] = `${this.tenantNameUpperFirst} Management`;
-            }, this);
+            if (this.enableTranslation) {
+                this.addTranslationKeyToAllLanguages(`${this.tenantNameLowerFirst}-management`, `${this.tenantNameUpperFirst} Management`, 'addAdminElementTranslationKey', this.enableTranslation);
+                this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`, `${this.tenantNameUpperFirst}`, 'addGlobalTranslationKey', this.enableTranslation);
+                // TODO: generate this file for each language
+                this.template('src/main/webapp/i18n/en/_tenant-management.json', `${this.webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
+            }
         },
         // registers sub-generators with the jhipster generator hooks
         registerModuleHooks() {
