@@ -136,10 +136,11 @@ module.exports = JhipsterGenerator.extend({
             this.template('src/main/java/package/service/dto/_UserDTO.java', `${this.javaDir}service/dto/UserDTO.java`);
             this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${this.javaDir}web/rest/vm/ManagedUserVM.java`);
             this.template('src/main/java/package/web/rest/_UserResource.java', `${this.javaDir}web/rest/UserResource.java`);
-            if(this.jhipsterAppConfig.jhipsterVersion >= '4.8.0') {
+
+            if (this.jhipsterAppConfig.jhipsterVersion >= '4.8.0') {
                 this.template('src/main/java/package/repository/4.8.0_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
                 this.template('src/main/java/package/service/4.8.0_UserService.java', `${this.javaDir}service/UserService.java`);
-            }  else {
+            } else {
                 this.template('src/main/java/package/repository/4.7.0_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
                 this.template('src/main/java/package/service/4.7.0_UserService.java', `${this.javaDir}service/UserService.java`);
             }
@@ -273,26 +274,6 @@ module.exports = JhipsterGenerator.extend({
             'skip-user-management': false,
             arguments: [this.tenantName],
         });
-
-        // install dependencies
-        const logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
-        const injectDependenciesAndConstants = (err) => {
-            if (err) {
-                this.warning('Install of dependencies failed!');
-                this.log(logMsg);
-            }
-        };
-        const installConfig = {
-            bower: this.clientFramework === 'angular1',
-            npm: this.clientPackageManager !== 'yarn',
-            yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants
-        };
-        if (this.options['skip-install']) {
-            this.log(logMsg);
-        } else {
-            this.installDependencies(installConfig);
-        }
     },
 
     end() {
