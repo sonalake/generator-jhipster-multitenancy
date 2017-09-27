@@ -4,6 +4,7 @@
       "packageName": "com.mycompany.myapp",
       "nativeLanguage": "en"
     },
+    "jhipsterVersion": "4.8.0",    
     "baseName": "sampleMysql",
     "packageName": "com.mycompany.myapp",
     "packageFolder": "com/mycompany/myapp",
