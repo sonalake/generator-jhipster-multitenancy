@@ -61,7 +61,7 @@ module.exports = JhipsterGenerator.extend({
             const jhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
-                this.warning(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
+                this.error(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
             }
         },
         // checks that the project is compatible with this generator
@@ -133,11 +133,16 @@ module.exports = JhipsterGenerator.extend({
 
             // update user object and associated tests
             this.template('src/main/java/package/domain/_User.java', `${this.javaDir}domain/User.java`);
-            this.template('src/main/java/package/repository/_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
             this.template('src/main/java/package/service/dto/_UserDTO.java', `${this.javaDir}service/dto/UserDTO.java`);
-            this.template('src/main/java/package/service/_UserService.java', `${this.javaDir}service/UserService.java`);
             this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${this.javaDir}web/rest/vm/ManagedUserVM.java`);
             this.template('src/main/java/package/web/rest/_UserResource.java', `${this.javaDir}web/rest/UserResource.java`);
+            if(this.jhipsterAppConfig.jhipsterVersion >= '4.8.0') {
+                this.template('src/main/java/package/repository/4.8.0_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
+                this.template('src/main/java/package/service/4.8.0_UserService.java', `${this.javaDir}service/UserService.java`);
+            }  else {
+                this.template('src/main/java/package/repository/4.7.0_UserRepository.java', `${this.javaDir}repository/UserRepository.java`);
+                this.template('src/main/java/package/service/4.7.0_UserService.java', `${this.javaDir}service/UserService.java`);
+            }
 
             // integration tests
             this.template('src/test/java/package/web/rest/UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
