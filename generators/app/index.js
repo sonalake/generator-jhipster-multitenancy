@@ -7,7 +7,7 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 const _ = require('lodash');
-const pluralize = require('pluralize');
+const mtUtils = require('../multitenancy-utils');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -20,11 +20,7 @@ module.exports = JhipsterGenerator.extend({
             if (!this.jhipsterAppConfig) {
                 this.error('Can\'t read .yo-rc.json');
             }
-
-            // Expose some of the jhipster config vars for the templates
-            Object.keys(this.jhipsterAppConfig).forEach((key) => {
-                this[key] = this.jhipsterAppConfig[key];
-            });
+            mtUtils.readConfig(this.jhipsterAppConfig, this);
 
             this.angularXAppName = this.getAngularXAppName();
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
@@ -124,15 +120,9 @@ module.exports = JhipsterGenerator.extend({
             this.clientTestDir = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
             // template variables
-            this.tenantName = _.camelCase(this.props.tenantName);
-            this.tenantNameUpperCase = _.toUpper(this.tenantName);
-            this.tenantNameLowerCase = _.toLower(this.tenantName);
-            this.tenantNameLowerFirst = _.lowerFirst(this.tenantName);
-            this.tenantNameUpperFirst = _.upperFirst(this.tenantName);
-            this.tenantNameSpinalCased = _.kebabCase(this.tenantNameLowerFirst);
+            mtUtils.tenantVariables(this.props.tenantName, this);
+            this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;            
             this.mainClass = this.getMainClassName();
-            this.tenantNamePluralLowerFirst = pluralize(this.tenantNameLowerFirst);
-            this.tenantNamePluralUpperFirst = pluralize(this.tenantNameUpperFirst);
             this.changelogDate = this.dateFormatForLiquibase();
         },
         // make the necessary server code changes

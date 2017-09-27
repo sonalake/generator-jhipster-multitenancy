@@ -5,6 +5,9 @@ const packagejs = require(__dirname + '/../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const jhipsterUtils = require('generator-jhipster/generators/utils');
+const _ = require('lodash');
+const mtUtils = require('../multitenancy-utils');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -104,40 +107,40 @@ module.exports = JhipsterGenerator.extend({
                             this.isValid = false;
                             this.log(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
                         }
-                        if(this.isValid) {
-                        // get entity json config
-                        this.tenantName = this.config.get("tenantName")
-                        this.relationships = this.entityJson.relationships;
-                        // if any relationship exisits already in the entity to the tenant remove it and regenerated
-                        for (var i = this.relationships.length - 1; i >= 0; i--) {
-                            if (this.relationships[i].otherEntityName == this.tenantName) {
-                                this.relationships.splice(i);
+                        if (this.isValid) {
+                            // get entity json config
+                            this.tenantName = this.config.get("tenantName")
+                            this.relationships = this.entityJson.relationships;
+                            // if any relationship exisits already in the entity to the tenant remove it and regenerated
+                            for (var i = this.relationships.length - 1; i >= 0; i--) {
+                                if (this.relationships[i].otherEntityName == this.tenantName) {
+                                    this.relationships.splice(i);
+                                }
+                            }
+
+                            this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
+                            this.real = {
+                                "relationshipName": this.tenantName,
+                                "otherEntityName": this.tenantName,
+                                "relationshipType": "many-to-one",
+                                "relationshipValidateRules": [
+                                    "required"
+                                ],
+                                "otherEntityField": "id",
+                                "ownerSide": true,
+                                "otherEntityRelationshipName": this.options.name
+                            };
+                            this.relationships.push(this.real);
+                            this.entityJson.relationships = this.relationships;
+                            this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+
+                            if (this.entities == undefined) {
+                                this.config.set("tenantisedEntities", [this.options.name]);
+                            } else {
+                                this.entities.push(this.options.name);
+                                this.config.set("tenantisedEntities", this.entities);
                             }
                         }
-
-                        this.log(chalk.white('Entity ' + chalk.bold(this.options.name) + ' found. Adding relationship'));
-                        this.real = {
-                            "relationshipName": this.tenantName,
-                            "otherEntityName": this.tenantName,
-                            "relationshipType": "many-to-one",
-                            "relationshipValidateRules": [
-                                "required"
-                            ],
-                            "otherEntityField": "id",
-                            "ownerSide": true,
-                            "otherEntityRelationshipName": this.options.name
-                        };
-                        this.relationships.push(this.real);
-                        this.entityJson.relationships = this.relationships;
-                        this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
-
-                        if (this.entities == undefined) {
-                            this.config.set("tenantisedEntities", [this.options.name]);
-                        } else {
-                            this.entities.push(this.options.name);
-                            this.config.set("tenantisedEntities", this.entities);
-                        }
-                    }
                     }
                 } else {
                     this.isValid = false;
@@ -145,6 +148,26 @@ module.exports = JhipsterGenerator.extend({
                 }
             }
         },
+        addEntityToAspect() {
+            if (this.isValid) {
+                // read app config from .yo-rc.json
+                mtUtils.readConfig(this.jhipsterAppConfig, this);
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;                
+                en = this.config.get("tenantisedEntities");
+                en.forEach((entity) =>  {
+                    addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
+                    foo = foo.concat(addEntity);
+                });
+                foo = foo.concat(`\")`);
+                this.tenantisedEntitesResources = foo;
+                // replace aspect
+               
+                /* tenant variables */
+                mtUtils.tenantVariables(this.tenantName, this);                
+                const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
+                this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+            }
+        }
     },
     install() {
         if (this.options.name != undefined && this.isValid) {
