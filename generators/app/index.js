@@ -75,6 +75,11 @@ module.exports = JhipsterGenerator.extend({
             if (_.toLower(this.clientFramework) !== 'angularx') {
                 this.error('This module currently only supports Angular 4+\n');
             }
+
+            // validate project has the user management
+            if (this.skipUserManagement) {
+                this.error('This module depends on the user management to have been generated\n');
+            }
         }
     },
 
