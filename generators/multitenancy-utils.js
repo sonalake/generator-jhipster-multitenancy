@@ -11,12 +11,12 @@ module.exports = {
 
 // Expose some of the jhipster config vars for the templates
 function readConfig(config, context) {
-    for (const property in config) {
-        context[property] = config[property];
-    }
+    Object.keys(config).forEach((key) => {
+        context[key] = config[key];
+    });
 }
 
-// Vaiations in tenant name
+// Variations in tenant name
 function tenantVariables(tenantName, context) {
     /* tenant variables */
     context.tenantName = _.camelCase(tenantName);
