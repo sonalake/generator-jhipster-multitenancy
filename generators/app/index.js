@@ -7,6 +7,7 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const _ = require('lodash');
 const mtUtils = require('../multitenancy-utils');
+const partialFiles = require('./partials/index');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -122,7 +123,7 @@ module.exports = JhipsterGenerator.extend({
 
             // template variables
             mtUtils.tenantVariables(this.props.tenantName, this);
-            this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;            
+            this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
             this.mainClass = this.getMainClassName();
             this.changelogDate = this.dateFormatForLiquibase();
         },
@@ -154,7 +155,7 @@ module.exports = JhipsterGenerator.extend({
 
             // copy over aspect
             this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
-            this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);            
+            this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);
         },
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
@@ -281,58 +282,46 @@ module.exports = JhipsterGenerator.extend({
             this.writeFilesToDisk(files, this, false);
 
             // Rewrites to existing files
-            // Admin Files
-            this.rewriteFile(`${this.webappDir}app/admin/index.ts`,
-                `export * from './admin.route';`,
-                `export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.route';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';
-        export * from './${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service';`
+            this.replaceContent(
+                `${this.webappDir}app/app.module.ts`,
+                'UserRouteAccessService } from \'./shared\';',
+                `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`,
+                'false'
             );
-
-            // Misc. Files
-            this.rewriteFile(`${this.webappDir}app/shared/index.ts`, `export * from './auth/user-route-access-service';`, `export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`);
-            this.replaceContent(`${this.webappDir}app/app.module.ts`, `UserRouteAccessService } from './shared';`, `UserRouteAccessService, ${this.tenantNameUpperFirst}RouteAccessService } from './shared';`, 'false');
-            this.rewriteFile(`${this.webappDir}app/app.module.ts`, `customHttpProvider(),`, `${this.tenantNameUpperFirst}RouteAccessService,`);
-
-            this.rewriteFile(`${this.webappDir}app/layouts/navbar/navbar.component.html`,
+            this.rewriteFile(
+                `${this.webappDir}app/app.module.ts`,
+                'customHttpProvider(),',
+                `${this.tenantNameUpperFirst}RouteAccessService,`
+            );
+            this.rewriteFile(
+                `${this.webappDir}app/shared/index.ts`,
+                'export * from \'./auth/user-route-access-service\';',
+                `export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`
+            );
+            this.rewriteFile(
+                `${this.webappDir}app/admin/index.ts`,
+                'export * from \'./admin.route\';',
+                partialFiles.angular.appAdminIndexTs(this)
+            );
+            this.rewriteFile(
+                `${this.webappDir}app/layouts/navbar/navbar.component.html`,
                 'jhipster-needle-add-element-to-admin-menu',
-                `<li [hidden]="has${this.tenantNameUpperFirst}()">
-                        <a class="dropdown-item" routerLink="${this.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
-                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.admin.${this.tenantNameLowerFirst}-management">${this.tenantNameUpperFirst} Management</span>
-                        </a>
-                    </li>`
+                partialFiles.angular.appLayoutsNavbarComponentHtml(this)
             );
-
-            this.rewriteFile(`${this.webappDir}app/layouts/navbar/navbar.component.ts`,
-                `getImageUrl() {`,
-                `has${this.tenantNameUpperFirst}() {
-            return this.principal.get${this.tenantNameUpperFirst}() ? true : false;
-        }`
+            this.rewriteFile(
+                `${this.webappDir}app/layouts/navbar/navbar.component.ts`,
+                'getImageUrl() {',
+                partialFiles.angular.appLayoutsNavbarComponentTs(this)
             );
-
-            this.rewriteFile(`${this.webappDir}app/shared/auth/principal.service.ts`,
-                `getImageUrl(): String {`,
-                `get${this.tenantNameUpperFirst}(): String {
-        return this.isIdentityResolved() ? this.userIdentity.${this.tenantNameLowerFirst} : null;
-    }\n`
+            this.rewriteFile(
+                `${this.webappDir}app/shared/auth/principal.service.ts`,
+                'getImageUrl(): String {',
+                partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
-
-            // UI tests
-            this.rewriteFile(`${this.clientTestDir}e2e/admin/administration.spec.ts`,
-                `it('should load metrics', () => {`,
-                `it('should load ${this.tenantNameLowerFirst} management', () => {
-        navBarPage.clickOnAdmin("${this.tenantNameLowerFirst}-management");
-        const expect1 = /${this.tenantNameLowerFirst}Management.home.title/;
-        element.all(by.css('h2 span')).first().getAttribute('jhiTranslate').then((value) => {
-            expect(value).toMatch(expect1);
-        });
-    });\n`
+            this.rewriteFile(
+                `${this.clientTestDir}e2e/admin/administration.spec.ts`,
+                'it(\'should load metrics\', () => {',
+                partialFiles.angular.e2eAdminSpecTs(this)
             );
         },
         // makes the necessary changes to the i18n files and adds files for tenant management
