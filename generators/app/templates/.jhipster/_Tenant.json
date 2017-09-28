@@ -23,5 +23,6 @@
     "dto": "no",
     "service": "serviceClass",
     "entityTableName": "<%= tenantNameLowerFirst %>",
-    "pagination": "pagination"
+    "pagination": "pagination",
+    "jpaMetamodelFiltering": false    
 }
