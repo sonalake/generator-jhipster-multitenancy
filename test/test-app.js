@@ -6,7 +6,7 @@ const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
 describe('JHipster generator multitenancy', () => {
-    describe('Test with Maven and Angular2', () => {
+    describe('Test with Maven and AngularX', () => {
         beforeEach((done) => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
