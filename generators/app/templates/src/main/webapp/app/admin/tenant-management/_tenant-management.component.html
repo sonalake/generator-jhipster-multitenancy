@@ -18,7 +18,7 @@
 -%>
 <div>
     <h2>
-        <span jhiTranslate="<%= tenantNameLowerFirst %>Management.home.title">tenantNamePluralUpperFirst</span>
+        <span jhiTranslate="<%= tenantNameLowerFirst %>Management.home.title"><%= tenantNamePluralUpperFirst %></span>
         <button class="btn btn-primary float-right jh-create-entity create-<%= tenantNameLowerFirst %>" [routerLink]="['/', { outlets: { popup: ['<%= tenantNameLowerFirst %>-management-new'] } }]">
             <span class="fa fa-plus"></span>
             <span  jhiTranslate="<%= tenantNameLowerFirst %>Management.home.createLabel">
