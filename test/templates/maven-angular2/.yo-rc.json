@@ -22,7 +22,7 @@
     "buildTool": "maven",
     "enableSocialSignIn": false,
     "jwtSecretKey": "0dd28f2f65d1860f1068b9fbefb3973c54f22f7a",
-    "clientFramework": "angular2",
+    "clientFramework": "angularx",
     "useSass": false,
     "clientPackageManager": "yarn",
     "applicationType": "monolith",
