@@ -18,6 +18,11 @@
 -%>
 import { browser, element, by, $ } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
+<%_
+let elementGetter = `getText()`;
+if (enableTranslation) {
+    elementGetter = `getAttribute('jhiTranslate')`;
+} _%>
 
 describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
 
@@ -43,7 +48,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         <%_ if (enableTranslation) { _%>
         expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/<%= tenantNameLowerFirst %>Management.home.createLabel/);
         <%_ } else { _%>
-        expect(<%= entityInstance %>DialogPage.getModalTitle()).toMatch(/Create new <%= tenantNameUpperFirst %>/);
+        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/Create new <%= tenantNameUpperFirst %>/);
         <%_ } _%>
         <%= tenantNameLowerFirst %>MgmtDialogPage.close();
     });
@@ -70,7 +75,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponentsPage {
     }
 
     getTitle() {
-        return this.title.getAttribute('jhiTranslate');
+        return this.title.<%- elementGetter %>;
     }
 }
 
@@ -81,7 +86,7 @@ export class <%= tenantNameUpperFirst %>MgmtDialogPage {
     nameInput = element(by.css('input#field_name'));
 
     getModalTitle() {
-        return this.modalTitle.getAttribute('jhiTranslate');
+        return this.modalTitle.<%- elementGetter %>;
     }
 
     setNameInput = function (name) {
