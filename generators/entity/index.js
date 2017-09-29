@@ -69,7 +69,7 @@ module.exports = JhipsterGenerator.extend({
                     message: `Do you want to tenantise the entity ${this.options.name}?`
                 },
                 {
-                    when: (p) => p.continue === true && this.options.name === undefined,
+                    when: p => p.continue === true && this.options.name === undefined,
                     type: 'input',
                     name: 'entity',
                     message: 'Name the entity you wish to tenantise.'
@@ -106,7 +106,7 @@ module.exports = JhipsterGenerator.extend({
                         }
                         if (this.isValid) {
                             // get entity json config
-                            this.tenantName = this.config.get('tenantName')
+                            this.tenantName = this.config.get('tenantName');
                             this.relationships = this.entityJson.relationships;
                             // if any relationship exisits already in the entity to the tenant remove it and regenerated
                             for (let i = this.relationships.length - 1; i >= 0; i--) {

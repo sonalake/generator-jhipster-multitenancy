@@ -8,6 +8,20 @@ const it = require('mocha').it;
 
 describe('Multitenancy sub generator', () => {
     describe('Given name argument', () => {
+        describe('jhipster-multitenancy module not installed', () => {
+            it('throws error as multitenancy module not installed', () => {
+                helpers
+                    .run(path.join(__dirname, '../generators/entity'))
+                    .withOptions({
+                        testmode: true
+                    })
+                    .withArguments(['foo'])
+                    .on('error', (e) => {
+                        const errorMsg = `${e} `;
+                        assert.equal(true, errorMsg.indexOf(`${chalk.red.bold('ERROR!')} Please run the Multitenancy generator first`) >= 0);
+                    });
+            });
+        });
         describe('jhipster-multitenancy module installed', () => {
             it('throws an error as entity doesn\'t exist', () => {
                 helpers
