@@ -9,7 +9,7 @@ const it = require('mocha').it;
 describe('Multitenancy sub generator', () => {
     describe('Given name argument', () => {
         describe('jhipster-multitenancy module installed', () => {
-            it.only('throws an error as entity doesn\'t exist', () => {
+            it('throws an error as entity doesn\'t exist', () => {
                 helpers
                     .run(path.join(__dirname, '../generators/entity'))
                     .inTmpDir((dir) => {
