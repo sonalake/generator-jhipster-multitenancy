@@ -38,7 +38,7 @@ describe('Multitenancy sub generator', () => {
                         assert.equal(true, errorMsg.indexOf(chalk.yellow(`Entity ${chalk.bold('foo')} doesn't exist. Please generate using yo jhipster:entity foo`)) >= 0);
                     });
             });
-            it.only('throws an error as entity already has tenant relationship', () => {
+            it('throws an error as entity already has tenant relationship', () => {
                 helpers
                     .run(path.join(__dirname, '../generators/entity'))
                     .inTmpDir((dir) => {

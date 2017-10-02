@@ -18,9 +18,6 @@ describe('JHipster generator multitenancy', () => {
                 .withOptions({
                     testmode: true
                 })
-                .withPrompts({
-                    message: 'simple message to say hello'
-                })
                 .on('end', done);
         });
 
@@ -58,9 +55,6 @@ describe('JHipster generator multitenancy', () => {
                 .withOptions({
                     testmode: true
                 })
-                .withPrompts({
-                    message: 'simple message to say hello'
-                })
                 .on('end', done);
         });
 
@@ -85,6 +79,43 @@ describe('JHipster generator multitenancy', () => {
             expectedFiles.updatedFiles.forEach((file)=>{
                 assert.fileContent(file, /(c|C)ompany/);
             });
+        });
+    });
+
+    describe('Test with Maven and Angularjs', () => {
+        it('throws an error when using angularjs', () => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/maven-angularjs'), dir);
+                })
+                .withOptions({
+                    testmode: true
+                })
+                .on('error', (e) => {
+                    const errorMsg = `${e} `;
+                    assert.equal(true, errorMsg.indexOf('This module currently only supports Angular 4+') >= 0);
+                });
+        });
+    });
+
+    describe('Test with disabled translation', () => {
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/i18nDisabled'), dir);
+                })
+                .withOptions({
+                    testmode: true
+                })
+                .on('end', done);
+        });
+
+        it('doesn\'t update i18n files', () => {
+            //UI
+            assert.noFile(expectedFiles.i18nNew);
+            assert.noFile('src/main/webapp/i18n/en/global.json');
         });
     });
 });
