@@ -44,24 +44,19 @@ module.exports = JhipsterGenerator.extend({
                 this.pkType = 'Long';
             }
         },
-        // display the logo and greeting
-        displayLogo() {
-            this.log('\n');
-            this.log(`${chalk.green('        ██╗')}${chalk.red(' ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗')}`);
-            this.log(`${chalk.green('        ██║')}${chalk.red(' ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗')}`);
-            this.log(`${chalk.green('        ██║')}${chalk.red(' ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝')}`);
-            this.log(`${chalk.green('  ██╗   ██║')}${chalk.red(' ██╔═══██║    ██║    ██╔════╝   ╚═══██╗    ██║    ██╔═══╝   ██╔══██║')}`);
-            this.log(`${chalk.green('  ╚██████╔╝')}${chalk.red(' ██║   ██║ ████████╗ ██║       ██████╔╝    ██║    ████████╗ ██║  ╚██╗')}`);
-            this.log(`${chalk.green('   ╚═════╝ ')}${chalk.red(' ╚═╝   ╚═╝ ╚═══════╝ ╚═╝       ╚═════╝     ╚═╝    ╚═══════╝ ╚═╝   ╚═╝')}\n`);
-            this.log(chalk.white.bold('                               Multitenancy Module\n'));
-            this.log(chalk.white('Welcome to the JHipster Multitenancy Generator ') + chalk.yellow(`v${packagejs.version}\n`));
-        },
         // check the jhipster version and display an appropriate warning if needed
         checkJhipster() {
             const jhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
                 this.error(`\nYour generated project used an old JHipster version (${jhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
+            }
+        },
+        // check the jhipster-multitenancy module is already installed
+        checkIfInstalled() {
+            const multitenancyConfig = this.getJhipsterAppConfig('generator-jhipster-multitenancy');
+            if (multitenancyConfig !== false) {
+                this.error('\nThis module is already installed.\n');
             }
         },
         // checks that the project is compatible with this generator
@@ -75,11 +70,18 @@ module.exports = JhipsterGenerator.extend({
             if (_.toLower(this.clientFramework) !== 'angularx') {
                 this.error('This module currently only supports Angular 4+\n');
             }
-
-            // validate project has the user management
-            if (this.skipUserManagement) {
-                this.error('This module depends on the user management to have been generated\n');
-            }
+        },
+        // display the logo and greeting
+        displayLogo() {
+            this.log('\n');
+            this.log(`${chalk.green('        ██╗')}${chalk.red(' ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗')}`);
+            this.log(`${chalk.green('        ██║')}${chalk.red(' ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗')}`);
+            this.log(`${chalk.green('        ██║')}${chalk.red(' ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝')}`);
+            this.log(`${chalk.green('  ██╗   ██║')}${chalk.red(' ██╔═══██║    ██║    ██╔════╝   ╚═══██╗    ██║    ██╔═══╝   ██╔══██║')}`);
+            this.log(`${chalk.green('  ╚██████╔╝')}${chalk.red(' ██║   ██║ ████████╗ ██║       ██████╔╝    ██║    ████████╗ ██║  ╚██╗')}`);
+            this.log(`${chalk.green('   ╚═════╝ ')}${chalk.red(' ╚═╝   ╚═╝ ╚═══════╝ ╚═╝       ╚═════╝     ╚═╝    ╚═══════╝ ╚═╝   ╚═╝')}\n`);
+            this.log(chalk.white.bold('                               Multitenancy Module\n'));
+            this.log(chalk.white('Welcome to the JHipster Multitenancy Generator ') + chalk.yellow(`v${packagejs.version}\n`));
         }
     },
 
@@ -128,7 +130,7 @@ module.exports = JhipsterGenerator.extend({
 
             // template variables
             mtUtils.tenantVariables(this.props.tenantName, this);
-            this.tenantisedEntitesResources = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))\")`;
+            this.tenantisedEntitesResources = `@Before("execution(* ${this.packageName}.web.rest.UserResource.*(..))")`;
             this.mainClass = this.getMainClassName();
             this.changelogDate = this.dateFormatForLiquibase();
         },
