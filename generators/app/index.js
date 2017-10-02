@@ -26,6 +26,7 @@ module.exports = JhipsterGenerator.extend({
             this.angularAppName = this.getAngularAppName();
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
             this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
+            this.protractorTests = this.testFrameworks.indexOf('protractor') !== -1;
 
             // set some appropriate defaults (i.e. what jhipster does)
             if (this.enableTranslation === undefined) {
@@ -168,7 +169,7 @@ module.exports = JhipsterGenerator.extend({
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
             // configs for the template files
-            const files = {
+            let files = {
                 userManagement: [
                     {
                         path: this.angularDir,
@@ -274,18 +275,22 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`
                             }
                         ]
-                    },
-                    {
-                        path: this.clientTestDir,
-                        templates: [
-                            {
-                                file: 'e2e/admin/_tenant-management.spec.ts',
-                                renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
-                            }
-                        ]
-                    },
+                    }
                 ]
             };
+
+            if(this.protractorTests) {
+                files.tests.push({
+                    path: this.clientTestDir,
+                    templates: [
+                        {
+                            file: 'e2e/admin/_tenant-management.spec.ts',
+                            renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
+                        }
+                    ]
+                });
+            }
+
             // parse the templates and write files to the appropriate locations
             this.writeFilesToDisk(files, this, false);
 
@@ -326,11 +331,14 @@ module.exports = JhipsterGenerator.extend({
                 'getImageUrl(): String {',
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
-            this.rewriteFile(
-                `${this.clientTestDir}e2e/admin/administration.spec.ts`,
-                'it(\'should load metrics\', () => {',
-                partialFiles.angular.e2eAdminSpecTs(this)
-            );
+
+            if(this.protractorTests){
+                this.rewriteFile(
+                    `${this.clientTestDir}e2e/admin/administration.spec.ts`,
+                    'it(\'should load metrics\', () => {',
+                    partialFiles.angular.e2eAdminSpecTs(this)
+                );
+            }
         },
         // makes the necessary changes to the i18n files and adds files for tenant management
         generateLanguageFiles() {
