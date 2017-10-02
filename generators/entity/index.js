@@ -15,29 +15,46 @@ util.inherits(JhipsterGenerator, BaseGenerator);
 module.exports = JhipsterGenerator.extend({
     constructor: function (...args) {
         generator.apply(this, args);
-        this.isValid = true;
+
         this.argument('name', {
             type: String,
             required: false,
             description: 'Entity name'
         });
+
+        this.isValid = true;
         this.skipPrompt = false;
-        if (this.options.name == undefined) {
 
-            // if name wasn't passed in check what entity was just generated
-            // if the entity generated was the tenant entity
-            // or check if entity has relationship already
-            this.options.name = this.options.entityConfig.entityTableName;
-            this.entities = this.config.get("tenantisedEntities");
-
-            if ((this.options.name == this.config.get("tenantName"))
-                || (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0)) {
+        const tenantName = _.toLower(this.config.get('tenantName'));
+        if (_.toLower(this.options.name) === tenantName) {
+            this.error('You can\'t select your Tenant entity');
+            this.isValid = false;
+        } else if (this.options.name) {
+            this.name = this.options.name;
+        } else if (this.options.name === undefined && this.options.entityConfig) {
+            // first check if the entityConfig is for the tenant entity
+            if (this.options.entityConfig && _.toLower(this.options.entityConfig.entityClass) === tenantName) {
+                // if so, then just ignore the config, and don't run the generator
                 this.isValid = false;
-                this.log(chalk.green('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
+            } else {
+                this.name = this.options.entityConfig.entityClass;
             }
-        } else {
-            this.skipPrompt = true;
         }
+
+        if (this.name) {
+            // we got a value
+            this.skipPrompt = true;
+            // check that the name hasn't already been done
+            const preTenantisedEntities = this.config.get('tenantisedEntities');
+            if (preTenantisedEntities && preTenantisedEntities.indexOf(this.name) >= 0) {
+                // entity is already tenantised, show warning and skip generator
+                this.log(chalk.green(`Entity ${chalk.bold(this.name)} has been tenantised`));
+                this.isValid = false;
+            }
+        }
+
+        // if we go this far, then we definitely have an entity to update
+        this.options.name = this.name;
     },
     initializing: {
         readConfig() {
@@ -47,11 +64,13 @@ module.exports = JhipsterGenerator.extend({
             }
         },
         displayLogo() {
-            this.log(chalk.white('Running ' + chalk.bold('JHipster Multitenacy:entity') + ' Generator! ' + chalk.yellow('v' + packagejs.version + '\n')));
+            if (this.isValid) {
+                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')} ${chalk.yellow(`v${packagejs.version}`)}\n`);
+            }
         },
         validate() {
-            if (this.config.get("tenantName") == undefined) {
-                this.env.error(chalk.red.bold('ERROR!') + ' Please run the Multitenancy generator first');
+            if (this.config.get('tenantName') === undefined) {
+                this.env.error(`${chalk.red.bold('ERROR!')} Please run the Multitenancy generator first`);
             }
         }
     },
