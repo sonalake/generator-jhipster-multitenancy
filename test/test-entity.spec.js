@@ -11,7 +11,7 @@ describe('Multitenancy sub generator', () => {
         describe('jhipster-multitenancy module not installed', () => {
             it('throws error as multitenancy module not installed', () => {
                 helpers
-                    .run(path.join(__dirname, '../generators/entity'))
+                    .run(path.join(__dirname, '../generators/entity-tenantised'))
                     .withOptions({
                         testmode: true
                     })
@@ -37,6 +37,15 @@ describe('Multitenancy sub generator', () => {
                         const errorMsg = `${e} `;
                         assert.equal(true, errorMsg.indexOf(chalk.yellow(`Entity ${chalk.bold('foo')} doesn't exist. Please generate using yo jhipster:entity foo`)) >= 0);
                     });
+            });
+            it.only('throws an error as entity already has tenant relationship', () => {
+                helpers
+                    .run(path.join(__dirname, '../generators/entity'))
+                    .inTmpDir((dir) => {
+                        fse.copySync(path.join(__dirname, '../test/templates/entity-tenanised'), dir);
+                    })
+                    .withArguments(['foo']);
+                    // 537AUJ8t4X$s
             });
         });
     });
