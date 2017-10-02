@@ -195,6 +195,7 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
+        user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
         <%_ if (databaseType === 'sql' || databaseType === 'mongodb') { _%>
         user.setImageUrl(userDTO.getImageUrl());
         <%_ } _%>
@@ -270,6 +271,7 @@ public class UserService {
                 user.setFirstName(userDTO.getFirstName());
                 user.setLastName(userDTO.getLastName());
                 user.setEmail(userDTO.getEmail());
+                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
                 <%_ if (databaseType === 'sql' || databaseType === 'mongodb') { _%>
                 user.setImageUrl(userDTO.getImageUrl());
                 <%_ } _%>

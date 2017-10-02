@@ -3,6 +3,7 @@ const appLayoutsNavbarComponentHtml = require('./angular/navbar.component.html.j
 const appLayoutsNavbarComponentTs = require('./angular/navbar.component.ts.js');
 const appSharedAuthPrincipalServiceTs = require('./angular/principal.service.ts.js');
 const e2eAdminSpecTs = require('./angular/administration.spec.ts.js');
+const tenantResource = require('./server/_TenantResource.js');
 
 module.exports = {
     angular: {
@@ -11,5 +12,8 @@ module.exports = {
         appLayoutsNavbarComponentTs: appLayoutsNavbarComponentTs.tmpl,
         appSharedAuthPrincipalServiceTs: appSharedAuthPrincipalServiceTs.tmpl,
         e2eAdminSpecTs: e2eAdminSpecTs.tmpl
+    },
+    server: {
+        tenantResource: tenantResource.tmpl
     }
 };
