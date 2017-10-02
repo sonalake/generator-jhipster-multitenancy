@@ -19,7 +19,7 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header">
-        <h4 [hidden]="<%= tenantNameLowerFirst %>.id" class="modal-title" id="my<%= tenantNameUpperFirst %>LabelC" jhiTranslate="<%= tenantNameLowerFirst %>Management.home.createLabel">Create a <%= tenantNameUpperFirst %></h4>
+        <h4 [hidden]="<%= tenantNameLowerFirst %>.id" class="modal-title" id="my<%= tenantNameUpperFirst %>LabelC" jhiTranslate="<%= tenantNameLowerFirst %>Management.home.createLabel">Create new <%= tenantNameUpperFirst %></h4>
         <h4 [hidden]="!<%= tenantNameLowerFirst %>.id" class="modal-title" id="my<%= tenantNameUpperFirst %>LabelE" jhiTranslate="<%= tenantNameLowerFirst %>Management.home.editLabel">Edit a <%= tenantNameUpperFirst %></h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 (click)="clear()">&times;</button>

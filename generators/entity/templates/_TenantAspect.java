@@ -52,15 +52,12 @@ public class <%= tenantNameUpperFirst %>Aspect {
     public void repoMethods() {}
 
     @Around("repoMethods()")
-    public Object foo(ProceedingJoinPoint pjp) throws Throwable {
+    public Object applyFilter(ProceedingJoinPoint pjp) throws Throwable {
         if (requestParam.get<%= tenantNameUpperFirst %>Id() != null) {
             // filter users results if they have a <%= tenantNameUpperFirst %>
             Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
             filter.setParameter(fieldName, requestParam.get<%= tenantNameUpperFirst %>Id());
         }
-        // start stopwatch
-        Object retVal = pjp.proceed();
-        // stop stopwatch
-        return retVal;
+        return pjp.proceed();
     }
 }
