@@ -275,21 +275,19 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `spec/app/admin/${this.tenantNameLowerFirst}-management-detail.component.spec.ts`
                             }
                         ]
+                    },
+                    {
+                        condition: generator => generator.protractorTests,
+                        path: this.clientTestDir,
+                        templates: [
+                            {
+                                file: 'e2e/admin/_tenant-management.spec.ts',
+                                renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
+                            }
+                        ]
                     }
                 ]
             };
-
-            if(this.protractorTests) {
-                files.tests.push({
-                    path: this.clientTestDir,
-                    templates: [
-                        {
-                            file: 'e2e/admin/_tenant-management.spec.ts',
-                            renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
-                        }
-                    ]
-                });
-            }
 
             // parse the templates and write files to the appropriate locations
             this.writeFilesToDisk(files, this, false);
