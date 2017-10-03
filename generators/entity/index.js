@@ -43,7 +43,10 @@ module.exports = JhipsterGenerator.extend({
 
         if (this.name) {
             // we got a value
-            this.skipPrompt = true;
+            if(!this.options.entityConfig){
+                this.skipPrompt = true;
+            }
+
             // check that the name hasn't already been done
             const preTenantisedEntities = this.config.get('tenantisedEntities');
             if (preTenantisedEntities && preTenantisedEntities.indexOf(this.name) >= 0) {
