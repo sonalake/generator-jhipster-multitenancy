@@ -157,10 +157,10 @@ module.exports = JhipsterGenerator.extend({
                             this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
 
                             if (this.entities == undefined) {
-                                this.config.set("tenantisedEntities", [this.options.name]);
+                                this.tenantisedEntities = [this.options.name];
                             } else {
                                 this.entities.push(this.options.name);
-                                this.config.set("tenantisedEntities", this.entities);
+                                this.tenantisedEntities = this.entities;
                             }
                         }
                     }
@@ -174,9 +174,8 @@ module.exports = JhipsterGenerator.extend({
             if (this.isValid) {
                 // read app config from .yo-rc.json
                 mtUtils.readConfig(this.jhipsterAppConfig, this);
-                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;                
-                en = this.config.get("tenantisedEntities");
-                en.forEach((entity) =>  {
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
+                this.tenantisedEntities.forEach((entity) =>  {
                     addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });
@@ -185,7 +184,7 @@ module.exports = JhipsterGenerator.extend({
                 // replace aspect
                
                 /* tenant variables */
-                mtUtils.tenantVariables(this.tenantName, this);                
+                mtUtils.tenantVariables(this.tenantName, this);
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
@@ -203,6 +202,7 @@ module.exports = JhipsterGenerator.extend({
                 'skip-user-management': false,
                 arguments: [this.options.name],
             });
+            this.config.set("tenantisedEntities", this.tenantisedEntities);
         }
     },
     end() {
