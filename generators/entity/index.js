@@ -37,7 +37,7 @@ module.exports = JhipsterGenerator.extend({
                 // if so, then just ignore the config, and don't run the generator
                 this.isValid = false;
             } else {
-                this.name = this.options.entityConfig.entityClass;
+                this.name = _.toLower(this.options.entityConfig.entityClass);
             }
         }
 
@@ -125,7 +125,7 @@ module.exports = JhipsterGenerator.extend({
                     } else {
                         // check if entity has relationship already
                         this.entities = this.config.get("tenantisedEntities");
-                        if (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
+                        if (this.entities != undefined && this.entities.indexOf(_.toLower(this.options.name)) >= 0) {
                             this.isValid = false;
                             this.log(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
                         }
@@ -154,12 +154,12 @@ module.exports = JhipsterGenerator.extend({
                             };
                             this.relationships.push(this.real);
                             this.entityJson.relationships = this.relationships;
-                            this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+                            this.fs.writeJSON(`.jhipster/${_.upperFirst(this.options.name)}.json`, this.entityJson, null, 4);
 
                             if (this.entities == undefined) {
-                                this.tenantisedEntities = [this.options.name];
+                                this.tenantisedEntities = [_.toLower(this.options.name)];
                             } else {
-                                this.entities.push(this.options.name);
+                                this.entities.push(_.toLower(this.options.name));
                                 this.tenantisedEntities = this.entities;
                             }
                         }
@@ -182,7 +182,7 @@ module.exports = JhipsterGenerator.extend({
                 foo = foo.concat(`\")`);
                 this.tenantisedEntitesResources = foo;
                 // replace aspect
-               
+
                 /* tenant variables */
                 mtUtils.tenantVariables(this.tenantName, this);
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
