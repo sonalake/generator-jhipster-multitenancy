@@ -21,7 +21,7 @@ module.exports = JhipsterGenerator.extend({
             required: false,
             description: 'Entity name'
         });
-
+//console.log("-----------------------------",this.options.entityConfig);
         this.isValid = true;
         this.skipPrompt = false;
 
@@ -58,6 +58,8 @@ module.exports = JhipsterGenerator.extend({
 
         // if we go this far, then we definitely have an entity to update
         this.options.name = this.name;
+
+        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^",this.options.name);
     },
     initializing: {
         readConfig() {
@@ -188,6 +190,20 @@ module.exports = JhipsterGenerator.extend({
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
+        },
+        generateClientCode() {
+
+
+            this.rewriteFile(
+                `${this.webappDir}app/entities/${this.options.entityConfig.entityFolderName}/${this.options.name}-detail.component.html`,
+                '</dl>',
+                `<dt><span jhiTranslate="fooApp.${this.options.name}.company">Company</span></dt>
+                 <dd>
+                     <div *ngIf="${this.options.name}.company">
+                         <a [routerLink]="['/company', ${this.options.name}.company?.id]">{{${this.options.name}.company?.id}}</a>
+                     </div>
+                 </dd>`
+            );
         }
     },
     install() {
@@ -196,7 +212,7 @@ module.exports = JhipsterGenerator.extend({
             this.composeWith('jhipster:entity', {
                 regenerate: true,
                 'skip-install': true,
-                'skip-client': false,
+                'skip-client': true,
                 'skip-server': false,
                 'no-fluent-methods': false,
                 'skip-user-management': false,
