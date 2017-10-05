@@ -1,17 +1,46 @@
 {
   "name": "generator-jhipster-multitenancy",
   "version": "0.0.0",
-  "description": "",
+  "description": "JHipster module to add multitenancy to an application",
   "keywords": [
     "yeoman-generator",
+    "Java",
+    "Spring",
+    "Spring Boot",
+    "Spring Security",
+    "JPA",
+    "Angular",
+    "Tenant",
+    "Multitenancy",
     "jhipster-module"
   ],
-  "homepage": "https://github.com/mairead_mccabe/generator-jhipster-multitenancy",
-  "author": {
-    "name": "Mairead McCabe",
-    "email": "mairead.mccabe@sonalake.com",
-    "url": "https://bitbucket.org/jduggan_sonalake/"
+  "homepage": "https://github.com/sonalake/generator-jhipster-multitenancy",
+  "bugs": {
+    "url": "https://github.com/sonalake/generator-jhipster-multitenancy/issues"
   },
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Jonathan Duggan",
+      "email": "jonathan.duggan@sonalake.com",
+      "url": "https://bitbucket.org/jduggan_sonalake/"
+    },
+    {
+      "name": "Mairead McCabe",
+      "email": "mairead.mccabe@sonalake.com",
+      "url": "https://bitbucket.org/mairead_mccabe/"
+    },
+    {
+      "name": "Gordon McGuire",
+      "email": "gordon.mcguire@sonalake.com",
+      "url": "https://bitbucket.org/gordon_mcguire/"
+    },
+    {
+      "name": "Alessia Ioria",
+      "email": "alessia.iorio@sonalake.com",
+      "url": "https://bitbucket.org/ale7/"
+    }
+  ],
   "files": [
     "generators"
   ],
@@ -20,15 +49,18 @@
     "type": "git",
     "url": "git+https://github.com/mairead_mccabe/generator-jhipster-multitenancy.git"
   },
+  "scripts": {
+    "test": "mocha test/*"
+  },
   "dependencies": {
     "chalk": "1.1.3",
     "generator-jhipster": ">=4.7.0",
+    "lodash": "^4.17.4",
     "mkdirp": "0.5.1",
+    "pluralize": "^6.0.0",
     "semver": "5.3.0",
     "shelljs": "0.5.3",
-    "yeoman-generator": "1.1.1",
-    "lodash": "^4.17.4",
-    "pluralize": "^6.0.0"
+    "yeoman-generator": "1.1.1"
   },
   "devDependencies": {
     "eslint": "3.17.1",
@@ -50,10 +82,8 @@
     "yeoman-assert": "3.0.0",
     "yeoman-test": "1.6.0"
   },
-  "scripts": {
-    "test": "mocha test/*"
-  },
-  "bugs": {
-    "url": "https://github.com/mairead_mccabe/generator-jhipster-multitenancy/issues"
+  "engines": {
+    "node": ">=6.9.0",
+    "npm": ">=2.14.2"
   }
 }
