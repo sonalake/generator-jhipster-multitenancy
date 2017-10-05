@@ -10,7 +10,7 @@
 
 # Introduction
 
-This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application. This module is used to:
+This is a [JHipster](http://jhipster.github.io/) module, that is intended to be applied to a JHipster application. This module is used to:
 
 - Generate a Tenant entity and a relationship to the User entity
 - Tenantise existing entities
