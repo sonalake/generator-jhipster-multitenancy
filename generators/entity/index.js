@@ -37,13 +37,16 @@ module.exports = JhipsterGenerator.extend({
                 // if so, then just ignore the config, and don't run the generator
                 this.isValid = false;
             } else {
-                this.name = this.options.entityConfig.entityClass;
+                this.name = _.toLower(this.options.entityConfig.entityClass);
             }
         }
 
         if (this.name) {
             // we got a value
-            this.skipPrompt = true;
+            if(!this.options.entityConfig){
+                this.skipPrompt = true;
+            }
+
             // check that the name hasn't already been done
             const preTenantisedEntities = this.config.get('tenantisedEntities');
             if (preTenantisedEntities && preTenantisedEntities.indexOf(this.name) >= 0) {
@@ -122,7 +125,7 @@ module.exports = JhipsterGenerator.extend({
                     } else {
                         // check if entity has relationship already
                         this.entities = this.config.get("tenantisedEntities");
-                        if (this.entities != undefined && this.entities.indexOf(this.options.name) >= 0) {
+                        if (this.entities != undefined && this.entities.indexOf(_.toLower(this.options.name)) >= 0) {
                             this.isValid = false;
                             this.log(chalk.yellow('Entity ' + chalk.bold(this.options.name) + ' has been tenantised'));
                         }
@@ -151,13 +154,13 @@ module.exports = JhipsterGenerator.extend({
                             };
                             this.relationships.push(this.real);
                             this.entityJson.relationships = this.relationships;
-                            this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+                            this.fs.writeJSON(`.jhipster/${_.upperFirst(this.options.name)}.json`, this.entityJson, null, 4);
 
                             if (this.entities == undefined) {
-                                this.config.set("tenantisedEntities", [this.options.name]);
+                                this.tenantisedEntities = [_.toLower(this.options.name)];
                             } else {
-                                this.entities.push(this.options.name);
-                                this.config.set("tenantisedEntities", this.entities);
+                                this.entities.push(_.toLower(this.options.name));
+                                this.tenantisedEntities = this.entities;
                             }
                         }
                     }
@@ -171,18 +174,17 @@ module.exports = JhipsterGenerator.extend({
             if (this.isValid) {
                 // read app config from .yo-rc.json
                 mtUtils.readConfig(this.jhipsterAppConfig, this);
-                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;                
-                en = this.config.get("tenantisedEntities");
-                en.forEach((entity) =>  {
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
+                this.tenantisedEntities.forEach((entity) =>  {
                     addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });
                 foo = foo.concat(`\")`);
                 this.tenantisedEntitesResources = foo;
                 // replace aspect
-               
+
                 /* tenant variables */
-                mtUtils.tenantVariables(this.tenantName, this);                
+                mtUtils.tenantVariables(this.tenantName, this);
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
@@ -200,6 +202,7 @@ module.exports = JhipsterGenerator.extend({
                 'skip-user-management': false,
                 arguments: [this.options.name],
             });
+            this.config.set("tenantisedEntities", this.tenantisedEntities);
         }
     },
     end() {
