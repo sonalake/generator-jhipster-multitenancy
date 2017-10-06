@@ -13,28 +13,49 @@ util.inherits(JhipsterGenerator, BaseGenerator);
 module.exports = JhipsterGenerator.extend({
     constructor: function (...args) {
         generator.apply(this, args);
-        this.isValid = true;
+
         this.argument('name', {
             type: String,
             required: false,
             description: 'Entity name'
         });
-        this.skipPrompt = false;
-        if (this.options.name === undefined) {
-            // if name wasn't passed in check what entity was just generated
-            // if the entity generated was the tenant entity
-            // or check if entity has relationship already
-            this.options.name = this.options.entityConfig.entityTableName;
-            this.entities = this.config.get('tenantisedEntities');
 
-            if ((this.options.name === this.config.get('tenantName'))
-                || (this.entities !== undefined && this.entities.indexOf(this.options.name) >= 0)) {
+        this.isValid = true;
+        this.skipPrompt = false;
+
+        const tenantName = _.toLower(this.config.get('tenantName'));
+        if (_.toLower(this.options.name) === tenantName) {
+            this.error('You can\'t select your Tenant entity');
+            this.isValid = false;
+        } else if (this.options.name) {
+            this.name = this.options.name;
+        } else if (this.options.name === undefined && this.options.entityConfig) {
+            // first check if the entityConfig is for the tenant entity
+            if (this.options.entityConfig && _.toLower(this.options.entityConfig.entityClass) === tenantName) {
+                // if so, then just ignore the config, and don't run the generator
                 this.isValid = false;
-                this.log(chalk.green(`Entity ${chalk.bold(this.options.name)} has been tenantised`));
+            } else {
+                this.name = _.toLower(this.options.entityConfig.entityClass);
             }
-        } else {
-            this.skipPrompt = true;
         }
+
+        if (this.name) {
+            // we got a value
+            if(!this.options.entityConfig){
+                this.skipPrompt = true;
+            }
+
+            // check that the name hasn't already been done
+            const preTenantisedEntities = this.config.get('tenantisedEntities');
+            if (preTenantisedEntities && preTenantisedEntities.indexOf(this.name) >= 0) {
+                // entity is already tenantised, show warning and skip generator
+                this.log(chalk.green(`Entity ${chalk.bold(this.name)} has been tenantised`));
+                this.isValid = false;
+            }
+        }
+
+        // if we go this far, then we definitely have an entity to update
+        this.options.name = this.name;
     },
     initializing: {
         readConfig() {
@@ -44,7 +65,9 @@ module.exports = JhipsterGenerator.extend({
             }
         },
         displayLogo() {
-            this.log(chalk.white(`Running ${chalk.bold('JHipster Multitenacy:entity')} Generator! ${chalk.yellow(`v ${packagejs.version}\n`)}`));
+            if (this.isValid) {
+                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')} ${chalk.yellow(`v${packagejs.version}`)}\n`);
+            }
         },
         validate() {
             if (this.config.get('tenantName') === undefined) {
@@ -99,8 +122,8 @@ module.exports = JhipsterGenerator.extend({
                         this.error(chalk.yellow(`Entity ${chalk.bold(this.options.name)} doesn't exist. Please generate using yo jhipster:entity ${this.options.name}`));
                     } else {
                         // check if entity has relationship already
-                        this.entities = this.config.get('tenantisedEntities');
-                        if (this.entities !== undefined && this.entities.indexOf(this.options.name) >= 0) {
+                        this.entities = this.config.get("tenantisedEntities");
+                        if (this.entities != undefined && this.entities.indexOf(_.toLower(this.options.name)) >= 0) {
                             this.isValid = false;
                             this.log(chalk.yellow(`Entity ${chalk.bold(this.options.name)} has been tenantised`));
                         }
@@ -129,13 +152,13 @@ module.exports = JhipsterGenerator.extend({
                             };
                             this.relationships.push(this.real);
                             this.entityJson.relationships = this.relationships;
-                            this.fs.writeJSON(`.jhipster/${this.options.name}.json`, this.entityJson, null, 4);
+                            this.fs.writeJSON(`.jhipster/${_.upperFirst(this.options.name)}.json`, this.entityJson, null, 4);
 
-                            if (this.entities === undefined) {
-                                this.config.set('tenantisedEntities', [this.options.name]);
+                            if (this.entities == undefined) {
+                                this.tenantisedEntities = [_.toLower(this.options.name)];
                             } else {
-                                this.entities.push(this.options.name);
-                                this.config.set('tenantisedEntities', this.entities);
+                                this.entities.push(_.toLower(this.options.name));
+                                this.tenantisedEntities = this.entities;
                             }
                         }
                     }
@@ -149,16 +172,17 @@ module.exports = JhipsterGenerator.extend({
             if (this.isValid) {
                 // read app config from .yo-rc.json
                 mtUtils.readConfig(this.jhipsterAppConfig, this);
-                let foo = `@Before("execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
-                const en = this.config.get('tenantisedEntities');
-                en.forEach((entity) => {
-                    const addEntity = ` || execution(* ${this.packageName}.web.rest.${_.upperFirst(entity)}Resource.*(..))`;
+                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
+                this.tenantisedEntities.forEach((entity) =>  {
+                    addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
                     foo = foo.concat(addEntity);
                 });
                 foo = foo.concat('")');
                 this.tenantisedEntitesResources = foo;
+                // replace aspect
+
                 /* tenant variables */
-                mtUtils.tenantVariables(this.tenantName, this);                
+                mtUtils.tenantVariables(this.tenantName, this);
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
@@ -176,6 +200,7 @@ module.exports = JhipsterGenerator.extend({
                 'skip-user-management': false,
                 arguments: [this.options.name],
             });
+            this.config.set("tenantisedEntities", this.tenantisedEntities);
         }
     },
     end() {
