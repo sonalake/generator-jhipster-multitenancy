@@ -380,9 +380,10 @@ module.exports = JhipsterGenerator.extend({
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
             this.tenantNameLowerFirst+'Service.delete(id);',
             partialFiles.server.tenantResource(this));
-            
+
         this.log(chalk.green('\nTenant entity generated successfully.'));
-        this.log(chalk.white.bold('Your application now supports multitenancy.\n'));
-        this.log(chalk.yellow('To tenantise existing entities use: yo jhipster-multitenancy foo\nAll new entities can be tenantised with a post entity creation hook: yo jhipster:entity foo\n'));
+        this.log(chalk.green('Your application now supports multitenancy.\n'));
+        this.log(chalk.green('To tenantise existing entities use: ') + chalk.yellow('yo jhipster-multitenancy foo'));
+        this.log(chalk.green('All new entities can be tenantised on entity creation using: ') + chalk.yellow('yo jhipster:entity foo\n'));
     }
 });
