@@ -57,8 +57,7 @@ module.exports = JhipsterGenerator.extend({
         checkIfInstalled() {
             const multitenancyConfig = this.getJhipsterAppConfig('generator-jhipster-multitenancy');
             if (multitenancyConfig !== false) {
-                this.error('\nThis module is already installed.\n'+
-                           chalk.white.bold('To tenantise an entity run yo jhipster-multitenancy:entity\n'));
+                this.error('\nThis module is already installed.\n');
             }
         },
         // checks that the project is compatible with this generator
@@ -384,5 +383,6 @@ module.exports = JhipsterGenerator.extend({
             
         this.log(chalk.green('\nTenant entity generated successfully.'));
         this.log(chalk.white.bold('Your application now supports multitenancy.\n'));
+        this.log(chalk.yellow('To tenantise existing entities use: yo jhipster-multitenancy foo\nAll new entities can be tenantised with a post entity creation hook: yo jhipster:entity foo\n'));
     }
 });
