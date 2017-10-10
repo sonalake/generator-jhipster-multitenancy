@@ -383,5 +383,6 @@ module.exports = JhipsterGenerator.extend({
             
         this.log(chalk.green('\nTenant entity generated successfully.'));
         this.log(chalk.white.bold('Your application now supports multitenancy.\n'));
+        this.log(chalk.yellow('To tenantise existing entities use: yo jhipster-multitenancy foo\nAll new entities can be tenantised with a post entity creation hook: yo jhipster:entity foo\n'));
     }
 });
