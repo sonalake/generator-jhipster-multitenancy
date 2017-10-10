@@ -39,6 +39,9 @@
       ]
     },
     "generator-jhipster-multitenancy": {
-      "tenantName": "company"
+      "tenantName": "company",
+      "tenantisedEntities": [
+        "ent"
+      ]
     }
   }

@@ -56,8 +56,8 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/shared/auth/company-route-access-service.ts`
     ],
     tests: [
-        `${CLIENT_TEST_SRC_DIR}e2e/admin/company-management.spec.ts`,
-        `${CLIENT_TEST_SRC_DIR}spec/app/admin/company-management-detail.component.spec.ts`
+        `${CLIENT_TEST_SRC_DIR}spec/app/admin/company-management-detail.component.spec.ts`,
+        `${CLIENT_TEST_SRC_DIR}e2e/admin/company-management.spec.ts`
     ],
     updatedFiles: [
         `${CLIENT_MAIN_SRC_DIR}app/admin/index.ts`,
@@ -68,6 +68,14 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/shared/index.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/admin/administration.spec.ts`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/global.json`
+    ],
+    entityFiles: [
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-dialog.component.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-detail.component.html`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-dialog.component.html`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent.model.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent.component.html`,
+        `${CLIENT_MAIN_SRC_DIR}i18n/en/ent.json`
     ]
 };
 

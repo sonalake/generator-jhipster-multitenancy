@@ -6,6 +6,8 @@ const chalk = require('chalk');
 const describe = require('mocha').describe;
 const it = require('mocha').it;
 
+const expectedFiles = require('./utils/expected-files');
+
 describe('Multitenancy sub generator', () => {
     describe('Given name argument', () => {
         describe('jhipster-multitenancy module not installed', () => {
@@ -42,10 +44,32 @@ describe('Multitenancy sub generator', () => {
                 helpers
                     .run(path.join(__dirname, '../generators/entity'))
                     .inTmpDir((dir) => {
-                        fse.copySync(path.join(__dirname, '../test/templates/entity-tenanised'), dir);
+                        fse.copySync(path.join(__dirname, '../test/templates/entity-tenantised'), dir);
                     })
-                    .withArguments(['foo']);
-                    // 537AUJ8t4X$s
+                    .withArguments(['ent'])
+                    .on('error', (e) => {
+                        const errorMsg = `${e} `;
+                        assert.equal(true, errorMsg.indexOf(`Entity ${chalk.bold(this.options.name)} has been tenantised`) >= 0);
+                    });
+            });
+        });
+    });
+
+    describe('Test tenantise entity', () => {
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/entity'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/entity-not-tenantised'), dir);
+                })
+                .withArguments(['ent'])
+                .on('end', done);
+        });
+
+        it('updates files', () => {
+            //UI
+            expectedFiles.entityFiles.forEach((file)=>{
+                assert.fileContent(file, /(c|C)ompany/);
             });
         });
     });

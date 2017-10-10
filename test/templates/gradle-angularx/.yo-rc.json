@@ -26,7 +26,11 @@
         "useSass": false,
         "clientPackageManager": "yarn",
         "applicationType": "monolith",
-        "testFrameworks": [],
+        "testFrameworks": [
+            "gatling",
+            "cucumber",
+            "protractor"
+        ],
         "jhiPrefix": "jhi",
         "enableTranslation": true,
         "nativeLanguage": "en",

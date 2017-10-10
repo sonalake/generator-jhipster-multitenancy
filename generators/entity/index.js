@@ -291,7 +291,7 @@ module.exports = JhipsterGenerator.extend({
     install() {
         if (this.options.name !== undefined && this.isValid) {
             // regenerate the tenant-ised entity
-            this.composeWith('jhipster:entity', {
+            this.composeWith(require.resolve('generator-jhipster/generators/entity'), {
                 regenerate: true,
                 'skip-install': true,
                 'skip-client': true,

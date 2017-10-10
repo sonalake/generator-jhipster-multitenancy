@@ -99,12 +99,12 @@ describe('JHipster generator multitenancy', () => {
         });
     });
 
-    describe('Test with disabled translation', () => {
+    describe('Test with some disabled options', () => {
         beforeEach((done) => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/i18nDisabled'), dir);
+                    fse.copySync(path.join(__dirname, '../test/templates/disabledOptions'), dir);
                 })
                 .withOptions({
                     testmode: true
@@ -116,6 +116,11 @@ describe('JHipster generator multitenancy', () => {
             //UI
             assert.noFile(expectedFiles.i18nNew);
             assert.noFile('src/main/webapp/i18n/en/global.json');
+        });
+
+        it('doesn\'t create protractor test files', () => {
+            //UI
+            assert.noFile('src/test/javascript/e2e/admin/company-management.spec.ts');
         });
     });
 });
