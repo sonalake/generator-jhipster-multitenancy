@@ -22,23 +22,20 @@
   "contributors": [
     {
       "name": "Jonathan Duggan",
-      "email": "jonathan.duggan@sonalake.com",
-      "url": "https://bitbucket.org/jduggan_sonalake/"
+      "email": "jonathan.duggan@sonalake.com"
     },
     {
       "name": "Mairead McCabe",
-      "email": "mairead.mccabe@sonalake.com",
-      "url": "https://bitbucket.org/mairead_mccabe/"
+      "email": "mairead.mccabe@sonalake.com"
     },
     {
       "name": "Gordon McGuire",
       "email": "gordon.mcguire@sonalake.com",
-      "url": "https://bitbucket.org/gordon_mcguire/"
+      "url": "https://github.com/gordonmcg"
     },
     {
-      "name": "Alessia Ioria",
-      "email": "alessia.iorio@sonalake.com",
-      "url": "https://bitbucket.org/ale7/"
+      "name": "Alessia Iorio",
+      "email": "alessia.iorio@sonalake.com"
     }
   ],
   "files": [
