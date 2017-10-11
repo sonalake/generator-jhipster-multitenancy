@@ -7,8 +7,8 @@ describe('Multitenancy Utils Methods', () => {
     describe('readConfig', () => {
         describe('when called', () => {
             it('returns config variables in context', () => {
-                assert.file('test/templates/maven-angularx/.yo-rc.json');
-                fs.readFile('test/templates/maven-angularx/.yo-rc.json', 'utf8', function (err, data) {
+                assert.file('test/templates/mainGen/maven-angularx/.yo-rc.json');
+                fs.readFile('test/templates/mainGen/maven-angularx/.yo-rc.json', 'utf8', function (err, data) {
                     if (err) throw err;
                     config = JSON.parse(data);
                     mtUtils.readConfig(config, this);

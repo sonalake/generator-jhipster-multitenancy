@@ -7,95 +7,134 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base').pr
 
 const expectedFiles = require('./utils/expected-files');
 
+checkTenantisedFiles = function () {
+    it('generates files', () => {
+        //UI
+        assert.file(expectedFiles.companyManagement);
+        assert.file(expectedFiles.userManagement);
+        assert.file(expectedFiles.admin);
+        assert.file(expectedFiles.shared);
+        assert.file(expectedFiles.tests);
+        assert.file(expectedFiles.i18nNew);
+
+        //server
+        assert.file(expectedFiles.server);
+
+        //database
+        assert.file('src/main/resources/config/liquibase/changelog/'+BaseGenerator.dateFormatForLiquibase()+'__user_Company_constraints.xml');
+    });
+
+    it('updates files', () => {
+        //UI
+        expectedFiles.updatedFiles.forEach((file)=>{
+            assert.fileContent(file, /(c|C)ompany/);
+        });
+    });
+}
+
 describe('JHipster generator multitenancy', () => {
     describe('Test with Maven and AngularX', () => {
         beforeEach((done) => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/maven-angularx'), dir);
-                })
-                .withOptions({
-                    testmode: true
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/maven-angularx'), dir);
                 })
                 .on('end', done);
         });
 
-        it('generates files', () => {
-            //UI
-            assert.file(expectedFiles.companyManagement);
-            assert.file(expectedFiles.userManagement);
-            assert.file(expectedFiles.admin);
-            assert.file(expectedFiles.shared);
-            assert.file(expectedFiles.tests);
-            assert.file(expectedFiles.i18nNew);
-
-            //server
-            assert.file(expectedFiles.server);
-
-            //database
-            assert.file('src/main/resources/config/liquibase/changelog/'+BaseGenerator.dateFormatForLiquibase()+'__user_Company_constraints.xml');
-        });
-
-        it('updates files', () => {
-            //UI
-            expectedFiles.updatedFiles.forEach((file)=>{
-                assert.fileContent(file, /(c|C)ompany/);
-            });
-        });
+        checkTenantisedFiles();
     });
 
-    describe('Test with Gradle and AngularX', () => {
+    describe('Test with hazelcast cache', () => {
         beforeEach((done) => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/gradle-angularx'), dir);
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/hazelcastCache'), dir);
                 })
-                .withOptions({
-                    testmode: true
+                .on('end', done);
+        });
+        checkTenantisedFiles();
+    });
+
+    describe('Test with no cache', () => {
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/noCache'), dir);
                 })
                 .on('end', done);
         });
 
-        it('generates files', () => {
-            //UI
-            assert.file(expectedFiles.companyManagement);
-            assert.file(expectedFiles.userManagement);
-            assert.file(expectedFiles.admin);
-            assert.file(expectedFiles.shared);
-            assert.file(expectedFiles.tests);
-            assert.file(expectedFiles.i18nNew);
-
-            //server
-            assert.file(expectedFiles.server);
-
-            //database
-            assert.file('src/main/resources/config/liquibase/changelog/'+BaseGenerator.dateFormatForLiquibase()+'__user_Company_constraints.xml');
-        });
-
-        it('updates files', () => {
-            //UI
-            expectedFiles.updatedFiles.forEach((file)=>{
-                assert.fileContent(file, /(c|C)ompany/);
-            });
-        });
+        checkTenantisedFiles();
     });
 
-    describe('Test with Maven and Angularjs', () => {
-        it('throws an error when using angularjs', () => {
+    describe('Test with social login enabled', () => {
+        beforeEach((done) => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/maven-angularjs'), dir);
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/socialLogin'), dir);
                 })
-                .withOptions({
-                    testmode: true
+                .on('end', done);
+        });
+
+        checkTenantisedFiles();
+    });
+
+    describe('Test with Maven and Angularjs', () => {
+        var errorMsg = '';
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/maven-angularjs'), dir);
                 })
                 .on('error', (e) => {
-                    const errorMsg = `${e} `;
-                    assert.equal(true, errorMsg.indexOf('This module currently only supports Angular 4+') >= 0);
+                    errorMsg = `${e} `;
+                    done();
                 });
+            });
+        it('throws an error when using angularjs', () => {
+            assert.equal(true, errorMsg.indexOf('This module currently only supports Angular 4+') >= 0);
+        });
+    });
+
+    describe('Test with MongoDb', () => {
+        var errorMsg = '';
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/mongoDb'), dir);
+                })
+                .on('error', (e) => {
+                    errorMsg = `${e} `;
+                    done();
+                });
+            });
+        it('throws an error when using mongoDb', () => {
+            assert.equal(true, errorMsg.indexOf('This module currently only supports SQL DB types\n') >= 0);
+        });
+    });
+
+    describe('Test with module already installed', () => {
+        var errorMsg = '';
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/module-installed'), dir);
+                })
+                .on('error', (e) => {
+                    errorMsg = `${e} `;
+                    done();
+                });
+            });
+        it('throws an error if the module is already installed', () => {
+            assert.equal(true, errorMsg.indexOf('\nThis module is already installed.\n') >= 0);
         });
     });
 
@@ -104,10 +143,7 @@ describe('JHipster generator multitenancy', () => {
             helpers
                 .run(path.join(__dirname, '../generators/app'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/disabledOptions'), dir);
-                })
-                .withOptions({
-                    testmode: true
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/disabledOptions'), dir);
                 })
                 .on('end', done);
         });
@@ -124,4 +160,6 @@ describe('JHipster generator multitenancy', () => {
         });
     });
 });
+
+
 

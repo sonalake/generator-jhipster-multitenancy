@@ -9,49 +9,49 @@ const it = require('mocha').it;
 const expectedFiles = require('./utils/expected-files');
 
 describe('Multitenancy sub generator', () => {
-    describe('Given name argument', () => {
-        describe('jhipster-multitenancy module not installed', () => {
-            it('throws error as multitenancy module not installed', () => {
-                helpers
-                    .run(path.join(__dirname, '../generators/entity-tenantised'))
-                    .withOptions({
-                        testmode: true
-                    })
-                    .withArguments(['foo'])
-                    .on('error', (e) => {
-                        const errorMsg = `${e} `;
-                        assert.equal(true, errorMsg.indexOf(`${chalk.red.bold('ERROR!')} Please run the Multitenancy generator first`) >= 0);
-                    });
+
+    describe('jhipster-multitenancy module not installed', () => {
+        var errorMsg = '';
+        beforeEach((done) => {
+            helpers
+            .run(path.join(__dirname, '../generators/entity'))
+            .inTmpDir((dir) => {
+                fse.copySync(path.join(__dirname, '../test/templates/subGen/module-not-installed'), dir);
+            })
+            .withOptions({
+                testmode: true
+            })
+            .withArguments(['foo'])
+            .on('error', (e) => {
+                errorMsg = `${e} `;
+                done();
             });
         });
-        describe('jhipster-multitenancy module installed', () => {
-            it('throws an error as entity doesn\'t exist', () => {
-                helpers
-                    .run(path.join(__dirname, '../generators/entity'))
-                    .inTmpDir((dir) => {
-                        fse.copySync(path.join(__dirname, '../test/templates/module-installed'), dir);
-                    })
-                    .withOptions({
-                        testmode: true
-                    })
-                    .withArguments(['foo'])
-                    .on('error', (e) => {
-                        const errorMsg = `${e} `;
-                        assert.equal(true, errorMsg.indexOf(chalk.yellow(`Entity ${chalk.bold('foo')} doesn't exist. Please generate using yo jhipster:entity foo`)) >= 0);
-                    });
+
+        it('throws error as multitenancy module not installed', () => {
+            assert.equal(true, errorMsg.indexOf(`${chalk.red.bold('ERROR!')} Please run the Multitenancy generator first`) >= 0);
+        });
+    });
+
+    describe('jhipster-multitenancy module installed but entity doesn\'t exist', () => {
+        var errorMsg = '';
+        beforeEach((done) => {
+            helpers
+            .run(path.join(__dirname, '../generators/entity'))
+            .inTmpDir((dir) => {
+                fse.copySync(path.join(__dirname, '../test/templates/subGen/module-installed-no-entity'), dir);
+            })
+            .withOptions({
+                testmode: true
+            })
+            .withArguments(['foo'])
+            .on('error', (e) => {
+                errorMsg = `${e} `;
+                done();
             });
-            it('throws an error as entity already has tenant relationship', () => {
-                helpers
-                    .run(path.join(__dirname, '../generators/entity'))
-                    .inTmpDir((dir) => {
-                        fse.copySync(path.join(__dirname, '../test/templates/entity-tenantised'), dir);
-                    })
-                    .withArguments(['ent'])
-                    .on('error', (e) => {
-                        const errorMsg = `${e} `;
-                        assert.equal(true, errorMsg.indexOf(`Entity ${chalk.bold(this.options.name)} has been tenantised`) >= 0);
-                    });
-            });
+        });
+        it('throws an error as entity doesn\'t exist', () => {
+            assert.equal(true, errorMsg.indexOf(chalk.yellow(`Entity ${chalk.bold('foo')} doesn't exist. Please generate using yo jhipster:entity foo`)) >= 0);
         });
     });
 
@@ -60,7 +60,7 @@ describe('Multitenancy sub generator', () => {
             helpers
                 .run(path.join(__dirname, '../generators/entity'))
                 .inTmpDir((dir) => {
-                    fse.copySync(path.join(__dirname, '../test/templates/entity-not-tenantised'), dir);
+                    fse.copySync(path.join(__dirname, '../test/templates/subGen/entity-not-tenantised'), dir);
                 })
                 .withArguments(['ent'])
                 .on('end', done);
