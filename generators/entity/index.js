@@ -242,7 +242,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private onError(error) {`,
+                    `private onError(error: any) {`,
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`
