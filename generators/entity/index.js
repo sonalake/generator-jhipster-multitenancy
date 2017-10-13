@@ -8,6 +8,8 @@ const jhipsterConstants = require('generator-jhipster/generators/generator-const
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 const _ = require('lodash');
 const mtUtils = require('../multitenancy-utils');
+const partialFiles = require('./partials/index');
+const pluralize = require('pluralize');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -188,7 +190,105 @@ module.exports = JhipsterGenerator.extend({
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
             }
-        }
+        },
+        generateClientCode() {
+            if (this.isValid) {
+
+                const tenantNameUpperFirst = _.upperFirst(this.config.get("tenantName"));
+                const tenantNameLowerFirst = _.lowerFirst(this.config.get("tenantName"));
+                const tenantNamePluralLowerFirst = pluralize(_.lowerFirst(this.config.get("tenantName")));
+                const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
+                const entityName = _.kebabCase(_.lowerFirst(this.options.name));
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-detail.component.html`,
+                    '</dl>',
+                    partialFiles.angular.entityDetailCompHtml(this)
+                );
+
+                this.replaceContent(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.html`,
+                    `</div>
+    <div class=\"modal-footer\">`,
+                    partialFiles.angular.entityDialogCompHtml(this),
+                    false
+                );
+
+                //entity-dialog.component.ts
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `import { Observable } from 'rxjs/Rx';`,
+                    partialFiles.angular.entityDialogCompTsImports(this)
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `isSaving: boolean;`,
+                    `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];`
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `private alertService: JhiAlertService,`,
+                    `private ${tenantNameLowerFirst}Service: ${tenantNameUpperFirst}Service,`
+                );
+
+                this.replaceContent(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `ngOnInit() {`,
+                    partialFiles.angular.entityDialogCompTsOnInit(this),
+                    false
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `private onError(error: any) {`,
+                    `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
+        return item.id;
+    }`
+                );
+                //----------------
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
+                    `<th></th>`,
+                    `<th><span jhiTranslate="fooApp.${this.options.name}.${tenantNameLowerFirst}">${tenantNameUpperFirst}</span></th>`
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
+                    `<td class="text-right">`,
+                    `<td>
+                    <div *ngIf="${this.options.name}.${tenantNameLowerFirst}">
+                        <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.name}.${tenantNameLowerFirst}?.id ]" >{{${this.options.name}.${tenantNameLowerFirst}?.name}}</a>
+                    </div>
+                </td>`
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
+                    `import { BaseEntity } from './../../shared';`,
+                    `import { ${tenantNameUpperFirst} } from '../../admin/${tenantNameLowerFirst}-management/${tenantNameLowerFirst}.model';`
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
+                    `) {`,
+                    `   public ${tenantNameLowerFirst}?: ${tenantNameUpperFirst}`
+                );
+
+                //i18n
+                if(this.enableTranslation) {
+                    this.getAllInstalledLanguages().forEach((language) => {
+                        this.rewriteFile(
+                            `${webappDir}i18n/${language}/${this.options.name}.json`,
+                            `"detail": {`,
+                            `"${tenantNameLowerFirst}": "${tenantNameUpperFirst}",`
+                        );
+                    }); 
+                }
+            }
+        }        
     },
     install() {
         if (this.options.name != undefined && this.isValid) {
@@ -196,7 +296,7 @@ module.exports = JhipsterGenerator.extend({
             this.composeWith('jhipster:entity', {
                 regenerate: true,
                 'skip-install': true,
-                'skip-client': false,
+                'skip-client': true,
                 'skip-server': false,
                 'no-fluent-methods': false,
                 'skip-user-management': false,
@@ -206,6 +306,5 @@ module.exports = JhipsterGenerator.extend({
         }
     },
     end() {
-
     }
 });
