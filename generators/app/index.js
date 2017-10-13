@@ -334,18 +334,17 @@ module.exports = JhipsterGenerator.extend({
                 // TODO: generate this file for each language
                 this.template('src/main/webapp/i18n/en/_tenant-management.json', `${this.webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
             }
-        },
-        // registers sub-generators with the jhipster generator hooks
-        registerModuleHooks() {
-            try {
-                this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
-            } catch (err) {
-                this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-            }
         }
     },
 
     install() {
+        // registers sub-generators with the jhipster generator hooks
+        try {
+            this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
+
         // store the tenantName variable in the .yo-rc
         this.config.set('tenantName', this.tenantName);
 
