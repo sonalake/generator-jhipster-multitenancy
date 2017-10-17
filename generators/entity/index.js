@@ -248,11 +248,17 @@ module.exports = JhipsterGenerator.extend({
     }`
                 );
                 //----------------
-
+                
+                if(this.enableTranslation) { 
+                    let th =`<th><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
+                }
+                else {
+                    let th =`<th><span>${tenantNameUpperFirst}</span></th>`;
+                }
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
                     `<th></th>`,
-                    `<th><span jhiTranslate="fooApp.${this.options.name}.${tenantNameLowerFirst}">${tenantNameUpperFirst}</span></th>`
+                    th
                 );
 
                 this.rewriteFile(

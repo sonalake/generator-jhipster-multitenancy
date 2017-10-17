@@ -6,7 +6,7 @@ const tmpl = (context) => {
             </div>
         </dd>`;
     if (context.enableTranslation) {
-    template = `<dt><span jhiTranslate="fooApp.${context.options.name}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</span></dt>
+    template = `<dt><span jhiTranslate="userManagement${context.tenantNameUpperFirst}">${context.tenantNameUpperFirst}</span></dt>
         <dd>
             <div *ngIf="${context.options.name}.${context.tenantNameLowerFirst}">
                 <a [routerLink]="['/${context.tenantNameLowerFirst}-management', ${context.options.name}.${context.tenantNameLowerFirst}?.id]">{{${context.options.name}.${context.tenantNameLowerFirst}?.name}}</a>
