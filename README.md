@@ -84,7 +84,7 @@ Do you want to tenantise the entity foo? (Y/n)
 
 ## Applying the tenant filter
 
-To apply automatic data filtering by tenant, add @FilterDef and @Filter annotations to the top of each tenantised entity.
+In order to achieve multitenancy we have chose a discriminator column approach. To apply data filtering by tenant, add @FilterDef and @Filter annotations to the top of each tenantised entity.
 
 ```bash
 import org.hibernate.annotations.Filter;
@@ -102,7 +102,7 @@ public class Book extends AbstractAuditingEntity implements Serializable {
     ...
 }
 ```
-This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
+This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference. This manual step by now as multitenancy achieved by discriminator columns is not fully supported. Issue to watch → https://hibernate.atlassian.net/browse/HHH-6054
 
 # License
 
