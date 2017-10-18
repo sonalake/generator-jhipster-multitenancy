@@ -1,0 +1,1 @@
+it('should load metrics', () => {
