@@ -22,7 +22,7 @@ This is a [JHipster](http://jhipster.github.io/) module, that is intended to be 
 * [Installation](#installation)
 * [Usage](#usage)
   * [Tenantising an entity](#tenantising-an-entity)
-  * [Applying the tenant filter](#applying-tenant-filter)
+  * [Applying the tenant filter](#applying-the-tenant-filter)
 * [License](#license)
 
 # Prerequisites
