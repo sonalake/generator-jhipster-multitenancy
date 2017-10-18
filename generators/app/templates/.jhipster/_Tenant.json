@@ -8,12 +8,6 @@
             "otherEntityField": "login",
             "ownerSide": true,
             "otherEntityRelationshipName": "<%= tenantNameLowerFirst %>"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "tenantContact",
-            "otherEntityName": "user",
-            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -25,9 +19,10 @@
             ]
         }
     ],
-    "changelogDate": "changelogDate",
+    "changelogDate": "<%= changelogDate %>",
     "dto": "no",
     "service": "serviceClass",
-    "entityTableName": "tenant",
-    "pagination": "no"
+    "entityTableName": "<%= tenantNameLowerFirst %>",
+    "pagination": "pagination",
+    "jpaMetamodelFiltering": false    
 }
