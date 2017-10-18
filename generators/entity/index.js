@@ -27,7 +27,7 @@ module.exports = JhipsterGenerator.extend({
 
         const tenantName = _.toLower(this.config.get('tenantName'));
         if (_.toLower(this.options.name) === tenantName) {
-            this.error('You can\'t select your Tenant entity');
+            this.error('You can\'t select your tenant entity');
             this.isValid = false;
         } else if (this.options.name) {
             this.name = this.options.name;
@@ -68,7 +68,7 @@ module.exports = JhipsterGenerator.extend({
         },
         displayLogo() {
             if (this.isValid) {
-                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')} ${chalk.yellow(`v${packagejs.version}`)}\n`);
+                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')}\n`);
             }
         },
         validate() {
@@ -240,7 +240,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private onError(error) {`,
+                    `private onError(error: any) {`,
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`
