@@ -22,6 +22,7 @@ This is a [JHipster](http://jhipster.github.io/) module, that is intended to be 
 * [Installation](#installation)
 * [Usage](#usage)
   * [Tenantising an entity](#tenantising-an-entity)
+  * [Applying the tenant filter](#applying-tenant-filter)
 * [License](#license)
 
 # Prerequisites
@@ -80,6 +81,27 @@ yo jhipster:entity foo
 # upon generation, you will be asked
 Do you want to tenantise the entity foo? (Y/n)
 ```
+
+## Applying the tenant filter
+
+To apply automatic data filtering by tenant, add @FilterDef and @Filter annotations to the top of each tenantised entity.
+
+```bash
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
+/**
+ * A book.
+ */
+@Entity
+@Table(name = "book")
+@FilterDef(name = "COMPANY_FILTER", parameters = {@ParamDef(name = "companyId", type = "long")})
+@Filter(name = "COMPANY_FILTER", condition = "company_id = :companyId")
+public class Book extends AbstractAuditingEntity implements Serializable {
+    ...
+```
+This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
 
 # License
 
