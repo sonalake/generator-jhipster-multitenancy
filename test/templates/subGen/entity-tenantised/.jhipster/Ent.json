@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "company",
+            "otherEntityName": "company",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "ent"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170929151229",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "ent",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}
