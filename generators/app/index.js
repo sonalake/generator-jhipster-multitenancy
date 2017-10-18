@@ -26,6 +26,7 @@ module.exports = JhipsterGenerator.extend({
             this.angularAppName = this.getAngularAppName();
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
             this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
+            this.protractorTests = this.testFrameworks.indexOf('protractor') !== -1;
 
             // set some appropriate defaults (i.e. what jhipster does)
             if (this.enableTranslation === undefined) {
@@ -168,7 +169,7 @@ module.exports = JhipsterGenerator.extend({
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
             // configs for the template files
-            const files = {
+            let files = {
                 userManagement: [
                     {
                         path: this.angularDir,
@@ -276,6 +277,7 @@ module.exports = JhipsterGenerator.extend({
                         ]
                     },
                     {
+                        condition: generator => generator.protractorTests,
                         path: this.clientTestDir,
                         templates: [
                             {
@@ -283,9 +285,10 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `e2e/admin/${this.tenantNameLowerFirst}-management.spec.ts`
                             }
                         ]
-                    },
+                    }
                 ]
             };
+
             // parse the templates and write files to the appropriate locations
             this.writeFilesToDisk(files, this, false);
 
@@ -326,11 +329,14 @@ module.exports = JhipsterGenerator.extend({
                 'getImageUrl(): String {',
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
-            this.rewriteFile(
-                `${this.clientTestDir}e2e/admin/administration.spec.ts`,
-                'it(\'should load metrics\', () => {',
-                partialFiles.angular.e2eAdminSpecTs(this)
-            );
+
+            if(this.protractorTests){
+                this.rewriteFile(
+                    `${this.clientTestDir}e2e/admin/administration.spec.ts`,
+                    'it(\'should load metrics\', () => {',
+                    partialFiles.angular.e2eAdminSpecTs(this)
+                );
+            }
         },
         // makes the necessary changes to the i18n files and adds files for tenant management
         generateLanguageFiles() {
@@ -356,7 +362,7 @@ module.exports = JhipsterGenerator.extend({
         this.config.set('tenantName', this.tenantName);
 
         // generate backend code using jhipster's entity generator
-        this.composeWith('jhipster:entity', {
+        this.composeWith(require.resolve('generator-jhipster/generators/entity'), {
             regenerate: true,
             'skip-install': true,
             'skip-client': true,
@@ -374,8 +380,10 @@ module.exports = JhipsterGenerator.extend({
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
             this.tenantNameLowerFirst+'Service.delete(id);',
             partialFiles.server.tenantResource(this));
-            
+
         this.log(chalk.green('\nTenant entity generated successfully.'));
-        this.log(chalk.white.bold('Your application now supports multitenancy.\n'));
+        this.log(chalk.green('Your application now supports multitenancy.\n'));
+        this.log(chalk.green('To tenantise existing entities use: ') + chalk.yellow('yo jhipster-multitenancy foo'));
+        this.log(chalk.green('All new entities can be tenantised on entity creation using: ') + chalk.yellow('yo jhipster:entity foo\n'));
     }
 });
