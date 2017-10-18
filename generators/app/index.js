@@ -362,7 +362,7 @@ module.exports = JhipsterGenerator.extend({
         this.config.set('tenantName', this.tenantName);
 
         // generate backend code using jhipster's entity generator
-        this.composeWith('jhipster:entity', {
+        this.composeWith(require.resolve('generator-jhipster/generators/entity'), {
             regenerate: true,
             'skip-install': true,
             'skip-client': true,
