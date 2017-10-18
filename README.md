@@ -100,6 +100,7 @@ import org.hibernate.annotations.ParamDef;
 @Filter(name = "COMPANY_FILTER", condition = "company_id = :companyId")
 public class Book extends AbstractAuditingEntity implements Serializable {
     ...
+}
 ```
 This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
 
