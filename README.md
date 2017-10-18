@@ -102,7 +102,7 @@ public class Book extends AbstractAuditingEntity implements Serializable {
     ...
 }
 ```
-This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference. This manual step by now as multitenancy achieved by discriminator columns is not fully supported. Issue to watch → https://hibernate.atlassian.net/browse/HHH-6054
+This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
 
 # License
 
