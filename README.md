@@ -74,7 +74,7 @@ yo jhipster-multitenancy:entity foo
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-multitenancy.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-multitenancy
-[travis-image]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy.svg?branch=master
-[travis-url]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy
+[travis-image]: https://travis-ci.org/sonalake/generator-jhipster-multitenancy.svg?branch=master
+[travis-url]: https://travis-ci.org/sonalake/generator-jhipster-multitenancy
 [daviddm-image]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy
