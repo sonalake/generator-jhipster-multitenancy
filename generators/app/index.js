@@ -169,7 +169,7 @@ module.exports = JhipsterGenerator.extend({
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
             // configs for the template files
-            let files = {
+            const files = {
                 userManagement: [
                     {
                         path: this.angularDir,
@@ -330,7 +330,7 @@ module.exports = JhipsterGenerator.extend({
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
 
-            if(this.protractorTests){
+            if (this.protractorTests) {
                 this.rewriteFile(
                     `${this.clientTestDir}e2e/admin/administration.spec.ts`,
                     'it(\'should load metrics\', () => {',
@@ -373,11 +373,11 @@ module.exports = JhipsterGenerator.extend({
     },
     end() {
         this.replaceContent(`${this.javaDir}domain/${this.tenantNameUpperFirst}.java`,
-        '    @OneToMany(mappedBy = "'+this.tenantNameLowerFirst+'")',
-        '\t@OneToMany(mappedBy = "'+this.tenantNameLowerFirst+'", fetch = FetchType.EAGER)');
+        '    @OneToMany(mappedBy = "'+ this.tenantNameLowerFirst + '")',
+        '\t@OneToMany(mappedBy = "' + this.tenantNameLowerFirst + '", fetch = FetchType.EAGER)');
 
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
-            this.tenantNameLowerFirst+'Service.delete(id);',
+            this.tenantNameLowerFirst + 'Service.delete(id);',
             partialFiles.server.tenantResource(this));
 
         this.log(chalk.green('\nTenant entity generated successfully.'));
