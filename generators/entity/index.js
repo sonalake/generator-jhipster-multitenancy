@@ -222,13 +222,17 @@ module.exports = JhipsterGenerator.extend({
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
                     `isSaving: boolean;`,
-                    `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];`
+                    `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];
+    currentAccount: any;`
                 );
 
-                this.rewriteFile(
+                this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private alertService: JhiAlertService,`,
-                    `private ${tenantNameLowerFirst}Service: ${tenantNameUpperFirst}Service,`
+                    `private eventManager: JhiEventManager
+    ) {
+    }`,
+                    partialFiles.angular.entityDialogCompTsConstr(this),
+                    false
                 );
 
                 this.replaceContent(
@@ -240,13 +244,28 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `if (this.${entityName}.id !== undefined) {`,
+                    `if (this.currentAccount.${tenantNameLowerFirst}) {
+            this.${entityName}.${tenantNameLowerFirst} = this.currentAccount.${tenantNameLowerFirst};
+        }`
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
                     `private onError(error: any) {`,
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`
                 );
                 //----------------
-
+                
+                let th ='';
+                if(this.enableTranslation) { 
+                    th =`<th><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
+                }
+                else {
+                    th =`<th><span>${tenantNameUpperFirst}</span></th>`;
+                }
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
                     `<th></th>`,
