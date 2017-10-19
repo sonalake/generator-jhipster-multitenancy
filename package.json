@@ -47,7 +47,7 @@
   "main": "generators/app/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mairead_mccabe/generator-jhipster-multitenancy.git"
+    "url": "git+https://github.com/sonalake/generator-jhipster-multitenancy.git"
   },
   "scripts": {
     "test": "mocha test/*"
