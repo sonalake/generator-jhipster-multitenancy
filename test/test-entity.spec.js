@@ -5,13 +5,13 @@ const helpers = require('yeoman-test');
 const chalk = require('chalk');
 const describe = require('mocha').describe;
 const it = require('mocha').it;
+const beforeEach = require('mocha').beforeEach;
 
 const expectedFiles = require('./utils/expected-files');
 
 describe('Multitenancy sub generator', () => {
-
     describe('jhipster-multitenancy module not installed', () => {
-        var errorMsg = '';
+        let errorMsg = '';
         beforeEach((done) => {
             helpers
             .run(path.join(__dirname, '../generators/entity'))
@@ -34,7 +34,7 @@ describe('Multitenancy sub generator', () => {
     });
 
     describe('jhipster-multitenancy module installed but entity doesn\'t exist', () => {
-        var errorMsg = '';
+        let errorMsg = '';
         beforeEach((done) => {
             helpers
             .run(path.join(__dirname, '../generators/entity'))
@@ -67,8 +67,8 @@ describe('Multitenancy sub generator', () => {
         });
 
         it('updates files', () => {
-            //UI
-            expectedFiles.entityFiles.forEach((file)=>{
+            // UI
+            expectedFiles.entityFiles.forEach((file) => {
                 assert.fileContent(file, /(c|C)ompany/);
             });
         });

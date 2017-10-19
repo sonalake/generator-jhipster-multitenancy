@@ -373,11 +373,11 @@ module.exports = JhipsterGenerator.extend({
     },
     end() {
         this.replaceContent(`${this.javaDir}domain/${this.tenantNameUpperFirst}.java`,
-        '    @OneToMany(mappedBy = "'+ this.tenantNameLowerFirst + '")',
-        '\t@OneToMany(mappedBy = "' + this.tenantNameLowerFirst + '", fetch = FetchType.EAGER)');
+        `    @OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'")`,
+        `\t@OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'", fetch = FetchType.EAGER)`);
 
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
-            this.tenantNameLowerFirst + 'Service.delete(id);',
+            `${this.tenantNameLowerFirst}Service.delete(id);`,
             partialFiles.server.tenantResource(this));
 
         this.log(chalk.green('\nTenant entity generated successfully.'));
