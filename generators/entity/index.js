@@ -27,7 +27,7 @@ module.exports = JhipsterGenerator.extend({
 
         const tenantName = _.toLower(this.config.get('tenantName'));
         if (_.toLower(this.options.name) === tenantName) {
-            this.error('You can\'t select your Tenant entity');
+            this.error('You can\'t select your tenant entity');
             this.isValid = false;
         } else if (this.options.name) {
             this.name = this.options.name;
@@ -68,7 +68,7 @@ module.exports = JhipsterGenerator.extend({
         },
         displayLogo() {
             if (this.isValid) {
-                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')} ${chalk.yellow(`v${packagejs.version}`)}\n`);
+                this.log(`${chalk.white('Running')} ${chalk.bold('JHipster Multitenacy:entity')} ${chalk.white('Generator!')}\n`);
             }
         },
         validate() {
@@ -154,6 +154,11 @@ module.exports = JhipsterGenerator.extend({
                             };
                             this.relationships.push(this.real);
                             this.entityJson.relationships = this.relationships;
+
+                            if(this.entityJson.service === 'no'){
+                                this.entityJson.service = "serviceClass";
+                            }
+
                             this.fs.writeJSON(`.jhipster/${_.upperFirst(this.options.name)}.json`, this.entityJson, null, 4);
 
                             if (this.entities == undefined) {
@@ -174,13 +179,13 @@ module.exports = JhipsterGenerator.extend({
             if (this.isValid) {
                 // read app config from .yo-rc.json
                 mtUtils.readConfig(this.jhipsterAppConfig, this);
-                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
+                var tenantisedEntityServices = `@Before(\"execution(* ${this.packageName}.service.UserService.*(..))`;
                 this.tenantisedEntities.forEach((entity) =>  {
-                    addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
-                    foo = foo.concat(addEntity);
+                    addEntity = ` || execution(* ${this.packageName}.service.` + _.upperFirst(entity) + `Service.*(..))`
+                    tenantisedEntityServices = tenantisedEntityServices.concat(addEntity);
                 });
-                foo = foo.concat('")');
-                this.tenantisedEntitesResources = foo;
+                tenantisedEntityServices = tenantisedEntityServices.concat('")');
+                this.tenantisedEntityServices = tenantisedEntityServices;
                 // replace aspect
 
                 /* tenant variables */

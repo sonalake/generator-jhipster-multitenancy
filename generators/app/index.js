@@ -164,12 +164,11 @@ module.exports = JhipsterGenerator.extend({
 
             // copy over aspect
             this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
-            this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);
         },
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
             // configs for the template files
-            let files = {
+            const files = {
                 userManagement: [
                     {
                         path: this.angularDir,
@@ -330,7 +329,7 @@ module.exports = JhipsterGenerator.extend({
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
 
-            if(this.protractorTests){
+            if (this.protractorTests) {
                 this.rewriteFile(
                     `${this.clientTestDir}e2e/admin/administration.spec.ts`,
                     'it(\'should load metrics\', () => {',
@@ -346,18 +345,17 @@ module.exports = JhipsterGenerator.extend({
                 // TODO: generate this file for each language
                 this.template('src/main/webapp/i18n/en/_tenant-management.json', `${this.webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
             }
-        },
-        // registers sub-generators with the jhipster generator hooks
-        registerModuleHooks() {
-            try {
-                this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
-            } catch (err) {
-                this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-            }
         }
     },
 
     install() {
+        // registers sub-generators with the jhipster generator hooks
+        try {
+            this.registerModule('generator-jhipster-multitenancy', 'entity', 'post', 'entity', '');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
+
         // store the tenantName variable in the .yo-rc
         this.config.set('tenantName', this.tenantName);
 
@@ -374,11 +372,11 @@ module.exports = JhipsterGenerator.extend({
     },
     end() {
         this.replaceContent(`${this.javaDir}domain/${this.tenantNameUpperFirst}.java`,
-        '    @OneToMany(mappedBy = "'+this.tenantNameLowerFirst+'")',
-        '\t@OneToMany(mappedBy = "'+this.tenantNameLowerFirst+'", fetch = FetchType.EAGER)');
+        `    @OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'")`,
+        `\t@OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'", fetch = FetchType.EAGER)`);
 
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
-            this.tenantNameLowerFirst+'Service.delete(id);',
+            `${this.tenantNameLowerFirst}Service.delete(id);`,
             partialFiles.server.tenantResource(this));
 
         this.log(chalk.green('\nTenant entity generated successfully.'));

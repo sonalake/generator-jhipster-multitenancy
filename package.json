@@ -37,7 +37,8 @@
     },
     {
       "name": "Alessia Iorio",
-      "email": "alessia.iorio@sonalake.com"
+      "email": "alessia.iorio@sonalake.com",
+      "url": "https://github.com/alessiaio"
     }
   ],
   "files": [
@@ -46,7 +47,7 @@
   "main": "generators/app/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mairead_mccabe/generator-jhipster-multitenancy.git"
+    "url": "git://github.com/sonalake/generator-jhipster-multitenancy.git"
   },
   "scripts": {
     "test": "mocha test/*"

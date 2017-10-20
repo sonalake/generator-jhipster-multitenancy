@@ -1,48 +1,61 @@
+<div>
+    <a href="http://jhipster.github.io">
+        <img src="https://github.com/sonalake/generator-jhipster-multitenancy/raw/master/images/logo-jhipster.png">
+    </a>
+</div>
+Greetings, Java Hipster!
+
 # generator-jhipster-multitenancy
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > JHipster module to enable multitenancy in your application
 
-**Note:** This module does not support Angular 1 yet and hence will not work if you are using JHipster 4 with Angular1.
 
-## Usage
+# Introduction
 
-This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
+This is a [JHipster](http://jhipster.github.io/) module, that is intended to be applied to a JHipster application. This module is used to:
 
-### Installation
+- Generate a Tenant entity and a relationship to the User entity
+- Tenantise existing entities
+- Enhance `yo jhipster:entity` sub-generator with a post-hook
 
-As this is a [JHipster](http://jhipster.github.io/) module, we expect you have [JHipster and its related tools already installed](http://jhipster.github.io/installation.html).
+# Table of contents
 
-This module requires Jhipster version greater than 3.0 in order to work
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Tenantising an entity](#tenantising-an-entity)
+  * [Applying the tenant filter](#applying-the-tenant-filter)
+* [License](#license)
 
-### Install With Yarn
+# Prerequisites
 
-To install this module:
+As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
+
+- [Installing JHipster](https://jhipster.github.io/installation.html)
+
+# Installation
+
+If you are using Yarn:
 
 ```bash
+# install the module
 yarn global add generator-jhipster-multitenancy
-```
 
-To update this module:
-
-```bash
+# update the module
 yarn global upgrade generator-jhipster-multitenancy
 ```
 
-### Install With NPM
-
-To install this module:
+If you are using npm:
 
 ```bash
+#install the module
 npm install -g generator-jhipster-multitenancy
-```
 
-To update this module:
-
-```bash
+# update the module
 npm update -g generator-jhipster-multitenancy
 ```
 
-###Running The module
+# Usage
 
 After installation, run the module on a JHipster generated application:
 
@@ -50,18 +63,11 @@ After installation, run the module on a JHipster generated application:
 yo jhipster-multitenancy
 ```
 
-###Tenantising an entity
+You will then be prompted for the name of your tenant entity.
 
-Once the module has been run on the JHipster generated application, any entity in the application can then be tenantised.
+## Tenantising an entity
 
-To tenantise an new entity as it is being created:
-
-```bash
-yo jhipster:entity foo
-
-//upon generation, you will be asked
-Do you want to tenantise the entity foo? (Y/n)
-```
+Once the module has been run on the JHipster generated application, any entity in the application can then be tenantised. This is done using the `jhipster-multitenancy:entity` sub-generator.
 
 To tenantise an existing entity:
 
@@ -69,12 +75,44 @@ To tenantise an existing entity:
 yo jhipster-multitenancy:entity foo
 ```
 
-## License
+This sub-generator also hooks into the `jhipster:entity` sub-generator. When creating a new entity, you will be prompted to tenantise the new entity.
 
+```bash
+yo jhipster:entity foo
+
+# upon generation, you will be asked
+Do you want to tenantise the entity foo? (Y/n)
+```
+
+## Applying the tenant filter
+
+In order to achieve multitenancy we have chose a discriminator column approach. To apply data filtering by tenant, add @FilterDef and @Filter annotations to the top of each tenantised entity.
+
+```bash
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
+/**
+ * A book.
+ */
+@Entity
+@Table(name = "book")
+@FilterDef(name = "COMPANY_FILTER", parameters = {@ParamDef(name = "companyId", type = "long")})
+@Filter(name = "COMPANY_FILTER", condition = "company_id = :companyId")
+public class Book extends AbstractAuditingEntity implements Serializable {
+    ...
+}
+```
+This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
+
+# License
+
+Apache-2.0 © [Sonalake](http://github.com/sonalake/)
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-multitenancy.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-multitenancy
-[travis-image]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy.svg?branch=master
-[travis-url]: https://travis-ci.org/mairead_mccabe/generator-jhipster-multitenancy
-[daviddm-image]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/mairead_mccabe/generator-jhipster-multitenancy
+[travis-image]: https://travis-ci.org/sonalake/generator-jhipster-multitenancy.svg?branch=master
+[travis-url]: https://travis-ci.org/sonalake/generator-jhipster-multitenancy
+[daviddm-image]: https://david-dm.org/sonalake/generator-jhipster-multitenancy.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/sonalake/generator-jhipster-multitenancy
