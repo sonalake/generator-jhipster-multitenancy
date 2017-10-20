@@ -251,9 +251,9 @@ module.exports = JhipsterGenerator.extend({
                 //----------------
                 let th = '';
                 if (this.enableTranslation) {
-                    th = `<th><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
+                    th = `<th *ngIf="!currentAccount.${tenantNameLowerFirst}"><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
                 } else {
-                    th = `<th><span>${tenantNameUpperFirst}</span></th>`;
+                    th = `<th *ngIf="!currentAccount.${tenantNameLowerFirst}"><span>${tenantNameUpperFirst}</span></th>`;
                 }
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
@@ -264,7 +264,7 @@ module.exports = JhipsterGenerator.extend({
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
                     '<td class="text-right">',
-                    `<td>
+                    `<td *ngIf="!currentAccount.company">
                     <div *ngIf="${this.options.name}.${tenantNameLowerFirst}">
                         <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.name}.${tenantNameLowerFirst}?.id ]" >{{${this.options.name}.${tenantNameLowerFirst}?.name}}</a>
                     </div>
