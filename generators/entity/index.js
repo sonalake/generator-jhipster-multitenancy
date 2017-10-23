@@ -247,7 +247,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `if (this.${entityName}.id !== undefined) {`,
+                    `if (this.${_.lowerFirst(this.options.name)}.id !== undefined) {`,
                     `if (this.currentAccount.${tenantNameLowerFirst}) {
             this.${entityName}.${tenantNameLowerFirst} = this.currentAccount.${tenantNameLowerFirst};
         }`
