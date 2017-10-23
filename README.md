@@ -1,12 +1,14 @@
-# generator-jhipster-multitenancy
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> JHipster module to enable multitenancy in your application
-
 <div>
     <a href="http://jhipster.github.io">
         <img src="https://github.com/sonalake/generator-jhipster-multitenancy/raw/master/images/logo-jhipster.png">
     </a>
 </div>
+Greetings, Java Hipster!
+
+# generator-jhipster-multitenancy
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+> JHipster module to enable multitenancy in your application
+
 
 # Introduction
 
