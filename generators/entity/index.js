@@ -276,7 +276,7 @@ module.exports = JhipsterGenerator.extend({
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
                     '<td class="text-right">',
-                    `<td *ngIf="!currentAccount.company">
+                    `<td *ngIf="!currentAccount.${tenantNameLowerFirst}">
                     <div *ngIf="${this.options.name}.${tenantNameLowerFirst}">
                         <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.name}.${tenantNameLowerFirst}?.id ]" >{{${this.options.name}.${tenantNameLowerFirst}?.name}}</a>
                     </div>
