@@ -224,7 +224,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `isSaving: boolean;`,
+                    'isSaving: boolean;',
                     `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];
     currentAccount: any;`
                 );
@@ -255,7 +255,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private onError(error: any) {`,
+                    'private onError(error: any) {',
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`

@@ -1,5 +1,5 @@
 const tmpl = (context) => {
-    let template =`private eventManager: JhiEventManager,
+    const template = `private eventManager: JhiEventManager,
         private ${context.tenantNameLowerFirst}Service: ${context.tenantNameUpperFirst}Service,
         private principal: Principal
         ) {
