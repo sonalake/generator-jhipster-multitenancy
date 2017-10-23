@@ -225,13 +225,17 @@ module.exports = JhipsterGenerator.extend({
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
                     'isSaving: boolean;',
-                    `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];`
+                    `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];
+    currentAccount: any;`
                 );
 
-                this.rewriteFile(
+                this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    'private alertService: JhiAlertService,',
-                    `private ${tenantNameLowerFirst}Service: ${tenantNameUpperFirst}Service,`
+                    `private eventManager: JhiEventManager
+    ) {
+    }`,
+                    partialFiles.angular.entityDialogCompTsConstr(this),
+                    false
                 );
 
                 this.replaceContent(
@@ -239,6 +243,14 @@ module.exports = JhipsterGenerator.extend({
                     'ngOnInit() {',
                     partialFiles.angular.entityDialogCompTsOnInit(this),
                     false
+                );
+
+                this.rewriteFile(
+                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `if (this.${entityName}.id !== undefined) {`,
+                    `if (this.currentAccount.${tenantNameLowerFirst}) {
+            this.${entityName}.${tenantNameLowerFirst} = this.currentAccount.${tenantNameLowerFirst};
+        }`
                 );
 
                 this.rewriteFile(

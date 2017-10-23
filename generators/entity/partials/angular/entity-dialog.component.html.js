@@ -1,5 +1,5 @@
 const tmpl = (context) => {
-    let template = `    <div class="form-group">
+    let template = `    <div class="form-group" *ngIf="!currentAccount.${context.tenantNameLowerFirst}">
             <label class="form-control-label" for="field_${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</label>
             <select class="form-control" id="field_${context.tenantNameLowerFirst}" name="${context.tenantNameLowerFirst}" [(ngModel)]="${context.options.name}.${context.tenantNameLowerFirst}"  required>
                 <option *ngIf="!editForm.value.${context.tenantNameLowerFirst}" [ngValue]="null" selected></option>
@@ -15,7 +15,7 @@ const tmpl = (context) => {
     </div>
     <div class="modal-footer">`;
     if (context.enableTranslation) {
-        template = `    <div class="form-group">
+        template = `    <div class="form-group" *ngIf="!currentAccount.${context.tenantNameLowerFirst}">
             <label class="form-control-label" jhiTranslate="userManagement${context.tenantNameUpperFirst}" for="field_${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</label>
             <select class="form-control" id="field_${context.tenantNameLowerFirst}" name="${context.tenantNameLowerFirst}" [(ngModel)]="${context.options.name}.${context.tenantNameLowerFirst}"  required>
                 <option *ngIf="!editForm.value.${context.tenantNameLowerFirst}" [ngValue]="null" selected></option>
