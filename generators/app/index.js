@@ -131,7 +131,7 @@ module.exports = JhipsterGenerator.extend({
 
             // template variables
             mtUtils.tenantVariables(this.props.tenantName, this);
-            this.tenantisedEntitesResources = `@Before("execution(* ${this.packageName}.web.rest.UserResource.*(..))")`;
+            this.tenantisedEntityServices = `@Before("execution(* ${this.packageName}.service.UserService.*(..))")`;
             this.mainClass = this.getMainClassName();
             this.changelogDate = this.dateFormatForLiquibase();
         },
