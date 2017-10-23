@@ -185,62 +185,6 @@ public class UserResourceIntTest {
 
     @Test
     @Transactional
-    public void create<%=tenantNameUpperFirst%>UserNo<%=tenantNameUpperFirst%>() throws Exception {
-        // Create the User
-        Set<String> authorities = new HashSet<>();
-        authorities.add("ROLE_<%= tenantNameUpperCase %>_USER");
-        ManagedUserVM managedUserVM = new ManagedUserVM(
-            null,
-            DEFAULT_LOGIN,
-            DEFAULT_PASSWORD,
-            DEFAULT_FIRSTNAME,
-            DEFAULT_LASTNAME,
-            DEFAULT_EMAIL,
-            true,
-            DEFAULT_IMAGEURL,
-            DEFAULT_LANGKEY,
-            null,
-            null,
-            null,
-            null,
-            authorities, null);
-
-        restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Transactional
-    public void create<%=tenantNameUpperFirst%>AdminNo<%=tenantNameUpperFirst%>() throws Exception {
-        // Create the User
-        Set<String> authorities = new HashSet<>();
-        authorities.add("ROLE_<%= tenantNameUpperCase %>_ADMIN");
-        ManagedUserVM managedUserVM = new ManagedUserVM(
-            null,
-            DEFAULT_LOGIN,
-            DEFAULT_PASSWORD,
-            DEFAULT_FIRSTNAME,
-            DEFAULT_LASTNAME,
-            DEFAULT_EMAIL,
-            true,
-            DEFAULT_IMAGEURL,
-            DEFAULT_LANGKEY,
-            null,
-            null,
-            null,
-            null,
-            authorities, null);
-
-        restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Transactional
     @WithMockUser()
     public void createUserWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
@@ -604,7 +548,7 @@ public class UserResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(containsInAnyOrder("ROLE_USER", "ROLE_ADMIN", "ROLE_<%= tenantNameUpperCase %>_ADMIN","ROLE_<%= tenantNameUpperCase %>_USER")));
+            .andExpect(jsonPath("$").value(containsInAnyOrder("ROLE_USER", "ROLE_ADMIN")));
     }
 
     @Test

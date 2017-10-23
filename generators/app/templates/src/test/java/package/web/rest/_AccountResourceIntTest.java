@@ -1,42 +1,88 @@
-package <%=packageName%>.web.rest;
+<%#
+ Copyright 2013-2017 the original author or authors from the JHipster project.
 
-import <%=packageName%>.<%=mainClass%>;
-import <%=packageName%>.domain.Authority;
-import <%=packageName%>.domain.User;
-import <%=packageName%>.repository.AuthorityRepository;
+ This file is part of the JHipster project, see http://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+import <%=packageName%>.config.Constants;
+<%_ if (databaseType === 'cassandra') { _%>
+import <%=packageName%>.AbstractCassandraTest;
+<%_ } _%>
+import <%=packageName%>.<%= mainClass %>;<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+import <%=packageName%>.domain.Authority;<% } %><% if (authenticationType === 'session') { %>
+import <%=packageName%>.domain.PersistentToken;<% } %>
+import <%=packageName%>.domain.User;<% if (authenticationType !== 'oauth2' && (databaseType === 'sql' || databaseType === 'mongodb')) { %>
+import <%=packageName%>.repository.AuthorityRepository;<% } %>
+<%_ if (authenticationType === 'session') { _%>
+import <%=packageName%>.repository.PersistentTokenRepository;
+<%_ } _%>
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.security.AuthoritiesConstants;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import <%=packageName%>.service.MailService;
-import <%=packageName%>.service.UserService;
 import <%=packageName%>.service.dto.UserDTO;
+<%_ } _%>
+import <%=packageName%>.web.rest.errors.ExceptionTranslator;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+<%_ } _%>
+import <%=packageName%>.service.UserService;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import org.apache.commons.lang3.RandomStringUtils;
+<%_ } _%>
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import org.mockito.Mock;
+<%_ } _%>
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+<%_ if (authenticationType === 'oauth2') { _%>
+import org.springframework.boot.test.mock.mockito.MockBean;
+<%_ } _%>
 import org.springframework.http.MediaType;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+<%_ } _%>
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;<% if (databaseType === 'sql' && authenticationType !== 'oauth2') { %>
+import org.springframework.transaction.annotation.Transactional;<% } %>
+<%_ if (authenticationType === 'oauth2') { _%>
+import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+<% } else { %>
+import java.time.Instant;<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+import java.time.LocalDate;<% } %>
+<%_ } _%>
 import java.util.*;
-
+<%_ if (authenticationType !== 'oauth2') { _%>
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
+<%_ } _%>
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -45,49 +91,77 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see AccountResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = <%=mainClass%>.class)
-public class AccountResourceIntTest {
+@SpringBootTest(classes = <%= mainClass %>.class)
+public class AccountResourceIntTest <% if (databaseType === 'cassandra') { %>extends AbstractCassandraTest <% } %>{
 
     @Autowired
     private UserRepository userRepository;
+<%_ if (authenticationType !== 'oauth2' && (databaseType === 'sql' || databaseType === 'mongodb')) { _%>
 
     @Autowired
     private AuthorityRepository authorityRepository;
+<%_ } _%>
+<%_ if (authenticationType !== 'oauth2') { _%>
 
     @Autowired
     private UserService userService;
+<%_ } _%>
+<%_ if (authenticationType === 'session') { _%>
+
+    @Autowired
+    private PersistentTokenRepository persistentTokenRepository;
+<%_ } _%>
+<%_ if (authenticationType !== 'oauth2') { _%>
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private HttpMessageConverter[] httpMessageConverters;
+<%_ } _%>
 
-    @Mock
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    <% if (authenticationType === 'oauth2') { %>@MockBean<% } else { %>@Mock<% } %>
     private UserService mockUserService;
+<%_ if (authenticationType !== 'oauth2') { _%>
 
     @Mock
     private MailService mockMailService;
 
-    private MockMvc restUserMockMvc;
-
     private MockMvc restMvc;
+<%_ } _%>
+
+    private MockMvc restUserMockMvc;
+<%_ if (authenticationType === 'oauth2') { _%>
+
+    @Autowired
+    private WebApplicationContext context;
+<%_ } _%>
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        <%_ if (authenticationType !== 'oauth2') { _%>
         doNothing().when(mockMailService).sendActivationEmail(anyObject());
+        <%_ } _%>
 
+        <%_ if (authenticationType !== 'oauth2') { _%>
         AccountResource accountResource =
-            new AccountResource(userRepository, userService, mockMailService);
-
+            new AccountResource(userRepository, userService, mockMailService<% if (authenticationType === 'session') { %>, persistentTokenRepository<% } %>);
+        <%_ } _%>
         AccountResource accountUserMockResource =
-            new AccountResource(userRepository, mockUserService, mockMailService);
-
+            new AccountResource(userRepository, mockUserService<% if (authenticationType !== 'oauth2') { %>, mockMailService<% } %><% if (authenticationType === 'session') { %>, persistentTokenRepository<% } %>);
+        <%_ if (authenticationType !== 'oauth2') { _%>
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource)
             .setMessageConverters(httpMessageConverters)
+            .setControllerAdvice(exceptionTranslator)
             .build();
-        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource).build();
+        <%_ } _%>
+        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource)
+            .setControllerAdvice(exceptionTranslator)
+            .build();
     }
 
     @Test
@@ -111,23 +185,36 @@ public class AccountResourceIntTest {
     }
 
     @Test
-    public void testGetExistingAccount() throws Exception {
+    public void testGetExistingAccount() throws Exception {<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.ADMIN);
-        authorities.add(authority);
+        authorities.add(authority);<% } %><% if (databaseType === 'cassandra') { %>
+        Set<String> authorities = new HashSet<>();
+        authorities.add(AuthoritiesConstants.ADMIN);<% } %>
 
         User user = new User();
         user.setLogin("test");
         user.setFirstName("john");
         user.setLastName("doe");
         user.setEmail("john.doe@jhipster.com");
+        <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
         user.setImageUrl("http://placehold.it/50x50");
+        <%_ } _%>
         user.setLangKey("en");
         user.setAuthorities(authorities);
         when(mockUserService.getUserWithAuthorities()).thenReturn(user);
+        <%_ if (authenticationType === 'oauth2') { _%>
+
+        // create security-aware mockMvc
+        restUserMockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
+        <%_ } _%>
 
         restUserMockMvc.perform(get("/api/account")
+            <%_ if (authenticationType === 'oauth2') { _%>.with(user(user.getLogin()).roles("ADMIN"))<%_ } _%>
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -135,7 +222,9 @@ public class AccountResourceIntTest {
             .andExpect(jsonPath("$.firstName").value("john"))
             .andExpect(jsonPath("$.lastName").value("doe"))
             .andExpect(jsonPath("$.email").value("john.doe@jhipster.com"))
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             .andExpect(jsonPath("$.imageUrl").value("http://placehold.it/50x50"))
+            <%_ } _%>
             .andExpect(jsonPath("$.langKey").value("en"))
             .andExpect(jsonPath("$.authorities").value(AuthoritiesConstants.ADMIN));
     }
@@ -148,10 +237,10 @@ public class AccountResourceIntTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
     }
+<%_ if (authenticationType !== 'oauth2') { _%>
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterValid() throws Exception {
         ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
@@ -161,13 +250,18 @@ public class AccountResourceIntTest {
             "Shmoe",                // lastName
             "joe@example.com",      // email
             true,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         restMvc.perform(
             post("/api/register")
@@ -179,8 +273,8 @@ public class AccountResourceIntTest {
         assertThat(user.isPresent()).isTrue();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterInvalidLogin() throws Exception {
         ManagedUserVM invalidUser = new ManagedUserVM(
             null,                   // id
@@ -190,13 +284,18 @@ public class AccountResourceIntTest {
             "One",                  // lastName
             "funky@example.com",    // email
             true,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -204,12 +303,12 @@ public class AccountResourceIntTest {
                 .content(TestUtil.convertObjectToJsonBytes(invalidUser)))
             .andExpect(status().isBadRequest());
 
-        Optional<User> user = userRepository.findOneByEmail("funky@example.com");
+        Optional<User> user = userRepository.findOneByEmailIgnoreCase("funky@example.com");
         assertThat(user.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterInvalidEmail() throws Exception {
         ManagedUserVM invalidUser = new ManagedUserVM(
             null,               // id
@@ -219,13 +318,18 @@ public class AccountResourceIntTest {
             "Green",            // lastName
             "invalid",          // email <-- invalid
             true,               // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -237,8 +341,8 @@ public class AccountResourceIntTest {
         assertThat(user.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterInvalidPassword() throws Exception {
         ManagedUserVM invalidUser = new ManagedUserVM(
             null,               // id
@@ -248,13 +352,18 @@ public class AccountResourceIntTest {
             "Green",            // lastName
             "bob@example.com",  // email
             true,               // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -266,8 +375,8 @@ public class AccountResourceIntTest {
         assertThat(user.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterNullPassword() throws Exception {
         ManagedUserVM invalidUser = new ManagedUserVM(
             null,               // id
@@ -277,13 +386,18 @@ public class AccountResourceIntTest {
             "Green",            // lastName
             "bob@example.com",  // email
             true,               // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -295,9 +409,8 @@ public class AccountResourceIntTest {
         assertThat(user.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterDuplicateLogin() throws Exception {
         // Good
         ManagedUserVM validUser = new ManagedUserVM(
@@ -308,17 +421,22 @@ public class AccountResourceIntTest {
             "Something",            // lastName
             "alice@example.com",    // email
             true,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         // Duplicate login, different email
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), validUser.getLogin(), validUser.getPassword(), validUser.getFirstName(), validUser.getLastName(),
-            "alicejr@example.com", true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities(), null);
+            "alicejr@example.com", true<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getImageUrl()<% } %>, validUser.getLangKey()<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate()<% } %>, validUser.getAuthorities(), null);
 
         // Good user
         restMvc.perform(
@@ -334,13 +452,12 @@ public class AccountResourceIntTest {
                 .content(TestUtil.convertObjectToJsonBytes(duplicatedUser)))
             .andExpect(status().is4xxClientError());
 
-        Optional<User> userDup = userRepository.findOneByEmail("alicejr@example.com");
+        Optional<User> userDup = userRepository.findOneByEmailIgnoreCase("alicejr@example.com");
         assertThat(userDup.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterDuplicateEmail() throws Exception {
         // Good
         ManagedUserVM validUser = new ManagedUserVM(
@@ -351,17 +468,22 @@ public class AccountResourceIntTest {
             "Doe",                  // lastName
             "john@example.com",     // email
             true,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)),
+            null);
 
         // Duplicate email, different login
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
-            validUser.getEmail(), true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities(), null);
+            validUser.getEmail(), true<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getImageUrl()<% } %>, validUser.getLangKey()<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate()<% } %>, validUser.getAuthorities(),null);
 
         // Good user
         restMvc.perform(
@@ -377,13 +499,22 @@ public class AccountResourceIntTest {
                 .content(TestUtil.convertObjectToJsonBytes(duplicatedUser)))
             .andExpect(status().is4xxClientError());
 
+        // Duplicate email - with uppercase email address
+        final ManagedUserVM userWithUpperCaseEmail = new ManagedUserVM(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
+                validUser.getEmail().toUpperCase(), true<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getImageUrl()<% } %>, validUser.getLangKey()<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate()<% } %>, validUser.getAuthorities(),null);
+
+        restMvc.perform(
+            post("/api/register")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(userWithUpperCaseEmail)))
+            .andExpect(status().is4xxClientError());
+
         Optional<User> userDup = userRepository.findOneByLogin("johnjr");
         assertThat(userDup.isPresent()).isFalse();
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRegisterAdminIsIgnored() throws Exception {
         ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
@@ -393,13 +524,18 @@ public class AccountResourceIntTest {
             "Guy",                  // lastName
             "badguy@example.com",   // email
             true,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)), null);
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)),
+            null);
 
         restMvc.perform(
             post("/api/register")
@@ -410,22 +546,24 @@ public class AccountResourceIntTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
-            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+            .containsExactly(<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>authorityRepository.findOne(AuthoritiesConstants.USER)<% } %><% if (databaseType === 'cassandra') { %>AuthoritiesConstants.USER<% } %>);
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testActivateAccount() throws Exception {
         final String activationKey = "some activation key";
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setLogin("activate-account");
         user.setEmail("activate-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(false);
         user.setActivationKey(activationKey);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         restMvc.perform(get("/api/activate?key={activationKey}", activationKey))
             .andExpect(status().isOk());
@@ -434,25 +572,27 @@ public class AccountResourceIntTest {
         assertThat(user.getActivated()).isTrue();
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testActivateAccountWithWrongKey() throws Exception {
         restMvc.perform(get("/api/activate?key=wrongActivationKey"))
             .andExpect(status().isInternalServerError());
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("save-account")
     public void testSaveAccount() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setLogin("save-account");
         user.setEmail("save-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         UserDTO userDTO = new UserDTO(
             null,                   // id
@@ -461,13 +601,18 @@ public class AccountResourceIntTest {
             "lastname",                  // lastName
             "save-account@example.com",    // email
             false,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)), null
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)),
+            null
         );
 
         restMvc.perform(
@@ -481,23 +626,26 @@ public class AccountResourceIntTest {
         assertThat(updatedUser.getLastName()).isEqualTo(userDTO.getLastName());
         assertThat(updatedUser.getEmail()).isEqualTo(userDTO.getEmail());
         assertThat(updatedUser.getLangKey()).isEqualTo(userDTO.getLangKey());
-        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
-        assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());
+        assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>
+        assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());<% } %>
         assertThat(updatedUser.getActivated()).isEqualTo(true);
         assertThat(updatedUser.getAuthorities()).isEmpty();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("save-invalid-email")
     public void testSaveInvalidEmail() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setLogin("save-invalid-email");
         user.setEmail("save-invalid-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         UserDTO userDTO = new UserDTO(
             null,                   // id
@@ -506,13 +654,18 @@ public class AccountResourceIntTest {
             "lastname",                  // lastName
             "invalid email",    // email
             false,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)), null
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)),
+            null
         );
 
         restMvc.perform(
@@ -521,28 +674,34 @@ public class AccountResourceIntTest {
                 .content(TestUtil.convertObjectToJsonBytes(userDTO)))
             .andExpect(status().isBadRequest());
 
-        assertThat(userRepository.findOneByEmail("invalid email")).isNotPresent();
+        assertThat(userRepository.findOneByEmailIgnoreCase("invalid email")).isNotPresent();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("save-existing-email")
     public void testSaveExistingEmail() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setLogin("save-existing-email");
         user.setEmail("save-existing-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         User anotherUser = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        anotherUser.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         anotherUser.setLogin("save-existing-email2");
         anotherUser.setEmail("save-existing-email2@example.com");
         anotherUser.setPassword(RandomStringUtils.random(60));
         anotherUser.setActivated(true);
 
-        userRepository.saveAndFlush(anotherUser);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(anotherUser);
 
         UserDTO userDTO = new UserDTO(
             null,                   // id
@@ -551,13 +710,18 @@ public class AccountResourceIntTest {
             "lastname",                  // lastName
             "save-existing-email2@example.com",    // email
             false,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)), null
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)),
+            null
         );
 
         restMvc.perform(
@@ -570,17 +734,20 @@ public class AccountResourceIntTest {
         assertThat(updatedUser.getEmail()).isEqualTo("save-existing-email@example.com");
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("save-existing-email-and-login")
     public void testSaveExistingEmailAndLogin() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setLogin("save-existing-email-and-login");
         user.setEmail("save-existing-email-and-login@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         UserDTO userDTO = new UserDTO(
             null,                   // id
@@ -589,13 +756,18 @@ public class AccountResourceIntTest {
             "lastname",                  // lastName
             "save-existing-email-and-login@example.com",    // email
             false,                   // activated
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             "http://placehold.it/50x50", //imageUrl
-            "en",                   // langKey
+            <%_ } _%>
+            Constants.DEFAULT_LANGUAGE,// langKey
+            <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)), null
+            <%_ } _%>
+            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)),
+            null
         );
 
         restMvc.perform(
@@ -608,117 +780,218 @@ public class AccountResourceIntTest {
         assertThat(updatedUser.getEmail()).isEqualTo("save-existing-email-and-login@example.com");
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("change-password")
     public void testChangePassword() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
-        restMvc.perform(post("/api/account/change_password").content("new password"))
+        restMvc.perform(post("/api/account/change-password").content("new password"))
             .andExpect(status().isOk());
 
         User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
         assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("change-password-too-small")
     public void testChangePasswordTooSmall() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("change-password-too-small");
         user.setEmail("change-password-too-small@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
-        restMvc.perform(post("/api/account/change_password").content("new"))
+        restMvc.perform(post("/api/account/change-password").content("new"))
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-small").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("change-password-too-long")
     public void testChangePasswordTooLong() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("change-password-too-long");
         user.setEmail("change-password-too-long@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
-        restMvc.perform(post("/api/account/change_password").content(RandomStringUtils.random(101)))
+        restMvc.perform(post("/api/account/change-password").content(RandomStringUtils.random(101)))
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-long").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
 
-    @Test
-    @Transactional
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     @WithMockUser("change-password-empty")
     public void testChangePasswordEmpty() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("change-password-empty");
         user.setEmail("change-password-empty@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
-        restMvc.perform(post("/api/account/change_password").content(RandomStringUtils.random(0)))
+        restMvc.perform(post("/api/account/change-password").content(RandomStringUtils.random(0)))
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-empty").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
+    <%_ if (authenticationType === 'session') { _%>
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
+    @WithMockUser("current-sessions")
+    public void testGetCurrentSessions()  throws Exception {
+        User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
+        user.setPassword(RandomStringUtils.random(60));
+        user.setLogin("current-sessions");
+        user.setEmail("current-sessions@example.com");
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
+
+        PersistentToken token = new PersistentToken();
+        token.setSeries("current-sessions");<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+        token.setUser(user);<% } else { %>
+        token.setUserId(user.getId());
+        token.setLogin(user.getLogin());<% } %>
+        token.setTokenValue("current-session-data");<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+        token.setTokenDate(LocalDate.of(2017, 3, 23));<% } else { %>
+        token.setTokenDate(new Date(1490714757123L));<% } %>
+        token.setIpAddress("127.0.0.1");
+        token.setUserAgent("Test agent");
+        persistentTokenRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(token);
+
+        restMvc.perform(get("/api/account/sessions"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.[*].series").value(hasItem(token.getSeries())))
+            .andExpect(jsonPath("$.[*].ipAddress").value(hasItem(token.getIpAddress())))
+            .andExpect(jsonPath("$.[*].userAgent").value(hasItem(token.getUserAgent())))
+            .andExpect(jsonPath("$.[*].tokenDate").value(hasItem(<% if (databaseType === 'cassandra') { %>"2017-03-28T15:25:57.123+0000"<% } else { %>token.getTokenDate().toString()<% } %>)));
+    }
+
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
+    @WithMockUser("invalidate-session")
+    public void testInvalidateSession() throws Exception {
+        User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
+        user.setPassword(RandomStringUtils.random(60));
+        user.setLogin("invalidate-session");
+        user.setEmail("invalidate-session@example.com");
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
+
+        PersistentToken token = new PersistentToken();
+        token.setSeries("invalidate-session");<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+        token.setUser(user);<% } else { %>
+        token.setUserId(user.getId());
+        token.setLogin(user.getLogin());<% } %>
+        token.setTokenValue("invalidate-data");<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+        token.setTokenDate(LocalDate.of(2017, 3, 23));<% } else { %>
+        token.setTokenDate(new Date(1490714757123L));<% } %>
+        token.setIpAddress("127.0.0.1");
+        token.setUserAgent("Test agent");
+        persistentTokenRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(token);
+
+        assertThat(persistentTokenRepository.findByUser(user)).hasSize(1);
+
+        restMvc.perform(delete("/api/account/sessions/invalidate-session"))
+            .andExpect(status().isOk());
+
+        assertThat(persistentTokenRepository.findByUser(user)).isEmpty();
+    }
+    <%_ } _%>
+
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testRequestPasswordReset() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setLogin("password-reset");
         user.setEmail("password-reset@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
-        restMvc.perform(post("/api/account/reset_password/init")
+        restMvc.perform(post("/api/account/reset-password/init")
             .content("password-reset@example.com"))
             .andExpect(status().isOk());
     }
 
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
+    public void testRequestPasswordResetUpperCaseEmail() throws Exception {
+        User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
+        user.setPassword(RandomStringUtils.random(60));
+        user.setActivated(true);
+        user.setLogin("password-reset");
+        user.setEmail("password-reset@example.com");
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
+
+        restMvc.perform(post("/api/account/reset-password/init")
+            .content("password-reset@EXAMPLE.COM"))
+            .andExpect(status().isOk());
+    }
+
     @Test
-    @WithMockUser()
     public void testRequestPasswordResetWrongEmail() throws Exception {
         restMvc.perform(
-            post("/api/account/reset_password/init")
+            post("/api/account/reset-password/init")
                 .content("password-reset-wrong-email@example.com"))
             .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testFinishPasswordReset() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset");
         user.setEmail("finish-password-reset@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
         keyAndPassword.setNewPassword("new password");
 
         restMvc.perform(
-            post("/api/account/reset_password/finish")
+            post("/api/account/reset-password/finish")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isOk());
@@ -727,24 +1000,26 @@ public class AccountResourceIntTest {
         assertThat(passwordEncoder.matches(keyAndPassword.getNewPassword(), updatedUser.getPassword())).isTrue();
     }
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testFinishPasswordResetTooSmall() throws Exception {
         User user = new User();
+        <%_ if (databaseType === 'cassandra') { _%>
+        user.setId(UUID.randomUUID().toString());
+        <%_ } _%>
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset-too-small");
         user.setEmail("finish-password-reset-too-small@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key too small");
-        userRepository.saveAndFlush(user);
+        userRepository.save<% if (databaseType === 'sql') { %>AndFlush<% } %>(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
         keyAndPassword.setNewPassword("foo");
 
         restMvc.perform(
-            post("/api/account/reset_password/finish")
+            post("/api/account/reset-password/finish")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isBadRequest());
@@ -754,18 +1029,18 @@ public class AccountResourceIntTest {
     }
 
 
-    @Test
-    @Transactional
-    @WithMockUser()
+    @Test<% if (databaseType === 'sql') { %>
+    @Transactional<% } %>
     public void testFinishPasswordResetWrongKey() throws Exception {
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey("wrong reset key");
         keyAndPassword.setNewPassword("new password");
 
         restMvc.perform(
-            post("/api/account/reset_password/finish")
+            post("/api/account/reset-password/finish")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isInternalServerError());
     }
+<%_ } _%>
 }
