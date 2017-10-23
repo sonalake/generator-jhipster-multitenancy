@@ -33,8 +33,8 @@ public class <%= tenantNameUpperFirst %>Aspect {
 
     /**
      * Run method if User service is hit.
-     * Filter users based on which company the user is associated with.
-     * Skip filter if user has no company
+     * Filter users based on which <%= tenantNameLowerCase %> the user is associated with.
+     * Skip filter if user has no <%= tenantNameLowerCase %>
      */
     <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
@@ -44,6 +44,6 @@ public class <%= tenantNameUpperFirst %>Aspect {
         if (user.get<%= tenantNameUpperFirst %>() != null) {
             Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
             filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
-        }        
+        }
     }
 }
