@@ -8,7 +8,6 @@ const mtUtils = require('../multitenancy-utils');
 const partialFiles = require('./partials/index');
 const pluralize = require('pluralize');
 
-const packagejs = require(`${__dirname}/../../package.json`);
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
 
@@ -43,7 +42,7 @@ module.exports = JhipsterGenerator.extend({
 
         if (this.name) {
             // we got a value
-            if(!this.options.entityConfig){
+            if (!this.options.entityConfig) {
                 this.skipPrompt = true;
             }
 
@@ -124,8 +123,8 @@ module.exports = JhipsterGenerator.extend({
                         this.error(chalk.yellow(`Entity ${chalk.bold(this.options.name)} doesn't exist. Please generate using yo jhipster:entity ${this.options.name}`));
                     } else {
                         // check if entity has relationship already
-                        this.entities = this.config.get("tenantisedEntities");
-                        if (this.entities != undefined && this.entities.indexOf(_.toLower(this.options.name)) >= 0) {
+                        this.entities = this.config.get('tenantisedEntities');
+                        if (this.entities !== undefined && this.entities.indexOf(_.toLower(this.options.name)) >= 0) {
                             this.isValid = false;
                             this.log(chalk.yellow(`Entity ${chalk.bold(this.options.name)} has been tenantised`));
                         }
@@ -142,21 +141,26 @@ module.exports = JhipsterGenerator.extend({
 
                             this.log(chalk.white(`Entity ${chalk.bold(this.options.name)} found. Adding relationship`));
                             this.real = {
-                                "relationshipName": this.tenantName,
-                                "otherEntityName": this.tenantName,
-                                "relationshipType": "many-to-one",
-                                "relationshipValidateRules": [
-                                    "required"
+                                relationshipName: this.tenantName,
+                                otherEntityName: this.tenantName,
+                                relationshipType: 'many-to-one',
+                                relationshipValidateRules: [
+                                    'required'
                                 ],
-                                "otherEntityField": "id",
-                                "ownerSide": true,
-                                "otherEntityRelationshipName": this.options.name
+                                otherEntityField: 'id',
+                                ownerSide: true,
+                                otherEntityRelationshipName: this.options.name
                             };
                             this.relationships.push(this.real);
                             this.entityJson.relationships = this.relationships;
+
+                            if (this.entityJson.service === 'no') {
+                                this.entityJson.service = 'serviceClass';
+                            }
+
                             this.fs.writeJSON(`.jhipster/${_.upperFirst(this.options.name)}.json`, this.entityJson, null, 4);
 
-                            if (this.entities == undefined) {
+                            if (this.entities === undefined) {
                                 this.tenantisedEntities = [_.toLower(this.options.name)];
                             } else {
                                 this.entities.push(_.toLower(this.options.name));
@@ -174,13 +178,13 @@ module.exports = JhipsterGenerator.extend({
             if (this.isValid) {
                 // read app config from .yo-rc.json
                 mtUtils.readConfig(this.jhipsterAppConfig, this);
-                var foo = `@Before(\"execution(* ${this.packageName}.web.rest.UserResource.*(..))`;
-                this.tenantisedEntities.forEach((entity) =>  {
-                    addEntity = ` || execution(* ${this.packageName}.web.rest.` + _.upperFirst(entity) + `Resource.*(..))`
-                    foo = foo.concat(addEntity);
+                let tenantisedEntityServices = `@Before("execution(* ${this.packageName}.service.UserService.*(..))`;
+                this.tenantisedEntities.forEach((entity) => {
+                    const addEntity = ` || execution(* ${this.packageName}.service.${_.upperFirst(entity)}Service.*(..))`;
+                    tenantisedEntityServices = tenantisedEntityServices.concat(addEntity);
                 });
-                foo = foo.concat('")');
-                this.tenantisedEntitesResources = foo;
+                tenantisedEntityServices = tenantisedEntityServices.concat('")');
+                this.tenantisedEntityServices = tenantisedEntityServices;
                 // replace aspect
 
                 /* tenant variables */
@@ -191,10 +195,9 @@ module.exports = JhipsterGenerator.extend({
         },
         generateClientCode() {
             if (this.isValid) {
-
-                const tenantNameUpperFirst = _.upperFirst(this.config.get("tenantName"));
-                const tenantNameLowerFirst = _.lowerFirst(this.config.get("tenantName"));
-                const tenantNamePluralLowerFirst = pluralize(_.lowerFirst(this.config.get("tenantName")));
+                const tenantNameUpperFirst = _.upperFirst(this.config.get('tenantName'));
+                const tenantNameLowerFirst = _.lowerFirst(this.config.get('tenantName'));
+                const tenantNamePluralLowerFirst = pluralize(_.lowerFirst(this.config.get('tenantName')));
                 const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
                 const entityName = _.kebabCase(_.lowerFirst(this.options.name));
 
@@ -207,56 +210,61 @@ module.exports = JhipsterGenerator.extend({
                 this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.html`,
                     `</div>
-    <div class=\"modal-footer\">`,
+    <div class="modal-footer">`,
                     partialFiles.angular.entityDialogCompHtml(this),
                     false
                 );
 
-                //entity-dialog.component.ts
+                // entity-dialog.component.ts
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `import { Observable } from 'rxjs/Rx';`,
+                    'import { Observable } from \'rxjs/Rx\';',
                     partialFiles.angular.entityDialogCompTsImports(this)
                 );
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `isSaving: boolean;`,
+                    'isSaving: boolean;',
                     `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];`
                 );
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private alertService: JhiAlertService,`,
+                    'private alertService: JhiAlertService,',
                     `private ${tenantNameLowerFirst}Service: ${tenantNameUpperFirst}Service,`
                 );
 
                 this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `ngOnInit() {`,
+                    'ngOnInit() {',
                     partialFiles.angular.entityDialogCompTsOnInit(this),
                     false
                 );
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private onError(error: any) {`,
+                    'private onError(error: any) {',
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`
                 );
                 //----------------
-
+                let th = '';
+                if (this.enableTranslation) {
+                    th = `<th *ngIf="!currentAccount.${tenantNameLowerFirst}"><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
+                } else {
+                    th = `<th *ngIf="!currentAccount.${tenantNameLowerFirst}"><span>${tenantNameUpperFirst}</span></th>`;
+                }
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
-                    `<th></th>`,
-                    `<th><span jhiTranslate="fooApp.${this.options.name}.${tenantNameLowerFirst}">${tenantNameUpperFirst}</span></th>`
+                    '<th></th>',
+                    th
                 );
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
-                    `<td class="text-right">`,
-                    `<td>
+                    '<td class="text-right">',
+                    `<td *ngIf="!currentAccount.company">
                     <div *ngIf="${this.options.name}.${tenantNameLowerFirst}">
                         <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.name}.${tenantNameLowerFirst}?.id ]" >{{${this.options.name}.${tenantNameLowerFirst}?.name}}</a>
                     </div>
@@ -265,28 +273,28 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
-                    `import { BaseEntity } from './../../shared';`,
+                    'import { BaseEntity } from \'./../../shared\';',
                     `import { ${tenantNameUpperFirst} } from '../../admin/${tenantNameLowerFirst}-management/${tenantNameLowerFirst}.model';`
                 );
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
-                    `) {`,
+                    ') {',
                     `   public ${tenantNameLowerFirst}?: ${tenantNameUpperFirst}`
                 );
 
-                //i18n
-                if(this.enableTranslation) {
+                // i18n
+                if (this.enableTranslation) {
                     this.getAllInstalledLanguages().forEach((language) => {
                         this.rewriteFile(
                             `${webappDir}i18n/${language}/${this.options.name}.json`,
-                            `"detail": {`,
+                            '"detail": {',
                             `"${tenantNameLowerFirst}": "${tenantNameUpperFirst}",`
                         );
-                    }); 
+                    });
                 }
             }
-        }        
+        }
     },
     install() {
         if (this.options.name !== undefined && this.isValid) {
@@ -300,7 +308,7 @@ module.exports = JhipsterGenerator.extend({
                 'skip-user-management': false,
                 arguments: [this.options.name],
             });
-            this.config.set("tenantisedEntities", this.tenantisedEntities);
+            this.config.set('tenantisedEntities', this.tenantisedEntities);
         }
     },
     end() {

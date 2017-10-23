@@ -156,7 +156,6 @@ module.exports = JhipsterGenerator.extend({
 
             // copy over aspect
             this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
-            this.template('src/main/java/package/aop/_tenant/RequestParam.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/RequestParam.java`);
         },
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
