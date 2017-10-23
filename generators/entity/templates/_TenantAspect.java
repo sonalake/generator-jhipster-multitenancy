@@ -27,37 +27,23 @@ public class <%= tenantNameUpperFirst %>Aspect {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    RequestParam requestParam;
-
     private final String fieldName =  "<%= tenantNameSpinalCased %>Id";
 
     private final Logger log = LoggerFactory.getLogger(<%= tenantNameUpperFirst %>Aspect.class);
 
     /**
      * Run method if User service is hit.
-     * Filter users based on which company the user is associated with.
-     * Skip filter if user has no company
+     * Filter users based on which <%= tenantNameLowerCase %> the user is associated with.
+     * Skip filter if user has no <%= tenantNameLowerCase %>
      */
-    <%- tenantisedEntitesResources %>
+    <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
         String login = SecurityUtils.getCurrentUserLogin();
         User user = userRepository.findOneByLogin(login).get();
+
         if (user.get<%= tenantNameUpperFirst %>() != null) {
-            requestParam.set<%= tenantNameUpperFirst %>Id(user.get<%= tenantNameUpperFirst %>().getId());
-        }
-    }
-
-    @Pointcut("this(org.springframework.data.repository.Repository)")
-    public void repoMethods() {}
-
-    @Around("repoMethods()")
-    public Object applyFilter(ProceedingJoinPoint pjp) throws Throwable {
-        if (requestParam.get<%= tenantNameUpperFirst %>Id() != null) {
-            // filter users results if they have a <%= tenantNameUpperFirst %>
             Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
-            filter.setParameter(fieldName, requestParam.get<%= tenantNameUpperFirst %>Id());
+            filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
         }
-        return pjp.proceed();
     }
 }
