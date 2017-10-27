@@ -39,11 +39,14 @@ public class <%= tenantNameUpperFirst %>Aspect {
     <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
         String login = SecurityUtils.getCurrentUserLogin();
-        User user = userRepository.findOneByLogin(login).get();
+		
+		if(login != null) {
+			User user = userRepository.findOneByLogin(login).get();
 
-        if (user.get<%= tenantNameUpperFirst %>() != null) {
-            Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
-            filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
-        }
+			if (user.get<%= tenantNameUpperFirst %>() != null) {
+				Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
+				filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
+			}
+		}
     }
 }
