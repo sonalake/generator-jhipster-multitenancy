@@ -6,17 +6,15 @@
 Greetings, Java Hipster!
 
 # generator-jhipster-multitenancy
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 > JHipster module to enable multitenancy in your application
 
 
 # Introduction
+This module is used for creating multitenant applications. The module will:
 
-This is a [JHipster](http://jhipster.github.io/) module, that is intended to be applied to a JHipster application. This module is used to:
-
-- Generate a Tenant entity and a relationship to the User entity
-- Tenantise existing entities
-- Enhance `yo jhipster:entity` sub-generator with a post-hook
+ - Generate a Tenant entity.
+ - Make the User, and any other entities, tenant aware.
 
 # Table of contents
 
@@ -65,28 +63,28 @@ yo jhipster-multitenancy
 
 You will then be prompted for the name of your tenant entity.
 
-## Tenantising an entity
+## Making an entity tenant aware
 
-Once the module has been run on the JHipster generated application, any entity in the application can then be tenantised. This is done using the `jhipster-multitenancy:entity` sub-generator.
+Once the module has been run on the JHipster generated application, any entity in the application can be made tenant aware. This is done using the `jhipster-multitenancy:entity` sub-generator.
 
-To tenantise an existing entity:
+For an existing entity:
 
 ```bash
-yo jhipster-multitenancy:entity foo
+yo jhipster-multitenancy:entity Book
 ```
 
-This sub-generator also hooks into the `jhipster:entity` sub-generator. When creating a new entity, you will be prompted to tenantise the new entity.
+This sub-generator also hooks into the `jhipster:entity` sub-generator. When creating a new entity, you will be prompted to make an entity tenant aware.
 
 ```bash
-yo jhipster:entity foo
+yo jhipster:entity Book
 
 # upon generation, you will be asked
-Do you want to tenantise the entity foo? (Y/n)
+Do you want to make Book tenant aware? (Y/n)
 ```
 
 ## Applying the tenant filter
 
-In order to achieve multitenancy we have chose a discriminator column approach. To apply data filtering by tenant, add @FilterDef and @Filter annotations to the top of each tenantised entity.
+Tenancy is enforced using a Hibernate filter. The filter identifies a discriminator column that is used to used to uniquely identify a tenant. By default, jhipster-multitenancy adds the filter to the `User` class. For other entities, you must add the filter manually. See below for an example.
 
 ```bash
 import org.hibernate.annotations.Filter;
@@ -104,11 +102,10 @@ public class Book extends AbstractAuditingEntity implements Serializable {
     ...
 }
 ```
-This example is based on company being the tenant name, and the filter then being name "COMPANY_FILTER". Copy these lines from User.java to ensure no mistakes in filter reference.
 
 # License
 
-Apache-2.0 © [Sonalake](http://github.com/sonalake/)
+Apache-2.0
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-multitenancy.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-multitenancy

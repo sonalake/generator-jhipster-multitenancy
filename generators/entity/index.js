@@ -84,19 +84,19 @@ module.exports = JhipsterGenerator.extend({
                     when: this.options.name === undefined && this.skipPrompt === false,
                     type: 'confirm',
                     name: 'continue',
-                    message: 'Do you want to tenantise an entity?'
+                    message: 'Do you want to make an entity tenant aware?'
                 },
                 {
                     when: this.options.name !== undefined && this.skipPrompt === false,
                     type: 'confirm',
                     name: 'continue',
-                    message: `Do you want to tenantise the entity ${this.options.name}?`
+                    message: `Do you want to make ${this.options.name} tenant aware?`
                 },
                 {
                     when: p => p.continue === true && this.options.name === undefined,
                     type: 'input',
                     name: 'entity',
-                    message: 'Name the entity you wish to tenantise.'
+                    message: 'Name the entity you wish to make tenant aware.'
                 }
             ]).then((props) => {
                 if (this.options.name === undefined) {
