@@ -7,7 +7,7 @@ Greetings, Java Hipster!
 
 # generator-jhipster-multitenancy
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-> JHipster module to enable multitenancy in your application
+> A JHipster module for creating multitenant applications
 
 
 # Introduction
@@ -22,7 +22,7 @@ This module is used for creating multitenant applications. The module will:
 * [Installation](#installation)
 * [Usage](#usage)
   * [Tenantising an entity](#tenantising-an-entity)
-  * [Applying the tenant filter](#applying-the-tenant-filter)
+  * [Making an entity tenant aware](#making-an-entity-tenant-aware)
 * [License](#license)
 
 # Prerequisites
