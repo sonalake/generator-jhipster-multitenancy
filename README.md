@@ -21,8 +21,8 @@ This module is used for creating multitenant applications. The module will:
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Usage](#usage)
-  * [Tenantising an entity](#tenantising-an-entity)
   * [Making an entity tenant aware](#making-an-entity-tenant-aware)
+  * [Applying the tenant filter](#applying-the-tenant-filter)
 * [License](#license)
 
 # Prerequisites
