@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.hibernate.Filter;
+import java.util.Optional;
 
 @Aspect
 @Component
@@ -38,10 +39,10 @@ public class <%= tenantNameUpperFirst %>Aspect {
      */
     <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
-        String login = SecurityUtils.getCurrentUserLogin().get();
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
 
-		if(login != null) {
-			User user = userRepository.findOneByLogin(login).get();
+        if(login.isPresent()) {
+			User user = userRepository.findOneByLogin(login.get()).get();
 
 			if (user.get<%= tenantNameUpperFirst %>() != null) {
 				Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
