@@ -109,7 +109,6 @@ export class UserMgmtDialogComponent implements OnInit {
 })
 export class UserDialogComponent implements OnInit, OnDestroy {
 
-    modalRef: NgbModalRef;
     routeSub: any;
 
     constructor(
@@ -120,9 +119,9 @@ export class UserDialogComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
             if ( params['login'] ) {
-                this.modalRef = this.userModalService.open(UserMgmtDialogComponent as Component, params['login']);
+                this.userModalService.open(UserMgmtDialogComponent as Component, params['login']);
             } else {
-                this.modalRef = this.userModalService.open(UserMgmtDialogComponent as Component);
+                this.userModalService.open(UserMgmtDialogComponent as Component);
             }
         });
     }
