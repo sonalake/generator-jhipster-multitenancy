@@ -38,8 +38,8 @@ public class <%= tenantNameUpperFirst %>Aspect {
      */
     <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
-        String login = SecurityUtils.getCurrentUserLogin();
-		
+    String login = SecurityUtils.getCurrentUserLogin().get();
+
 		if(login != null) {
 			User user = userRepository.findOneByLogin(login).get();
 

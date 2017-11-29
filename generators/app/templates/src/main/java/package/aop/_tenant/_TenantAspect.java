@@ -38,8 +38,8 @@ public class <%= tenantNameUpperFirst %>Aspect {
      */
     <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
-        String login = SecurityUtils.getCurrentUserLogin();
-		
+        String login = SecurityUtils.getCurrentUserLogin().get();
+
 		if(login != null) {
 			User user = userRepository.findOneByLogin(login).get();
 
@@ -47,6 +47,6 @@ public class <%= tenantNameUpperFirst %>Aspect {
 				Filter filter = entityManager.unwrap(Session.class).enableFilter("<%= tenantNameUpperCase %>_FILTER");
 				filter.setParameter(fieldName, user.get<%= tenantNameUpperFirst %>().getId());
 			}
-		}        
+		}
     }
 }
