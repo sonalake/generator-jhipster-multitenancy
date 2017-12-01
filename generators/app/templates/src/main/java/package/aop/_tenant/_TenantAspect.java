@@ -3,7 +3,9 @@ package <%=packageName%>.aop.<%= tenantNameLowerFirst %>;
 import <%=packageName%>.security.SecurityUtils;
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.domain.User;
-import org.aspectj.lang.ProceedingJoinPoint;
+import com.starbucks.inventory.service.dto.UserDTO;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -31,6 +33,27 @@ public class <%= tenantNameUpperFirst %>Aspect {
     private final String fieldName =  "<%= tenantNameSpinalCased %>Id";
 
     private final Logger log = LoggerFactory.getLogger(<%= tenantNameUpperFirst %>Aspect.class);
+
+    /**
+     * Run method if if a user is created or updated
+     * sets the tenant on the user
+     */
+    @AfterReturning(value = "execution(* <%= packageName %>.service.UserService.createUser(..)) || execution(* <%= packageName %>.service.UserService.updateUser(..))", returning = "user")
+    public void afterExecution(JoinPoint joinPoint, User user) throws Throwable {
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+
+        if(login.isPresent()) {
+            User loggedInUser = userRepository.findOneByLogin(login.get()).get();
+
+            if (loggedInUser.get<%= tenantNameUpperFirst %>() != null) {
+                user.set<%= tenantNameUpperFirst %>(loggedInUser.get<%= tenantNameUpperFirst %>());
+            }
+            else{
+                UserDTO userDTO = (UserDTO)joinPoint.getArgs()[0];
+                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
+            }
+        }
+    }
 
     /**
      * Run method if User service is hit.
