@@ -35,11 +35,11 @@ private final String fieldName =  "<%= tenantNameSpinalCased %>Id";
 private final Logger log = LoggerFactory.getLogger(<%= tenantNameUpperFirst %>Aspect.class);
 
 /**
- * Run method if if a user is created or updated
+ * Run method if if a user is created
  * sets the tenant on the user
  */
-@AfterReturning(value = "execution(* <%= packageName %>.service.UserService.createUser(..)) || execution(* <%= packageName %>.service.UserService.updateUser(..))", returning = "user")
-public void afterExecution(JoinPoint joinPoint, User user) throws Throwable {
+@AfterReturning(value = "execution(* com.starbucks.inventory.service.UserService.createUser(..))", returning = "user")
+public void afterUserCreation(JoinPoint joinPoint, User user) throws Throwable {
     Optional<String> login = SecurityUtils.getCurrentUserLogin();
 
     if(login.isPresent()) {
