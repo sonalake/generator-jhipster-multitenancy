@@ -21,8 +21,6 @@
 <%_ if (authenticationType === 'oauth2' && applicationType !== 'monolith') { _%>
     import java.util.Set;
 
-@FilterDef(name = "<%= tenantNameUpperCase %>_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
-@Filter(name = "<%= tenantNameUpperCase %>_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
 public class User {
 
     private final String login;
@@ -112,6 +110,9 @@ public class User {
 
 <%_ if (databaseType === 'sql') { _%>
     import javax.persistence.*;
+    import org.hibernate.annotations.Filter;
+    import org.hibernate.annotations.FilterDef;
+    import org.hibernate.annotations.ParamDef;
 <%_ } _%>
     import javax.validation.constraints.NotNull;
     import javax.validation.constraints.Pattern;
@@ -140,6 +141,8 @@ public class User {
 @Document<% } %><% if (databaseType === 'cassandra') { %>
 @Table(name = "user")<% } %><% if (searchEngine === 'elasticsearch') { %>
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "user")<% } %>
+@FilterDef(name = "<%= tenantNameUpperCase %>_FILTER", parameters = {@ParamDef(name = "<%= tenantNameSpinalCased %>Id", type = "long")})
+@Filter(name = "<%= tenantNameUpperCase %>_FILTER", condition = "<%= tenantNameSpinalCased %>_id = :<%= tenantNameSpinalCased %>Id")
 public class User<% if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { %> extends AbstractAuditingEntity<% } %> implements Serializable {
 
 private static final long serialVersionUID = 1L;
