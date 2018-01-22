@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-multitenancy",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "A JHipster module for creating multitenant applications",
   "keywords": [
     "yeoman-generator",
