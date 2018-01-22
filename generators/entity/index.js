@@ -218,7 +218,7 @@ module.exports = JhipsterGenerator.extend({
                 // entity-dialog.component.ts
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    'import { Observable } from \'rxjs/Rx\';',
+                    'import { Observable } from \'rxjs/Observable\';',
                     partialFiles.angular.entityDialogCompTsImports(this)
                 );
 
@@ -255,7 +255,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    'private onError(error: any) {',
+                    'save() {',
                     `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
         return item.id;
     }`
