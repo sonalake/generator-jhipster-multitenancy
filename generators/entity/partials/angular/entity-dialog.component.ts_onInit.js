@@ -1,7 +1,7 @@
 const tmpl = (context) => {
     let template =`ngOnInit() {
         this.${context.tenantNameLowerFirst}Service.query()
-            .subscribe((res: ResponseWrapper) => { this.${context.tenantNamePluralLowerFirst} = res.json; }, (res: ResponseWrapper) => this.onError(res.json));`;
+            .subscribe((res: ResponseWrapper) => { this.${context.tenantNamePluralLowerFirst} = res.json; });`;
     
     return template;
 };
