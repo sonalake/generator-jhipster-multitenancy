@@ -1,1 +1,1 @@
-customHttpProvider(),
+PaginationConfig,

@@ -59,6 +59,7 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/shared/auth/principal.service.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/index.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/admin/administration.spec.ts`,
+        `${CLIENT_TEST_SRC_DIR}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/global.json`
     ],
     entityFiles: [

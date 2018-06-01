@@ -321,13 +321,13 @@ module.exports = JhipsterGenerator.extend({
                 'getImageUrl(): String {',
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
             );
+
+            // Rewriting on tests
             this.rewriteFile(
                 `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
                 'import { UserService, User, JhiLanguageHelper } from \'../../../../../../main/webapp/app/shared\';',
                 `import { ${this.tenantNameUpperFirst}Service } from '../../../../../../main/webapp/app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';`
             );
-
-            // unit tests
             this.replaceContent(
                 `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
                 `providers: [
