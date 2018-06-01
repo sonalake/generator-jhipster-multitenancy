@@ -18,13 +18,13 @@
 -%>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
+import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { ITEMS_PER_PAGE, Principal } from '../../shared';
 
 @Component({
     selector: '<%=jhiPrefix%>-<%= tenantNameLowerFirst %>-mgmt',
@@ -52,10 +52,6 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
         private alertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal,
-        <%_ if (databaseType !== 'cassandra') { _%>
-        private paginationUtil: JhiPaginationUtil,
-        private paginationConfig: PaginationConfig,
-        <%_ } _%>
         private activatedRoute: ActivatedRoute,
         private router: Router
     ) {
@@ -87,8 +83,8 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
             page: this.page - 1,
             size: this.itemsPerPage,
             sort: this.sort()}<% } %>).subscribe(
-            (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpResponse<<%= tenantNameUpperFirst %>[]>) => this.onSuccess(res.body, res.headers),
+            (res: HttpResponse<any>) => this.onError(res.body)
         );
     }
 

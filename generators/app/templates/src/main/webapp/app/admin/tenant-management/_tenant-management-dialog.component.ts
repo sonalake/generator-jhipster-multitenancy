@@ -18,16 +18,14 @@
 -%>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>ModalService } from './<%= tenantNameLowerFirst %>-modal.service';
 import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: '<%=jhiPrefix%>-<%= tenantNameLowerFirst %>-mgmt-dialog',

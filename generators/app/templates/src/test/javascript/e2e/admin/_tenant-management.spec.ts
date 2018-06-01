@@ -16,7 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 <%_
 let elementGetter = `getText()`;
@@ -29,7 +29,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
     let navBarPage: NavBarPage;
     let <%= tenantNameLowerFirst %>MgmtDialogPage: <%= tenantNameUpperFirst %>MgmtDialogPage;
     let <%= tenantNameLowerFirst %>MgmtComponentsPage: <%= tenantNameUpperFirst %>MgmtComponentsPage;
-    
+
     beforeAll(() => {
         browser.get('/');
         browser.waitForAngular();
@@ -39,7 +39,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         navBarPage.getSignInPage().autoSignInUsing('admin', 'admin');
         browser.waitForAngular();
         navBarPage.clickOnAdminMenu();
-        navBarPage.clickOnAdmin("<%= tenantNameLowerFirst %>-management");
+        navBarPage.clickOnAdmin('<%= tenantNameLowerFirst %>-management');
         browser.waitForAngular();
     });
 
@@ -58,7 +58,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         <%= tenantNameLowerFirst %>MgmtDialogPage.setNameInput('new <%= tenantNameLowerFirst %>');
         expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getNameInput()).toMatch('new <%= tenantNameLowerFirst %>');
         <%= tenantNameLowerFirst %>MgmtDialogPage.save();
-        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getSaveButton().isPresent()).toBeFalsy();        
+        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getSaveButton().isPresent()).toBeFalsy();
     });
 
     afterAll(() => {
@@ -89,14 +89,14 @@ export class <%= tenantNameUpperFirst %>MgmtDialogPage {
         return this.modalTitle.<%- elementGetter %>;
     }
 
-    setNameInput = function (name) {
+    setNameInput = function(name) {
         this.nameInput.sendKeys(name);
-    }
+    };
 
-    getNameInput = function () {
+    getNameInput = function() {
         return this.nameInput.getAttribute('value');
-    }
-    
+    };
+
     save() {
         this.saveButton.click();
     }
