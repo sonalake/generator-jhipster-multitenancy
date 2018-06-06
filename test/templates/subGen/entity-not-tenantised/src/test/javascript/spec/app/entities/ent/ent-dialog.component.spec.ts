@@ -1,0 +1,1 @@
+import { Ent } from '../../../../../../main/webapp/app/entities/ent/ent.model';
