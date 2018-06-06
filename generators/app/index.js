@@ -339,15 +339,9 @@ module.exports = JhipsterGenerator.extend({
             );
             this.rewriteFile(
                 `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-                'const entity = new User(123);',
-                partialFiles.angular.userMgmtDialogComponentSpecTs1(this)
+                'service = fixture.debugElement.injector.get(UserService);',
+                partialFiles.angular.userMgmtDialogComponentSpecTs(this)
             );
-            this.rewriteFile(
-                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-                'const entity = new User();',
-                partialFiles.angular.userMgmtDialogComponentSpecTs2(this)
-            );
-
 
             if (this.protractorTests) {
                 this.rewriteFile(
