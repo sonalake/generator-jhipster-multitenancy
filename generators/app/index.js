@@ -293,7 +293,7 @@ module.exports = JhipsterGenerator.extend({
             );
             this.rewriteFile(
                 `${this.webappDir}app/app.module.ts`,
-                'customHttpProvider(),',
+                'PaginationConfig,',
                 `${this.tenantNameUpperFirst}RouteAccessService,`
             );
             this.rewriteFile(
@@ -320,6 +320,27 @@ module.exports = JhipsterGenerator.extend({
                 `${this.webappDir}app/shared/auth/principal.service.ts`,
                 'getImageUrl(): String {',
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
+            );
+
+            // Rewriting on tests
+            this.rewriteFile(
+                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+                'import { UserService, User, JhiLanguageHelper } from \'../../../../../../main/webapp/app/shared\';',
+                `import { ${this.tenantNameUpperFirst}Service } from '../../../../../../main/webapp/app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';`
+            );
+            this.replaceContent(
+                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+                `providers: [
+                    UserService`,
+                    `providers: [
+                    UserService,
+                    ${this.tenantNameUpperFirst}Service`,
+                false
+            );
+            this.rewriteFile(
+                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+                'service = fixture.debugElement.injector.get(UserService);',
+                partialFiles.angular.userMgmtDialogComponentSpecTs(this)
             );
 
             if (this.protractorTests) {

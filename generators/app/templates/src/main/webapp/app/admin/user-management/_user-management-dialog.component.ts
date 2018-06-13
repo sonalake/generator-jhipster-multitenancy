@@ -18,12 +18,13 @@
 -%>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { UserModalService } from './user-modal.service';
-import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService, ResponseWrapper, Principal } from '../../shared';
+import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService, Principal } from '../../shared';
 
 import { <%= tenantNameUpperFirst %> } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.service';
@@ -69,8 +70,8 @@ export class UserMgmtDialogComponent implements OnInit {
         <%_ } _%>
 
         this.<%= tenantNameLowerFirst %>Service.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.<%= tenantNamePluralLowerFirst %> = res.json;
+            (res: HttpResponse<<%= tenantNameUpperFirst %>[]>) => {
+                this.<%= tenantNamePluralLowerFirst %> = res.body;
             }
         );
     }
