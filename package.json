@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "chalk": "1.1.3",
-    "generator-jhipster": ">=4.13.1",
+    "generator-jhipster": ">=5.0.1",
     "lodash": "^4.17.4",
     "mkdirp": "0.5.1",
     "pluralize": "^6.0.0",
