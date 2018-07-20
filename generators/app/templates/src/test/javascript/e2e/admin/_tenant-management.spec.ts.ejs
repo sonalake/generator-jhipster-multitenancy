@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://jhipster.github.io/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ if (enableTranslation) {
 describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
 
     let navBarPage: NavBarPage;
-    let <%= tenantNameLowerFirst %>MgmtDialogPage: <%= tenantNameUpperFirst %>MgmtDialogPage;
+    let <%= tenantNameLowerFirst %>MgmtUpdatePage: <%= tenantNameUpperFirst %>MgmtUpdatePage;
     let <%= tenantNameLowerFirst %>MgmtComponentsPage: <%= tenantNameUpperFirst %>MgmtComponentsPage;
 
     beforeAll(() => {
@@ -35,7 +35,7 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         browser.waitForAngular();
         navBarPage = new NavBarPage(true);
         <%= tenantNameLowerFirst %>MgmtComponentsPage = new <%= tenantNameUpperFirst %>MgmtComponentsPage();
-        <%= tenantNameLowerFirst %>MgmtDialogPage = new <%= tenantNameUpperFirst %>MgmtDialogPage();
+        <%= tenantNameLowerFirst %>MgmtUpdatePage = new <%= tenantNameUpperFirst %>MgmtUpdatePage();
         navBarPage.getSignInPage().autoSignInUsing('admin', 'admin');
         browser.waitForAngular();
         navBarPage.clickOnAdminMenu();
@@ -43,22 +43,16 @@ describe('<%= tenantNameUpperFirst %>-management e2e test', () => {
         browser.waitForAngular();
     });
 
-    it('should load create <%= tenantNameLowerFirst %> dialog', () => {
+    it('should load create <%= tenantNameLowerFirst %> page', () => {
         <%= tenantNameLowerFirst %>MgmtComponentsPage.clickOnCreateButton();
-        <%_ if (enableTranslation) { _%>
-        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/<%= tenantNameLowerFirst %>Management.home.createLabel/);
-        <%_ } else { _%>
-        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getModalTitle()).toMatch(/Create new <%= tenantNameUpperFirst %>/);
-        <%_ } _%>
-        <%= tenantNameLowerFirst %>MgmtDialogPage.close();
+        expect(browser.getCurrentUrl()).toMatch('/admin/<%= tenantNameLowerFirst %>-management/new');
     });
 
    it('should create and save <%= tenantNamePluralLowerFirst %>', () => {
-        <%= tenantNameLowerFirst %>MgmtComponentsPage.clickOnCreateButton();
-        <%= tenantNameLowerFirst %>MgmtDialogPage.setNameInput('new <%= tenantNameLowerFirst %>');
-        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getNameInput()).toMatch('new <%= tenantNameLowerFirst %>');
-        <%= tenantNameLowerFirst %>MgmtDialogPage.save();
-        expect(<%= tenantNameLowerFirst %>MgmtDialogPage.getSaveButton().isPresent()).toBeFalsy();
+        <%= tenantNameLowerFirst %>MgmtUpdatePage.setNameInput('new <%= tenantNameLowerFirst %>');
+        expect(<%= tenantNameLowerFirst %>MgmtUpdatePage.getNameInput()).toMatch('new <%= tenantNameLowerFirst %>');
+        <%= tenantNameLowerFirst %>MgmtUpdatePage.save();
+        expect(browser.getCurrentUrl()).toMatch('/admin/<%= tenantNameLowerFirst %>-management');
     });
 
     afterAll(() => {
@@ -79,15 +73,9 @@ export class <%= tenantNameUpperFirst %>MgmtComponentsPage {
     }
 }
 
-export class <%= tenantNameUpperFirst %>MgmtDialogPage {
-    modalTitle = element(by.css('.modal-title'));
-    saveButton = element(by.css('.modal-footer .btn.btn-primary'));
-    closeButton = element(by.css('button.close'));
+export class <%= tenantNameUpperFirst %>MgmtUpdatePage {
+    saveButton = element(by.css('.btn.btn-primary'));
     nameInput = element(by.css('input#field_name'));
-
-    getModalTitle() {
-        return this.modalTitle.<%- elementGetter %>;
-    }
 
     setNameInput = function(name) {
         this.nameInput.sendKeys(name);
@@ -99,10 +87,6 @@ export class <%= tenantNameUpperFirst %>MgmtDialogPage {
 
     save() {
         this.saveButton.click();
-    }
-
-    close() {
-        this.closeButton.click();
     }
 
     getSaveButton() {
