@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://jhipster.github.io/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 import { Routes } from '@angular/router';
 
 import {
-    <%_ if (devDatabaseType !== 'cassandra') { _%>
+    <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
     auditsRoute,
     <%_ } _%>
     configurationRoute,
@@ -27,7 +27,7 @@ import {
     healthRoute,
     logsRoute,
     metricsRoute,
-    <%_ if (applicationType === 'gateway') { _%>
+    <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
     gatewayRoute,
     <%_ } _%>
     <%_ if (websocket === 'spring-websocket') { _%>
@@ -35,23 +35,21 @@ import {
     <%_ } _%>
     <%_ if (!skipUserManagement) { _%>
     userMgmtRoute,
-    userDialogRoute,
     <%_ } _%>
-    <%= tenantNameLowerFirst %>MgmtRoute,
-    <%= tenantNameLowerFirst %>DialogRoute
+    <%= tenantNameLowerFirst %>MgmtRoute
 } from './';
 
-import { UserRouteAccessService } from '../shared';
+import { UserRouteAccessService } from 'app/core';
 
 const ADMIN_ROUTES = [
-    <%_ if (devDatabaseType !== 'cassandra') { _%>
+    <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
     auditsRoute,
     <%_ } _%>
     configurationRoute,
     docsRoute,
     healthRoute,
     logsRoute,
-    <%_ if (applicationType === 'gateway') { _%>
+    <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
     gatewayRoute,
     <%_ } _%>
     <%_ if (websocket === 'spring-websocket') { _%>
@@ -71,9 +69,4 @@ export const adminState: Routes = [{
     },
     canActivate: [UserRouteAccessService],
     children: ADMIN_ROUTES
-},
-    <%_ if (!skipUserManagement) { _%>
-    ...userDialogRoute,
-    <%_ } _%>
-    ...<%= tenantNameLowerFirst %>DialogRoute
-];
+}];

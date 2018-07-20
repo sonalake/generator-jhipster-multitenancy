@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see http://www.jhipster.tech/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,12 +19,10 @@
 package <%=packageName%>.web.rest.vm;
 
 import <%=packageName%>.service.dto.UserDTO;
+<%_ if (authenticationType !== 'oauth2') { _%>
 import javax.validation.constraints.Size;
-import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
-<%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
-import java.time.Instant;
 <%_ } _%>
-import java.util.Set;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.
@@ -44,21 +42,25 @@ public class ManagedUserVM extends UserDTO {
         // Empty constructor needed for Jackson.
     }
 
-    public ManagedUserVM(<% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> id, String login, <% if (authenticationType !== 'oauth2') { %>String password, <% } %>String firstName, String lastName,
-                         String email, boolean activated<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, String imageUrl<% } %>, String langKey,
-                         <% if (databaseType === 'mongodb' || databaseType === 'sql') { %>String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
-                        <% } %>Set<String> authorities, <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
+    // public ManagedUserVM(<% if (databaseType === 'mongodb' || databaseType === 'cassandra') { %>String<% } else { %>Long<% } %> id, String login, <% if (authenticationType !== 'oauth2') { %>String password, <% } %>String firstName, String lastName,
+    //                      String email, boolean activated<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, String imageUrl<% } %>, String langKey,
+    //                      <% if (databaseType === 'mongodb' || databaseType === 'sql') { %>String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
+    //                     <% } %>Set<String> authorities, <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
 
-        super(id, login, firstName, lastName, email, activated<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, imageUrl<% } %>, langKey,
-            <% if (databaseType === 'mongodb' || databaseType === 'sql') { %>createdBy, createdDate, lastModifiedBy, lastModifiedDate,  <% } %>authorities, <%= tenantNameLowerFirst %>);
-    <%_ if (authenticationType !== 'oauth2') { _%>
-        this.password = password;
-    <%_ } _%>
-    }
-    <%_ if (authenticationType !== 'oauth2') { _%>
+    //     super(id, login, firstName, lastName, email, activated<% if (databaseType === 'mongodb' || databaseType === 'sql') { %>, imageUrl<% } %>, langKey,
+    //         <% if (databaseType === 'mongodb' || databaseType === 'sql') { %>createdBy, createdDate, lastModifiedBy, lastModifiedDate,  <% } %>authorities, <%= tenantNameLowerFirst %>);
+    // <%_ if (authenticationType !== 'oauth2') { _%>
+    //     this.password = password;
+    // <%_ } _%>
+    // }
+<%_ if (authenticationType !== 'oauth2') { _%>
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     <%_ } _%>
 

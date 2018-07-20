@@ -1,5 +1,5 @@
 const util = require('util');
-const chalk = require('chalk');
+const chalk = require('../../../../.cache/typescript/2.9/node_modules/chalk');
 const generator = require('yeoman-generator');
 const packagejs = require('../../package.json');
 const semver = require('semver');
@@ -7,7 +7,7 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const _ = require('lodash');
 const mtUtils = require('../multitenancy-utils');
-const partialFiles = require('./partials/index');
+const partialFiles = require('./partials');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -24,8 +24,10 @@ module.exports = JhipsterGenerator.extend({
 
             this.angularXAppName = this.getAngularXAppName();
             this.angularAppName = this.getAngularAppName();
+            this.cacheManagerIsAvailable = ['ehcache', 'hazelcast', 'infinispan', 'memcached'].includes(this.cacheProvider);
             this.jhiTablePrefix = this.getTableName(this.jhiPrefix);
             this.jhiPrefixCapitalized = _.upperFirst(this.jhiPrefix);
+            this.jhiPrefixDashed = _.kebabCase(this.jhiPrefix);
             this.skipUserManagement = this.options['skip-user-management'] || this.config.get('skipUserManagement');
             this.protractorTests = this.testFrameworks.indexOf('protractor') !== -1;
 
@@ -148,8 +150,8 @@ module.exports = JhipsterGenerator.extend({
             this.template('src/main/java/package/service/_UserService.java', `${this.javaDir}service/UserService.java`);
 
             // integration tests
-            this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
-            this.template('src/test/java/package/web/rest/_AccountResourceIntTest.java', `${this.testDir}/web/rest/AccountResourceIntTest.java`);
+            // this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
+            // this.template('src/test/java/package/web/rest/_AccountResourceIntTest.java', `${this.testDir}/web/rest/AccountResourceIntTest.java`);
 
             // database changes
             this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${this.resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
@@ -166,10 +168,10 @@ module.exports = JhipsterGenerator.extend({
                     {
                         path: this.angularDir,
                         templates: [
-                            { file: 'admin/user-management/_user-management.component.html', method: 'processHtml' },
-                            { file: 'admin/user-management/_user-management-detail.component.html', method: 'processHtml' },
-                            { file: 'admin/user-management/_user-management-dialog.component.ts', method: 'processJs' },
-                            { file: 'admin/user-management/_user-management-dialog.component.html', method: 'processHtml' },
+                            { file: 'admin/user-management/user-management.component.html', method: 'processHtml' },
+                            { file: 'admin/user-management/user-management-detail.component.html', method: 'processHtml' },
+                            { file: 'admin/user-management/user-management-update.component.ts', method: 'processJs' },
+                            { file: 'admin/user-management/user-management-update.component.html', method: 'processHtml' },
                         ]
                     }
                 ],
@@ -190,12 +192,6 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.html`
                             },
                             {
-                                file: 'admin/tenant-management/_tenant-management-dialog.component.html',
-                                method: 'processHtml',
-                                template: true,
-                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.html`
-                            },
-                            {
                                 file: 'admin/tenant-management/_tenant-management-delete-dialog.component.html',
                                 method: 'processHtml',
                                 template: true,
@@ -214,10 +210,6 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management.component.ts`
                             },
                             {
-                                file: 'admin/tenant-management/_tenant-management-dialog.component.ts',
-                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-dialog.component.ts`
-                            },
-                            {
                                 file: 'admin/tenant-management/_tenant-management-delete-dialog.component.ts',
                                 renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-delete-dialog.component.ts`
                             },
@@ -226,12 +218,16 @@ module.exports = JhipsterGenerator.extend({
                                 renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-detail.component.ts`
                             },
                             {
-                                file: 'admin/tenant-management/_tenant.service.ts',
-                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service.ts`
+                                file: 'shared/tenant/_tenant.service.ts',
+                                renameTo: generator => `shared/${this.tenantNameLowerFirst}/${this.tenantNameLowerFirst}.service.ts`
                             },
                             {
-                                file: 'admin/tenant-management/_tenant-modal.service.ts',
-                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-modal.service.ts`
+                                file: 'admin/tenant-management/_tenant-management-update.component.ts',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-update.component.ts`
+                            },
+                            {
+                                file: 'admin/tenant-management/_tenant-management-update.component.html',
+                                renameTo: generator => `admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}-management-update.component.html`
                             }
                         ]
                     }
@@ -240,8 +236,8 @@ module.exports = JhipsterGenerator.extend({
                     {
                         path: this.angularDir,
                         templates: [
-                            { file: 'admin/_admin.route.ts', method: 'processJs' },
-                            'admin/_admin.module.ts',
+                            { file: 'admin/admin.route.ts', method: 'processJs' },
+                            'admin/admin.module.ts',
                         ]
                     }
                 ],
@@ -250,10 +246,11 @@ module.exports = JhipsterGenerator.extend({
                         path: this.angularDir,
                         templates: [
                             {
-                                file: 'shared/auth/_tenant-route-access-service.ts',
-                                renameTo: generator => `shared/auth/${this.tenantNameLowerFirst}-route-access-service.ts`
+                                file: 'core/auth/_tenant-route-access-service.ts',
+                                renameTo: generator => `core/auth/${this.tenantNameLowerFirst}-route-access-service.ts`
                             },
-                            'shared/user/_user.model.ts'
+                            'shared/user/user.model.ts',
+                            'core/user/user.model.ts'
                         ]
                     }
 
@@ -292,12 +289,7 @@ module.exports = JhipsterGenerator.extend({
                 'false'
             );
             this.rewriteFile(
-                `${this.webappDir}app/app.module.ts`,
-                'PaginationConfig,',
-                `${this.tenantNameUpperFirst}RouteAccessService,`
-            );
-            this.rewriteFile(
-                `${this.webappDir}app/shared/index.ts`,
+                `${this.webappDir}app/core/index.ts`,
                 'export * from \'./auth/user-route-access-service\';',
                 `export * from './auth/${this.tenantNameLowerFirst}-route-access-service';`
             );
@@ -317,31 +309,36 @@ module.exports = JhipsterGenerator.extend({
                 partialFiles.angular.appLayoutsNavbarComponentTs(this)
             );
             this.rewriteFile(
-                `${this.webappDir}app/shared/auth/principal.service.ts`,
-                'getImageUrl(): String {',
+                `${this.webappDir}app/core/auth/principal.service.ts`,
+                'getImageUrl(): string {',
                 partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
+            );
+            this.rewriteFile(
+                `${this.webappDir}app/shared/index.ts`,
+                'export * from \'./util/datepicker-adapter\';',
+                `export * from './${this.tenantNameLowerFirst}/${this.tenantNameLowerFirst}.service';`
             );
 
             // Rewriting on tests
-            this.rewriteFile(
-                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-                'import { UserService, User, JhiLanguageHelper } from \'../../../../../../main/webapp/app/shared\';',
-                `import { ${this.tenantNameUpperFirst}Service } from '../../../../../../main/webapp/app/admin/${this.tenantNameLowerFirst}-management/${this.tenantNameLowerFirst}.service';`
-            );
-            this.replaceContent(
-                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-                `providers: [
-                    UserService`,
-                    `providers: [
-                    UserService,
-                    ${this.tenantNameUpperFirst}Service`,
-                false
-            );
-            this.rewriteFile(
-                `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-                'service = fixture.debugElement.injector.get(UserService);',
-                partialFiles.angular.userMgmtDialogComponentSpecTs(this)
-            );
+            // this.rewriteFile(
+            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+            //     'import { UserService } from \'app/core\';',
+            //     `import { ${this.tenantNameUpperFirst}Service } from 'app/shared/${this.tenantNameLowerFirst}/${this.tenantNameLowerFirst}.service';`
+            // );
+            // this.replaceContent(
+            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+            //     `providers: [
+            //         UserService`,
+            //         `providers: [
+            //         UserService,
+            //         ${this.tenantNameUpperFirst}Service`,
+            //     false
+            // );
+            // this.rewriteFile(
+            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
+            //     'service = fixture.debugElement.injector.get(UserService);',
+            //     partialFiles.angular.userMgmtDialogComponentSpecTs(this)
+            // );
 
             if (this.protractorTests) {
                 this.rewriteFile(
@@ -356,6 +353,7 @@ module.exports = JhipsterGenerator.extend({
             if (this.enableTranslation) {
                 this.addTranslationKeyToAllLanguages(`${this.tenantNameLowerFirst}-management`, `${this.tenantNameUpperFirst} Management`, 'addAdminElementTranslationKey', this.enableTranslation);
                 this.addTranslationKeyToAllLanguages(`userManagement${this.tenantNameUpperFirst}`, `${this.tenantNameUpperFirst}`, 'addGlobalTranslationKey', this.enableTranslation);
+
                 // TODO: generate this file for each language
                 this.template('src/main/webapp/i18n/en/_tenant-management.json', `${this.webappDir}i18n/en/${this.tenantNameLowerFirst}-management.json`);
             }
@@ -385,13 +383,25 @@ module.exports = JhipsterGenerator.extend({
         });
     },
     end() {
+        // update generated files
+        this.replaceContent(
+            `${this.javaDir}service/${this.tenantNameUpperFirst}Service.java`,
+            `return ${this.tenantNameLowerFirst}Repository.findById(id);`,
+            partialFiles.server.tenantService(this),
+            false
+        );
+
         this.replaceContent(`${this.javaDir}domain/${this.tenantNameUpperFirst}.java`,
         `    @OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'")`,
         `\t@OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'", fetch = FetchType.EAGER)`);
 
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
             `${this.tenantNameLowerFirst}Service.delete(id);`,
-            partialFiles.server.tenantResource(this));
+            partialFiles.server.tenantResource(this)
+        );
+
+        this.template(`src/main/java/package/repository/_TenantRepository.java`,
+        `${this.javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
 
         this.log(chalk.green('\nTenant entity generated successfully.'));
         this.log(chalk.green('Your application now supports multitenancy.\n'));

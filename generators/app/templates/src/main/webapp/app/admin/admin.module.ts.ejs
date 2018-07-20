@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://jhipster.github.io/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,31 +18,27 @@
 -%>
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-<%_ if (websocket === 'spring-websocket') { _%>
-import { <%=jhiPrefixCapitalized%>TrackerService } from './../shared/tracker/tracker.service';
+<%_ if (enableTranslation) { _%>
+import { JhiLanguageService } from 'ng-jhipster';
+import { JhiLanguageHelper } from 'app/core';
 <%_ } _%>
-
-import { <%=angularXAppName%>SharedModule } from '../shared';
+import { <%=angularXAppName%>SharedModule } from 'app/shared';
 /* jhipster-needle-add-admin-module-import - JHipster will add admin modules imports here */
 
 import {
     adminState,
-    <%_ if (devDatabaseType !== 'cassandra') { _%>
+    <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
     AuditsComponent,
     <%_ } _%>
     <%_ if (!skipUserManagement) { _%>
     UserMgmtComponent,
-    UserDialogComponent,
-    UserDeleteDialogComponent,
     UserMgmtDetailComponent,
-    UserMgmtDialogComponent,
+    UserMgmtUpdateComponent,
     UserMgmtDeleteDialogComponent,
     <%_ } _%>
     <%= tenantNameUpperFirst %>MgmtComponent,
     <%= tenantNameUpperFirst %>MgmtDetailComponent,
-    <%= tenantNameUpperFirst %>MgmtDialogComponent,
-    <%= tenantNameUpperFirst %>DialogComponent,
-    <%= tenantNameUpperFirst %>DeleteDialogComponent,
+    <%= tenantNameUpperFirst %>MgmtUpdateComponent,
     <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent,
     LogsComponent,
     <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
@@ -51,60 +47,40 @@ import {
     <%=jhiPrefixCapitalized%>HealthCheckComponent,
     <%=jhiPrefixCapitalized%>ConfigurationComponent,
     <%=jhiPrefixCapitalized%>DocsComponent,
-    <%_ if (devDatabaseType !== 'cassandra') { _%>
-    AuditsService,
-    <%_ } _%>
-    <%=jhiPrefixCapitalized%>ConfigurationService,
-    <%=jhiPrefixCapitalized%>HealthService,
-    <%=jhiPrefixCapitalized%>MetricsService,
-    <%_ if (applicationType === 'gateway') { _%>
-    GatewayRoutesService,
+    <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
     <%=jhiPrefixCapitalized%>GatewayComponent,
     <%_ } _%>
     <%_ if (websocket === 'spring-websocket') { _%>
     <%=jhiPrefixCapitalized%>TrackerComponent,
     <%_ } _%>
-    LogsService,
-    <%_ if (!skipUserManagement) { _%>
-    UserResolvePagingParams,
-    UserResolve,
-    UserModalService,
-    <%_ } _%>
-    <%= tenantNameUpperFirst %>ResolvePagingParams,
-    <%= tenantNameUpperFirst %>Service,
-    <%= tenantNameUpperFirst %>ModalService
 } from './';
 
 @NgModule({
     imports: [
         <%=angularXAppName%>SharedModule,
-        RouterModule.forRoot(adminState, { useHash: true }),
+        RouterModule.forChild(adminState),
         /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
     ],
     declarations: [
-        <%_ if (devDatabaseType !== 'cassandra') { _%>
+        <%_ if (databaseType !== 'no' && databaseType !== 'cassandra') { _%>
         AuditsComponent,
         <%_ } _%>
         <%_ if (!skipUserManagement) { _%>
         UserMgmtComponent,
-        UserDialogComponent,
-        UserDeleteDialogComponent,
         UserMgmtDetailComponent,
-        UserMgmtDialogComponent,
+        UserMgmtUpdateComponent,
         UserMgmtDeleteDialogComponent,
         <%_ } _%>
         <%= tenantNameUpperFirst %>MgmtComponent,
         <%= tenantNameUpperFirst %>MgmtDetailComponent,
-        <%= tenantNameUpperFirst %>MgmtDialogComponent,
-        <%= tenantNameUpperFirst %>DialogComponent,
-        <%= tenantNameUpperFirst %>DeleteDialogComponent,
+        <%= tenantNameUpperFirst %>MgmtUpdateComponent,
         <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent,
         LogsComponent,
         <%=jhiPrefixCapitalized%>ConfigurationComponent,
         <%=jhiPrefixCapitalized%>HealthCheckComponent,
         <%=jhiPrefixCapitalized%>HealthModalComponent,
         <%=jhiPrefixCapitalized%>DocsComponent,
-        <%_ if (applicationType === 'gateway') { _%>
+        <%_ if (applicationType === 'gateway' && serviceDiscoveryType) { _%>
         <%=jhiPrefixCapitalized%>GatewayComponent,
         <%_ } _%>
         <%_ if (websocket === 'spring-websocket') { _%>
@@ -115,37 +91,22 @@ import {
     ],
     entryComponents: [
         <%_ if (!skipUserManagement) { _%>
-        UserMgmtDialogComponent,
         UserMgmtDeleteDialogComponent,
         <%_ } _%>
         <%=jhiPrefixCapitalized%>HealthModalComponent,
         <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
-        <%= tenantNameUpperFirst %>MgmtDialogComponent,
         <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent
-    ],
-    providers: [
-        <%_ if (devDatabaseType !== 'cassandra') { _%>
-        AuditsService,
-        <%_ } _%>
-        <%=jhiPrefixCapitalized%>ConfigurationService,
-        <%=jhiPrefixCapitalized%>HealthService,
-        <%=jhiPrefixCapitalized%>MetricsService,
-        <%_ if (applicationType === 'gateway') { _%>
-        GatewayRoutesService,
-        <%_ } _%>
-        LogsService,
-        <%_ if (websocket === 'spring-websocket') { _%>
-        <%=jhiPrefixCapitalized%>TrackerService,
-        <%_ } _%>
-        <%_ if (!skipUserManagement) { _%>
-        UserResolvePagingParams,
-        UserResolve,
-        UserModalService,
-        <%_ } _%>
-        <%= tenantNameUpperFirst %>ResolvePagingParams,
-        <%= tenantNameUpperFirst %>Service,
-        <%= tenantNameUpperFirst %>ModalService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class <%=angularXAppName%>AdminModule {}
+export class <%=angularXAppName%>AdminModule {
+    <%_ if (enableTranslation) { _%>
+    constructor(private languageService: JhiLanguageService, private languageHelper: JhiLanguageHelper) {
+        this.languageHelper.language.subscribe((languageKey: string) => {
+            if (languageKey !== undefined) {
+                this.languageService.changeLanguage(languageKey);
+            }
+        });
+    }
+    <%_ } _%>
+}

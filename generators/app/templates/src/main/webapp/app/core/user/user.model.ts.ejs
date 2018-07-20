@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see http://www.jhipster.tech/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,39 +16,41 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { <%= tenantNameUpperFirst %> } from './../../admin/<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
+import { <%= tenantNameUpperFirst %> } from '../../admin/<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
 
-export class User {
-    public id?: any;
-    public login?: string;
-    public firstName?: string;
-    public lastName?: string;
-    public email?: string;
-    public activated?: Boolean;
-    public langKey?: string;
-    public authorities?: any[];
-    public createdBy?: string;
-    public createdDate?: Date;
-    public lastModifiedBy?: string;
-    public lastModifiedDate?: Date;
-    public password?: string;
-    public <%= tenantNameLowerFirst %>?: <%= tenantNameUpperFirst %>;
+export interface IUser {
+    id?: any;
+    login?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    activated?: boolean;
+    langKey?: string;
+    authorities?: any[];
+    createdBy?: string;
+    createdDate?: Date;
+    lastModifiedBy?: string;
+    lastModifiedDate?: Date;
+    password?: string;
+    <%= tenantNameLowerFirst %>?: <%= tenantNameUpperFirst %>;
+}
 
+export class User implements IUser {
     constructor(
-        id?: any,
-        login?: string,
-        firstName?: string,
-        lastName?: string,
-        email?: string,
-        activated?: Boolean,
-        langKey?: string,
-        authorities?: any[],
-        createdBy?: string,
-        createdDate?: Date,
-        lastModifiedBy?: string,
-        lastModifiedDate?: Date,
-        password?: string,
-        <%= tenantNameLowerFirst %>?: <%= tenantNameUpperFirst %>
+        public id?: any,
+        public login?: string,
+        public firstName?: string,
+        public lastName?: string,
+        public email?: string,
+        public activated?: boolean,
+        public langKey?: string,
+        public authorities?: any[],
+        public createdBy?: string,
+        public createdDate?: Date,
+        public lastModifiedBy?: string,
+        public lastModifiedDate?: Date,
+        public password?: string,
+        public <%= tenantNameLowerFirst %>?: <%= tenantNameUpperFirst %>
     ) {
         this.id = id ? id : null;
         this.login = login ? login : null;

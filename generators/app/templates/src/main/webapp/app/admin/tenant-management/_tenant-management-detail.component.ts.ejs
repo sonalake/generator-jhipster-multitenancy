@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://jhipster.github.io/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,39 +18,25 @@
 -%>
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
-import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
+import { <%= tenantNameUpperFirst %>Service } from '../../shared';
 
 @Component({
-    selector: '<%=jhiPrefix%>-<%= tenantNameLowerFirst %>-mgmt-detail',
+    selector: '<%=jhiPrefixDashed%>-<%= tenantNameLowerFirst %>-mgmt-detail',
     templateUrl: './<%= tenantNameLowerFirst %>-management-detail.component.html'
 })
-export class <%= tenantNameUpperFirst %>MgmtDetailComponent implements OnInit, OnDestroy {
+export class <%= tenantNameUpperFirst %>MgmtDetailComponent implements OnInit {
 
     <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>;
-    private subscription: Subscription;
 
     constructor(
-        private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
+        this.route.data.subscribe(({<%= tenantNameLowerFirst %>}) => {
+            this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>.body ? <%= tenantNameLowerFirst %>.body : <%= tenantNameLowerFirst %>;
         });
-    }
-
-    load(id) {
-        this.<%= tenantNameLowerFirst %>Service.find(id).subscribe((<%= tenantNameLowerFirst %>) => {
-            this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
-        });
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
     }
 }

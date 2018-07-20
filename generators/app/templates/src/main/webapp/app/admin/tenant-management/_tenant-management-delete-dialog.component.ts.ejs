@@ -1,7 +1,7 @@
 <%#
- Copyright 2013-2017 the original author or authors from the JHipster project.
+ Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://jhipster.github.io/
+ This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,21 +16,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Component } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
-import { <%= tenantNameUpperFirst %>ModalService } from './<%= tenantNameLowerFirst %>-modal.service';
-import { <%= tenantNameUpperFirst %>Service } from './<%= tenantNameLowerFirst %>.service';
+import { <%= tenantNameUpperFirst %>Service } from '../../shared';
 
 @Component({
-    selector: '<%=jhiPrefix%>-<%= tenantNameLowerFirst %>-mgmt-delete-dialog',
+    selector: '<%=jhiPrefixDashed%>-<%= tenantNameLowerFirst %>-mgmt-delete-dialog',
     templateUrl: './<%= tenantNameLowerFirst %>-management-delete-dialog.component.html'
 })
 export class <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent {
-
     <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>;
 
     constructor(
@@ -45,35 +42,10 @@ export class <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent {
     }
 
     confirmDelete(id: number) {
-        this.<%= tenantNameLowerFirst %>Service.delete(id).subscribe((response) => {
+        this.<%= tenantNameLowerFirst %>Service.delete(id).subscribe(response => {
             this.eventManager.broadcast({ name: '<%= tenantNameLowerFirst %>ListModification',
                 content: 'Deleted a <%= tenantNameLowerFirst %>'});
             this.activeModal.dismiss(true);
         });
-    }
-}
-
-@Component({
-    selector: '<%=jhiPrefix%>-<%= tenantNameLowerFirst %>-delete-dialog',
-    template: ''
-})
-export class <%= tenantNameUpperFirst %>DeleteDialogComponent implements OnInit, OnDestroy {
-
-    modalRef: NgbModalRef;
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private <%= tenantNameLowerFirst %>ModalService: <%= tenantNameUpperFirst %>ModalService
-    ) {}
-
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.<%= tenantNameLowerFirst %>ModalService.open(<%= tenantNameUpperFirst %>MgmtDeleteDialogComponent as Component, params['id']);
-        });
-    }
-
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
     }
 }
