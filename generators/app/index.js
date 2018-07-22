@@ -39,6 +39,11 @@ module.exports = JhipsterGenerator.extend({
             if (this.languages === undefined) {
                 this.languages = ['en', 'fr'];
             }
+            if (this.enableHibernateCache === undefined) {
+                this.enableHibernateCache = this.hibernateCache !== undefined
+                                            && this.hibernateCache !== 'no'
+                                            && this.hibernateCache !== 'memcached';
+            }
             // set primary key type
             if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
                 this.pkType = 'String';
