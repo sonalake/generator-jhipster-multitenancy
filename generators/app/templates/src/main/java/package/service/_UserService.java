@@ -226,6 +226,7 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
+        user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
         <%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
         user.setImageUrl(userDTO.getImageUrl());
         <%_ } _%>
@@ -280,6 +281,7 @@ public class UserService {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
+                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
                 user.setLangKey(langKey);
                 <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
                 user.setImageUrl(imageUrl);

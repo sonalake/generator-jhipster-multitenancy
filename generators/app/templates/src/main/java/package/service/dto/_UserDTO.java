@@ -22,6 +22,7 @@ import <%=packageName%>.config.Constants;
 <% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
 import <%=packageName%>.domain.Authority;<% } %>
 import <%=packageName%>.domain.User;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -79,6 +80,8 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -107,6 +110,15 @@ public class UserDTO {
         <%_ } else { _%>
         this.authorities = user.getAuthorities();
         <%_ } _%>
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
+    }
+
+    public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
+        return <%= tenantNameLowerFirst %>;
+    }
+
+    public void set<%= tenantNameUpperFirst %>(<%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     public <% if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'cassandra' || authenticationType === 'oauth2') { %>String<% } else { %>Long<% } %> getId() {
