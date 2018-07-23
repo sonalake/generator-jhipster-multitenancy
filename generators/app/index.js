@@ -44,6 +44,10 @@ module.exports = JhipsterGenerator.extend({
                                             && this.hibernateCache !== 'no'
                                             && this.hibernateCache !== 'memcached';
             }
+            if (this.cacheManagerIsAvailable === undefined) {
+                this.cacheManagerIsAvailable = ['ehcache', 'hazelcast', 'infinispan', 'memcached'].includes(this.cacheProvider);
+            }
+
             // set primary key type
             if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
                 this.pkType = 'String';
