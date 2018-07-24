@@ -150,8 +150,7 @@ module.exports = JhipsterGenerator.extend({
             this.template('src/main/java/package/service/_UserService.java', `${this.javaDir}service/UserService.java`);
 
             // integration tests
-            // this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
-            // this.template('src/test/java/package/web/rest/_AccountResourceIntTest.java', `${this.testDir}/web/rest/AccountResourceIntTest.java`);
+            this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
 
             // database changes
             this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${this.resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
