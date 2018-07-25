@@ -57,6 +57,7 @@ module.exports = JhipsterGenerator.extend({
 
         // if we go this far, then we definitely have an entity to update
         this.options.name = this.name;
+        this.context = {};
     },
     initializing: {
         readConfig() {
