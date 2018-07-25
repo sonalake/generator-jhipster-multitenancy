@@ -319,26 +319,6 @@ module.exports = JhipsterGenerator.extend({
             );
 
             // Rewriting on tests
-            // this.rewriteFile(
-            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-            //     'import { UserService } from \'app/core\';',
-            //     `import { ${this.tenantNameUpperFirst}Service } from 'app/shared/${this.tenantNameLowerFirst}/${this.tenantNameLowerFirst}.service';`
-            // );
-            // this.replaceContent(
-            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-            //     `providers: [
-            //         UserService`,
-            //         `providers: [
-            //         UserService,
-            //         ${this.tenantNameUpperFirst}Service`,
-            //     false
-            // );
-            // this.rewriteFile(
-            //     `${this.clientTestDir}spec/app/admin/user-management/user-management-dialog.component.spec.ts`,
-            //     'service = fixture.debugElement.injector.get(UserService);',
-            //     partialFiles.angular.userMgmtDialogComponentSpecTs(this)
-            // );
-
             if (this.protractorTests) {
                 this.rewriteFile(
                     `${this.clientTestDir}e2e/admin/administration.spec.ts`,

@@ -1,1 +1,1 @@
-PaginationConfig,
+UserRouteAccessService } from './shared';
