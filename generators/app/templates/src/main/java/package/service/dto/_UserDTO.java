@@ -107,10 +107,18 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
-        this.<%= tenantNameLowerFirst %> = user.get<%= tenantNameUpperFirst %>();
         <%_ } else { _%>
         this.authorities = user.getAuthorities();
         <%_ } _%>
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
+    }
+
+    public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
+        return <%= tenantNameLowerFirst %>;
+    }
+
+    public void set<%= tenantNameUpperFirst %>(<%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
+        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     public <% if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'cassandra' || authenticationType === 'oauth2') { %>String<% } else { %>Long<% } %> getId() {
@@ -219,14 +227,6 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
-    }
-
-    public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
-        return <%= tenantNameLowerFirst %>;
-    }
-
-    public void set<%= tenantNameUpperFirst %>(<%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>) {
-        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     @Override

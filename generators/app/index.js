@@ -41,6 +41,15 @@ module.exports = JhipsterGenerator.extend({
             if (this.languages === undefined) {
                 this.languages = ['en', 'fr'];
             }
+            if (this.enableHibernateCache === undefined) {
+                this.enableHibernateCache = this.hibernateCache !== undefined
+                                            && this.hibernateCache !== 'no'
+                                            && this.hibernateCache !== 'memcached';
+            }
+            if (this.cacheManagerIsAvailable === undefined) {
+                this.cacheManagerIsAvailable = ['ehcache', 'hazelcast', 'infinispan', 'memcached'].includes(this.cacheProvider);
+            }
+
             // set primary key type
             if (this.databaseType === 'cassandra' || this.databaseType === 'mongodb') {
                 this.pkType = 'String';
@@ -146,11 +155,7 @@ module.exports = JhipsterGenerator.extend({
             // update user object
             this.template('src/main/java/package/domain/_User.java', `${this.javaDir}domain/User.java`);
             this.template('src/main/java/package/service/dto/_UserDTO.java', `${this.javaDir}service/dto/UserDTO.java`);
-            this.template('src/main/java/package/web/rest/vm/_ManagedUserVM.java', `${this.javaDir}web/rest/vm/ManagedUserVM.java`);
             this.template('src/main/java/package/service/_UserService.java', `${this.javaDir}service/UserService.java`);
-
-            // integration tests
-            this.template('src/test/java/package/web/rest/_UserResourceIntTest.java', `${this.testDir}/web/rest/UserResourceIntTest.java`);
 
             // database changes
             this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${this.resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);

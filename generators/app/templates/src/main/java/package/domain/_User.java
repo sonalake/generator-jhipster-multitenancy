@@ -42,10 +42,10 @@ import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 <%_ } _%>
 
 <%_ if (databaseType === 'sql') { _%>
-import org.hibernate.annotations.Filter; 
-import org.hibernate.annotations.FilterDef; 
-import org.hibernate.annotations.ParamDef; 
 import javax.persistence.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 <%_ } _%>
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -196,6 +196,7 @@ public class User<% if (databaseType === 'sql' || databaseType === 'mongodb' || 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     <%_ } } _%>
     private Set<PersistentToken> persistentTokens = new HashSet<>();<% } %>
+
     @ManyToOne
     private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
 

@@ -281,6 +281,7 @@ public class UserService {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
+                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
                 user.setLangKey(langKey);
                 <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
                 user.setImageUrl(imageUrl);
@@ -322,7 +323,6 @@ public class UserService {
                 user.setFirstName(userDTO.getFirstName());
                 user.setLastName(userDTO.getLastName());
                 user.setEmail(userDTO.getEmail());
-                user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
                 <%_ if (databaseType === 'sql' || databaseType === 'mongodb'|| databaseType === 'couchbase') { _%>
                 user.setImageUrl(userDTO.getImageUrl());
                 <%_ } _%>
@@ -608,8 +608,13 @@ public class UserService {
             user.setLangKey((String) details.get("langKey"));
         } else if (details.get("locale") != null) {
             String locale = (String) details.get("locale");
-            String langKey = locale.substring(0, locale.indexOf("-"));
-            user.setLangKey(langKey);
+            if (locale.contains("-")) {
+              String langKey = locale.substring(0, locale.indexOf("-"));
+              user.setLangKey(langKey);
+            } else if (locale.contains("_")) {
+              String langKey = locale.substring(0, locale.indexOf("_"));
+              user.setLangKey(langKey);
+            }
         }
         if (details.get("picture") != null) {
             user.setImageUrl((String) details.get("picture"));
