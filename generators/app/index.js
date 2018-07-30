@@ -1,5 +1,5 @@
 const util = require('util');
-const chalk = require('../../../../.cache/typescript/2.9/node_modules/chalk');
+const chalk = require('chalk');
 const generator = require('yeoman-generator');
 const packagejs = require('../../package.json');
 const semver = require('semver');
