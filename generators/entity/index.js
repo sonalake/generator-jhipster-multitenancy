@@ -214,59 +214,50 @@ module.exports = JhipsterGenerator.extend({
                 );
 
                 this.replaceContent(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.html`,
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.html`,
                     `</div>
-    <div class="modal-footer">`,
-                    partialFiles.angular.entityDialogCompHtml(this),
+    <div>`,
+                    partialFiles.angular.entityUpdateCompHtml(this),
                     false
                 );
 
-                // entity-dialog.component.ts
+                // entity-update.component.ts
                 this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    'import { Observable } from \'rxjs/Observable\';',
-                    partialFiles.angular.entityDialogCompTsImports(this)
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
+                    'import { Observable } from \'rxjs\';',
+                    partialFiles.angular.entityUpdateCompTsImports(this)
                 );
 
                 this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
                     'isSaving: boolean;',
                     `${tenantNamePluralLowerFirst}: ${tenantNameUpperFirst}[];
     currentAccount: any;`
                 );
 
                 this.replaceContent(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    `private eventManager: JhiEventManager
-    ) {
-    }`,
-                    partialFiles.angular.entityDialogCompTsConstr(this),
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
+                    'private activatedRoute: ActivatedRoute) {}',
+                    partialFiles.angular.entityUpdateCompTsConstr(this),
                     false
                 );
 
                 this.replaceContent(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
                     'ngOnInit() {',
-                    partialFiles.angular.entityDialogCompTsOnInit(this),
+                    partialFiles.angular.entityUpdateCompTsOnInit(this),
                     false
                 );
 
                 this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
+                    `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
                     `if (this.${_.lowerFirst(this.options.name)}.id !== undefined) {`,
                     `if (this.currentAccount.${tenantNameLowerFirst}) {
             this.${entityName}.${tenantNameLowerFirst} = this.currentAccount.${tenantNameLowerFirst};
         }`
                 );
-
-                this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}-dialog.component.ts`,
-                    'save() {',
-                    `track${tenantNameUpperFirst}ById(index: number, item: ${tenantNameUpperFirst}) {
-        return item.id;
-    }`
-                );
                 //----------------
+
                 let th = '';
                 if (this.enableTranslation) {
                     th = `<th *ngIf="!currentAccount.${tenantNameLowerFirst}"><span jhiTranslate="userManagement${tenantNameUpperFirst}">${tenantNameUpperFirst}</span></th>`;
@@ -290,34 +281,15 @@ module.exports = JhipsterGenerator.extend({
                 );
 
                 this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
-                    'import { BaseEntity } from \'./../../shared\';',
+                    `${webappDir}app/shared/model/${entityName}.model.ts`,
+                    'export interface IBook {',
                     `import { ${tenantNameUpperFirst} } from '../../admin/${tenantNameLowerFirst}-management/${tenantNameLowerFirst}.model';`
                 );
 
                 this.rewriteFile(
-                    `${webappDir}app/entities/${entityName}/${entityName}.model.ts`,
-                    ') {',
-                    `   public ${tenantNameLowerFirst}?: ${tenantNameUpperFirst}`
-                );
-
-                // unit test
-                this.rewriteFile(
-                    `${clientTestDir}spec/app/entities/${entityName}/${entityName}-dialog.component.spec.ts`,
-                    `import { ${entityNameUpperFirst} } from '../../../../../../main/webapp/app/entities/${entityName}/${entityName}.model';`,
-                    `import { ${tenantNameUpperFirst}Service } from '../../../../../../main/webapp/app/admin';`
-                );
-                this.replaceContent(
-                    `${clientTestDir}spec/app/entities/${entityName}/${entityName}-dialog.component.spec.ts`,
-                    'providers: [',
-                    `providers: [
-                    ${tenantNameUpperFirst}Service,`,
-                    false
-                );
-                this.rewriteFile(
-                    `${clientTestDir}spec/app/entities/${entityName}/${entityName}-dialog.component.spec.ts`,
-                    `service = fixture.debugElement.injector.get(${entityNameUpperFirst}Service);`,
-                    partialFiles.angular.entityDialogCompSpecTs(this)
+                    `${webappDir}app/shared/model/${entityName}.model.ts`,
+                    'name?: string;',
+                    `${tenantNameLowerFirst}?: ${tenantNameUpperFirst};`
                 );
 
                 // e2e test
@@ -329,7 +301,7 @@ module.exports = JhipsterGenerator.extend({
                     );
 
                     this.replaceContent(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
                         '} from \'protractor\';',
                         ', protractor } from \'protractor\';'
                     );
@@ -376,7 +348,7 @@ module.exports = JhipsterGenerator.extend({
                 if (this.enableTranslation) {
                     this.getAllInstalledLanguages().forEach((language) => {
                         this.rewriteFile(
-                            `${webappDir}i18n/${language}/${this.options.name}.json`,
+                            `${webappDir}i18n/${language}/${entityName}.json`,
                             '"detail": {',
                             `"${tenantNameLowerFirst}": "${tenantNameUpperFirst}",`
                         );

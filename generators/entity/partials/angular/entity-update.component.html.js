@@ -13,7 +13,7 @@ const tmpl = (context) => {
             </small>
         </div>
     </div>
-    <div class="modal-footer">`;
+    <div>`;
     if (context.enableTranslation) {
         template = `    <div class="form-group" *ngIf="!currentAccount.${context.tenantNameLowerFirst}">
             <label class="form-control-label" jhiTranslate="userManagement${context.tenantNameUpperFirst}" for="field_${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</label>
@@ -29,7 +29,7 @@ const tmpl = (context) => {
             </small>
         </div>
     </div>
-    <div class="modal-footer">`;
+    <div>`;
     }
     return template;
 };
