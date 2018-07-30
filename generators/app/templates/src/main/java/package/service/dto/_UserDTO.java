@@ -1,25 +1,25 @@
 <%#
- Copyright 2013-2018 the original author or authors from the JHipster project.
+    Copyright 2013-2018 the original author or authors from the JHipster project.
 
- This file is part of the JHipster project, see https://www.jhipster.tech/
- for more information.
+    This file is part of the JHipster project, see https://www.jhipster.tech/
+    for more information.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--%>
-package <%=packageName%>.service.dto;
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    -%>
+    package <%=packageName%>.service.dto;
 
 import <%=packageName%>.config.Constants;
-<% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
+    <% if (databaseType === 'sql' || databaseType === 'mongodb') { %>
 import <%=packageName%>.domain.Authority;<% } %>
 import <%=packageName%>.domain.User;
 import <%=packageName%>.domain.<%= tenantNameUpperFirst %>;
@@ -59,8 +59,8 @@ public class UserDTO {
     private String email;
     <%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
 
-    @Size(max = 256)
-    private String imageUrl;
+        @Size(max = 256)
+        private String imageUrl;
     <%_ } _%>
 
     private boolean activated = false;
@@ -69,18 +69,19 @@ public class UserDTO {
     private String langKey;
     <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
 
-    private String createdBy;
+        private String createdBy;
 
-    private Instant createdDate;
+        private Instant createdDate;
 
-    private String lastModifiedBy;
+        private String lastModifiedBy;
 
-    private Instant lastModifiedDate;
+        private Instant lastModifiedDate;
     <%_ } _%>
 
     private Set<String> authorities;
 
     private <%= tenantNameUpperFirst %> <%= tenantNameLowerFirst %>;
+
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -94,23 +95,23 @@ public class UserDTO {
         this.email = user.getEmail();
         this.activated = user.getActivated();
         <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
-        this.imageUrl = user.getImageUrl();
+            this.imageUrl = user.getImageUrl();
         <%_ } _%>
-        this.langKey = user.getLangKey();
+            this.langKey = user.getLangKey();
         <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
-        this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
-        this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = user.getLastModifiedDate();
+            this.createdBy = user.getCreatedBy();
+            this.createdDate = user.getCreatedDate();
+            this.lastModifiedBy = user.getLastModifiedBy();
+            this.lastModifiedDate = user.getLastModifiedDate();
         <%_ } _%>
         <%_ if (databaseType === 'mongodb' || databaseType === 'sql') { _%>
-        this.authorities = user.getAuthorities().stream()
+            this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
         <%_ } else { _%>
-        this.authorities = user.getAuthorities();
+            this.authorities = user.getAuthorities();
         <%_ } _%>
-        this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
+            this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
     public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
@@ -162,13 +163,13 @@ public class UserDTO {
     }
     <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+        public String getImageUrl() {
+            return imageUrl;
+        }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
     <%_ } _%>
 
     public boolean isActivated() {
@@ -188,37 +189,37 @@ public class UserDTO {
     }
     <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { _%>
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+        public String getCreatedBy() {
+            return createdBy;
+        }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+        public void setCreatedBy(String createdBy) {
+            this.createdBy = createdBy;
+        }
 
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
+        public Instant getCreatedDate() {
+            return createdDate;
+        }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
+        public void setCreatedDate(Instant createdDate) {
+            this.createdDate = createdDate;
+        }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+        public String getLastModifiedBy() {
+            return lastModifiedBy;
+        }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+        public void setLastModifiedBy(String lastModifiedBy) {
+            this.lastModifiedBy = lastModifiedBy;
+        }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+        public Instant getLastModifiedDate() {
+            return lastModifiedDate;
+        }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+        public void setLastModifiedDate(Instant lastModifiedDate) {
+            this.lastModifiedDate = lastModifiedDate;
+        }
     <%_ } _%>
 
     public Set<String> getAuthorities() {
@@ -237,13 +238,13 @@ public class UserDTO {
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +<% if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { %>
             ", imageUrl='" + imageUrl + '\'' +<% } %>
-            ", activated=" + activated +
+        ", activated=" + activated +
             ", langKey='" + langKey + '\'' +<% if (databaseType === 'mongodb' || databaseType === 'couchbase' || databaseType === 'sql') { %>
             ", createdBy=" + createdBy +
-            ", createdDate=" + createdDate +
-            ", lastModifiedBy='" + lastModifiedBy + '\'' +
-            ", lastModifiedDate=" + lastModifiedDate +<% } %>
-            ", authorities=" + authorities +
+                ", createdDate=" + createdDate +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", lastModifiedDate=" + lastModifiedDate +<% } %>
+        ", authorities=" + authorities +
             "}";
     }
 }
