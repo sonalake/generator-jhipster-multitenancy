@@ -207,6 +207,8 @@ module.exports = JhipsterGenerator.extend({
                 const entityNamePluralUpperFirst = _.upperFirst(entityNamePlural);
                 const protractorTests = this.testFrameworks.indexOf('protractor') !== -1;
 
+                this.options.entityNameLowerFirst = _.kebabCase(_.lowerFirst(this.options.name));
+
                 this.rewriteFile(
                     `${webappDir}app/entities/${entityName}/${entityName}-detail.component.html`,
                     '</dl>',
@@ -215,8 +217,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-update.component.html`,
-                    `</div>
-    <div>`,
+                    '<button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">',
                     partialFiles.angular.entityUpdateCompHtml(this),
                     false
                 );
@@ -274,8 +275,8 @@ module.exports = JhipsterGenerator.extend({
                     `${webappDir}app/entities/${entityName}/${entityName}.component.html`,
                     '<td class="text-right">',
                     `<td *ngIf="!currentAccount.${tenantNameLowerFirst}">
-                    <div *ngIf="${this.options.name}.${tenantNameLowerFirst}">
-                        <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.name}.${tenantNameLowerFirst}?.id ]" >{{${this.options.name}.${tenantNameLowerFirst}?.name}}</a>
+                    <div *ngIf="${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}">
+                        <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.id ]" >{{${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.name}}</a>
                     </div>
                 </td>`
                 );
