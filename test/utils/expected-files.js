@@ -3,7 +3,6 @@ const constants = require('../../node_modules/generator-jhipster/generators/gene
 const CLIENT_MAIN_SRC_DIR = constants.CLIENT_MAIN_SRC_DIR;
 const CLIENT_TEST_SRC_DIR = constants.CLIENT_TEST_SRC_DIR;
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
-const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 
 const expectedFiles = {
 
@@ -12,8 +11,6 @@ const expectedFiles = {
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/UserDTO.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/UserDTO.java`,
-        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/ManagedUserVM.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceIntTest.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/aop/company/CompanyAspect.java`,
     ],
     i18nNew: [
@@ -60,15 +57,14 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}i18n/en/global.json`
     ],
     entityFiles: [
-        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-dialog.component.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-update.component.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-detail.component.html`,
-        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-dialog.component.html`,
-        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent.model.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent-update.component.html`,
+        `${CLIENT_MAIN_SRC_DIR}app/shared/model/ent.model.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/entities/ent/ent.component.html`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/ent.json`,
-        `${CLIENT_TEST_SRC_DIR}spec/app/entities/ent/ent-dialog.component.spec.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/admin/company-management.spec.ts`,
-        `${CLIENT_TEST_SRC_DIR}e2e/entities/ent.spec.ts`
+        `${CLIENT_TEST_SRC_DIR}e2e/entities/ent/ent.spec.ts`
     ]
 };
 
