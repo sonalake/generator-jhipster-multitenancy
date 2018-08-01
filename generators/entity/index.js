@@ -301,46 +301,46 @@ module.exports = JhipsterGenerator.extend({
                         partialFiles.angular.tenantMgmtSpecTs(this)
                     );
 
-                    this.replaceContent(
-                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
-                        '} from \'protractor\';',
-                        ', protractor } from \'protractor\';'
-                    );
-
                     this.rewriteFile(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
                         `describe('${entityNameUpperFirst} e2e test', () => {`,
-                        `import { ${tenantNameUpperFirst}MgmtComponentsPage } from '../admin/${tenantNameLowerFirst}-management.spec';
+                        `import { ${tenantNameUpperFirst}MgmtComponentsPage } from '../../admin/${tenantNameLowerFirst}-management.spec';
 `
                     );
 
                     this.rewriteFile(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
                         `let ${entityName}ComponentsPage: ${entityNameUpperFirst}ComponentsPage;`,
                         `let ${tenantNameLowerFirst}MgmtComponentsPage: ${tenantNameUpperFirst}MgmtComponentsPage;`
                     );
 
                     this.replaceContent(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
                         `it('should create and save ${entityNamePluralUpperFirst}', () => {`,
                         partialFiles.angular.entitySpecTs1(this)
                     );
 
                     this.rewriteFile(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
-                        `${entityName}DialogPage.save();`,
-                        `${entityName}DialogPage.set${tenantNameUpperFirst}();`
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.spec.ts`,
+                        `${entityName}UpdatePage.save();`,
+                        `${entityName}UpdatePage.set${tenantNameUpperFirst}();`
                     );
 
                     this.rewriteFile(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
-                        'getModalTitle() {',
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.page-object.ts`,
+                        'getPageTitle() {',
                         `${tenantNameLowerFirst}Select = element(by.css('select'));`
                     );
 
+                    this.replaceContent(
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.page-object.ts`,
+                        '} from \'protractor\';',
+                        ', protractor } from \'protractor\';'
+                    );
+
                     this.rewriteFile(
-                        `${clientTestDir}e2e/entities/${entityName}.spec.ts`,
-                        'save() {',
+                        `${clientTestDir}e2e/entities/${entityName}/${entityName}.page-object.ts`,
+                        'save(): promise.Promise<void> {',
                         partialFiles.angular.entitySpecTs2(this)
                     );
                 }
