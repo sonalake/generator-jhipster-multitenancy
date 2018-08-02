@@ -111,7 +111,7 @@ public class UserDTO {
         <%_ } else { _%>
             this.authorities = user.getAuthorities();
         <%_ } _%>
-            this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
+            this.<%= tenantNameLowerFirst %> = user.get<%= tenantNameUpperFirst %>();
     }
 
     public <%= tenantNameUpperFirst %> get<%= tenantNameUpperFirst %>() {
