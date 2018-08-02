@@ -279,7 +279,7 @@ module.exports = JhipsterGenerator.extend({
                     '<td class="text-right">',
                     `<td *ngIf="!currentAccount.${tenantNameLowerFirst}">
                     <div *ngIf="${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}">
-                        <a [routerLink]="['../${tenantNameLowerFirst}-management', ${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.id ]" >{{${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.name}}</a>
+                        <a [routerLink]="['/admin/${tenantNameLowerFirst}-management', ${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.id, 'view' ]" >{{${this.options.entityNameLowerFirst}.${tenantNameLowerFirst}?.name}}</a>
                     </div>
                 </td>`
                 );
