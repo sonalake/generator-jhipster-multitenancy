@@ -4,7 +4,7 @@ import <%=packageName%>.security.SecurityUtils;
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.service.dto.UserDTO;
-import <%=packageName%>.domain.<%= tenantNameLowerFirst %>Parameter;
+import <%=packageName%>.domain.<%= tenantNameUpperFirst %>Parameter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,7 +29,7 @@ public class UserAspect {
 private UserRepository userRepository;
 
 @Autowired
-private <%= tenantNameUpperFirst %>Parameter <%= tenantNameUpperFirst %>Parameter;
+private <%= tenantNameUpperFirst %>Parameter <%= tenantNameLowerFirst %>Parameter;
 
 private final String fieldName =  "<%= tenantNameSpinalCased %>Id";
 
@@ -60,8 +60,8 @@ public void onCreateUser(JoinPoint joinPoint, UserDTO userDTO) throws Throwable 
 public void onSave(JoinPoint joinPoint, User user) {
     Optional<String> login = SecurityUtils.getCurrentUserLogin();
 
-    if(companyParameter.get<%= tenantNameUpperFirst %>() != null) {
-        user.set<%= tenantNameUpperFirst %>(companyParameter.get<%= tenantNameUpperFirst %>());
+    if(<%= tenantNameLowerFirst %>Parameter.get<%= tenantNameUpperFirst %>() != null) {
+        user.set<%= tenantNameUpperFirst %>(<%= tenantNameLowerFirst %>Parameter.get<%= tenantNameUpperFirst %>());
     }
 }
 
