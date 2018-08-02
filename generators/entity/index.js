@@ -145,9 +145,6 @@ module.exports = JhipsterGenerator.extend({
                                 relationshipName: this.tenantName,
                                 otherEntityName: this.tenantName,
                                 relationshipType: 'many-to-one',
-                                relationshipValidateRules: [
-                                    'required'
-                                ],
                                 otherEntityField: 'id',
                                 ownerSide: true,
                                 otherEntityRelationshipName: this.options.name
@@ -192,6 +189,12 @@ module.exports = JhipsterGenerator.extend({
                 mtUtils.tenantVariables(this.tenantName, this);
                 const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
                 this.template('_TenantAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+
+                const entityName = _.kebabCase(_.lowerFirst(this.options.name));
+                this.entityNameUpperFirst = _.upperFirst(entityName);
+                this.entityNameLowerFirst = _.lowerFirst(entityName);
+                this.template('_EntityAspect.java', `${javaDir}aop/${this.tenantNameLowerFirst}/${this.entityNameUpperFirst}Aspect.java`);
+
             }
         },
         generateClientCode() {

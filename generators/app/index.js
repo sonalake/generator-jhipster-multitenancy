@@ -154,8 +154,9 @@ module.exports = JhipsterGenerator.extend({
 
             // update user object
             this.template('src/main/java/package/domain/_User.java', `${this.javaDir}domain/User.java`);
+            this.template('src/main/java/package/domain/_EntityParameter.java', `${this.javaDir}domain/${this.tenantNameUpperFirst}Parameter.java`);
+
             this.template('src/main/java/package/service/dto/_UserDTO.java', `${this.javaDir}service/dto/UserDTO.java`);
-            this.template('src/main/java/package/service/_UserService.java', `${this.javaDir}service/UserService.java`);
 
             // database changes
             this.template('src/main/resources/config/liquibase/changelog/_user_tenant_constraints.xml', `${this.resourceDir}config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`);
@@ -163,6 +164,8 @@ module.exports = JhipsterGenerator.extend({
 
             // copy over aspect
             this.template('src/main/java/package/aop/_tenant/_TenantAspect.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`);
+            this.template('src/main/java/package/aop/_tenant/_UserAspect.java', `${this.javaDir}aop/${this.tenantNameLowerFirst}/UserAspect.java`);
+
         },
         // make the necessary client code changes and adds the tenant UI
         generateClientCode() {
