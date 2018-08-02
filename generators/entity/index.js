@@ -286,7 +286,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/shared/model/${entityName}.model.ts`,
-                    'export interface IBook {',
+                    `export interface I${entityNameUpperFirst} {`,
                     `import { ${tenantNameUpperFirst} } from '../../admin/${tenantNameLowerFirst}-management/${tenantNameLowerFirst}.model';`
                 );
 
