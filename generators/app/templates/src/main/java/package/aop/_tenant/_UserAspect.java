@@ -56,6 +56,29 @@ public void onCreateUser(JoinPoint joinPoint, UserDTO userDTO) throws Throwable 
     }
 }
 
+@Before(value = "execution(*  <%=packageName%>.service.UserService.updateUser(..)) && args(userDTO, ..)")
+public void onUpdateUser(JoinPoint joinPoint, UserDTO userDTO)
+{
+    Optional<String> login = SecurityUtils.getCurrentUserLogin();
+
+    if (login.isPresent())
+    {
+        User loggedInUser = userRepository.findOneByLogin(login.get()).get();
+        User user = userRepository.findById(userDTO.getId()).get();
+
+        if (loggedInUser.get<%= tenantNameUpperFirst %>() != null)
+        {
+            user.set<%= tenantNameUpperFirst %>(loggedInUser.get<%= tenantNameUpperFirst %>());
+        }
+        else
+        {
+            user.set<%= tenantNameUpperFirst %>(userDTO.get<%= tenantNameUpperFirst %>());
+        }
+
+        log.debug("Changed <%= tenantNameUpperFirst %> for User: {}", user);
+    }
+}
+
 @Before(value = "execution(* <%=packageName%>.repository.UserRepository.save(..)) && args(user, ..)")
 public void onSave(JoinPoint joinPoint, User user) {
     Optional<String> login = SecurityUtils.getCurrentUserLogin();
