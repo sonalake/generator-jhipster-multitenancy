@@ -21,7 +21,7 @@
         "home": {
             "title": "<%= tenantNamePluralUpperFirst %>",
             "createLabel": "Create a new <%= tenantNameLowerFirst %>",
-            "editLabel": "Edit a <%= tenantNameLowerFirst %>"
+            "createOrEditLabel": "Create or edit a <%= tenantNameLowerFirst %>" 
         },
         "delete": {
             "question": "Are you sure you want to delete <%= tenantNameLowerFirst %> {{ name }}?"

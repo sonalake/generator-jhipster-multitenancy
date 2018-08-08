@@ -1,7 +1,7 @@
 <%#
-    Copyright 2013-2017 the original author or authors from the JHipster project.
+    Copyright 2013-2018 the original author or authors from the JHipster project.
 
-    This file is part of the JHipster project, see http://www.jhipster.tech/
+    This file is part of the JHipster project, see https://www.jhipster.tech/
     for more information.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,115 +18,50 @@
     -%>
     package <%=packageName%>.domain;
 
-<%_ if (authenticationType === 'oauth2' && applicationType !== 'monolith') { _%>
-    import java.util.Set;
-
-public class User {
-
-    private final String login;
-
-    private final String firstName;
-
-    private final String lastName;
-
-    private final String email;
-
-    private final String langKey;
-
-    private final String imageUrl;
-
-    private final boolean activated;
-
-    private final Set<String> authorities;
-
-    public User(String login, String firstName, String lastName, String email, String langKey,
-                String imageUrl, boolean activated, Set<String> authorities) {
-
-        this.login = login;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.langKey = langKey;
-        this.imageUrl = imageUrl;
-        this.activated = activated;
-        this.authorities = authorities;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getLangKey() {
-        return langKey;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public Set<String> getAuthorities() {
-        return authorities;
-    }
-}
-<%_ } else { _%>
-    import <%=packageName%>.config.Constants;
-<% if (databaseType === 'cassandra') { %>
-    import com.datastax.driver.mapping.annotations.*;<% } %>
-    import com.fasterxml.jackson.annotation.JsonIgnore;
-    import org.apache.commons.lang3.StringUtils;<% if (databaseType === 'sql') { %>
-    import org.hibernate.annotations.BatchSize;<% } %><% if (enableHibernateCache) { %>
-    import org.hibernate.annotations.Cache;
-    import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
-    import org.hibernate.validator.constraints.Email;
+import <%=packageName%>.config.Constants;
+    <% if (databaseType === 'cassandra') { %>
+import com.datastax.driver.mapping.annotations.*;<% } %>
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;<% if (databaseType === 'sql') { %>
+import org.hibernate.annotations.BatchSize;<% } %><% if (enableHibernateCache) { %>
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
+import javax.validation.constraints.Email;
 <%_ if (databaseType === 'mongodb') { _%>
-    import org.springframework.data.annotation.Id;
-    import org.springframework.data.mongodb.core.index.Indexed;
-    import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Field;
 <%_ } _%>
-<%_ if (databaseType === 'couchbase') { _%>
-    import org.springframework.data.annotation.Id;
-    import com.couchbase.client.java.repository.annotation.Field;
-    import org.springframework.data.couchbase.core.mapping.Document;
-    import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
-    import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
-    import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
+    <%_ if (databaseType === 'couchbase') { _%>
+import org.springframework.data.annotation.Id;
+import com.couchbase.client.java.repository.annotation.Field;
+import org.springframework.data.couchbase.core.mapping.Document;
+import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
+import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 <%_ } _%>
 
-<%_ if (databaseType === 'sql') { _%>
-    import javax.persistence.*;
-    import org.hibernate.annotations.Filter;
-    import org.hibernate.annotations.FilterDef;
-    import org.hibernate.annotations.ParamDef;
+    <%_ if (databaseType === 'sql') { _%>
+import javax.persistence.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 <%_ } _%>
-    import javax.validation.constraints.NotNull;
-    import javax.validation.constraints.Pattern;
-    import javax.validation.constraints.Size;
-    import java.io.Serializable;
-    import java.util.HashSet;
-    import java.util.Locale;
-    import java.util.Objects;
-    import java.util.Set;
-    import java.time.Instant;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+<%_ if (authenticationType !== 'oauth2') { _%>
+import java.time.Instant;
+<%_ } _%>
 
-<%_ if (databaseType === 'couchbase') { _%>
-    import static <%=packageName%>.config.Constants.ID_DELIMITER;
-    import static org.springframework.data.couchbase.core.mapping.id.GenerationStrategy.USE_ATTRIBUTES;
+    <%_ if (databaseType === 'couchbase') { _%>
+import static <%=packageName%>.config.Constants.ID_DELIMITER;
+import static org.springframework.data.couchbase.core.mapping.id.GenerationStrategy.USE_ATTRIBUTES;
 
 <%_ } _%>
 /**
@@ -148,32 +83,28 @@ public class User<% if (databaseType === 'sql' || databaseType === 'mongodb' || 
 private static final long serialVersionUID = 1L;
 <% if (databaseType === 'sql') { %>
 @Id
-<%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
+<%_ if (authenticationType !== 'oauth2' && (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb')) { _%>
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-<%_ }  else { _%>
+<%_ } else if (authenticationType !== 'oauth2') { _%>
 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
 @SequenceGenerator(name = "sequenceGenerator")
 <%_ } _%>
-private Long id;<% } else { %><% if (databaseType === 'couchbase') { %>
+private <% if (authenticationType === 'oauth2') { %>String<% } else { %>Long<% } %> id;<% } else { %><% if (databaseType === 'couchbase') { %>
 public static final String PREFIX = "user";
 
-@SuppressWarnings("unused")
 @IdPrefix
-private String prefix = PREFIX;<% } %>
-<% if (databaseType === 'mongodb' || databaseType === 'couchbase') { %>
+private String prefix = PREFIX;
+<%_ } _%>
+<%_ if (databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
 @Id<% } %><% if (databaseType === 'couchbase') { %>
 @GeneratedValue(strategy = USE_ATTRIBUTES, delimiter = ID_DELIMITER)<% } %><% if (databaseType === 'cassandra') { %>
 @PartitionKey<% } %>
 private String id;<% } %>
 
-<%_ let columnMax = 50;
-    if (enableSocialSignIn) {
-    columnMax = 100;
-    } _%>
 @NotNull
 @Pattern(regexp = Constants.LOGIN_REGEX)
-@Size(min = 1, max = <%=columnMax %>)<% if (databaseType === 'sql') { %>
-@Column(length = <%=columnMax %>, unique = true, nullable = false)<% } %><% if (databaseType === 'mongodb') { %>
+@Size(min = 1, max = 50)<% if (databaseType === 'sql') { %>
+@Column(length = 50, unique = true, nullable = false)<% } %><% if (databaseType === 'mongodb') { %>
 @Indexed<% } %><% if (databaseType === 'couchbase') { %>
 @IdAttribute<% } %>
 private String login;
@@ -182,7 +113,7 @@ private String login;
 @JsonIgnore
 @NotNull
 @Size(min = 60, max = 60)<% if (databaseType === 'sql') { %>
-@Column(name = "password_hash", length = 60)<% } %>
+@Column(name = "password_hash", length = 60, nullable = false)<% } %>
 private String password;
 <%_ } _%>
 
@@ -197,8 +128,8 @@ private String firstName;
 private String lastName;
 
 @Email
-@Size(min = 5, max = 100)<% if (databaseType === 'sql') { %>
-@Column(length = 100, unique = true)<% } %><% if (databaseType === 'mongodb') { %>
+@Size(min = 5, max = 254)<% if (databaseType === 'sql') { %>
+@Column(length = 254, unique = true)<% } %><% if (databaseType === 'mongodb') { %>
 @Indexed<% } %>
 private String email;
 
@@ -277,11 +208,11 @@ public void set<%= tenantNameUpperFirst %>(<%= tenantNameUpperFirst %> <%= tenan
     this.<%= tenantNameLowerFirst %> = <%= tenantNameLowerFirst %>;
     }
 
-public <% if (databaseType === 'sql') { %>Long<% } else { %>String<% } %> getId() {
+public <% if (databaseType === 'sql' && authenticationType !== 'oauth2') { %>Long<% } else { %>String<% } %> getId() {
     return id;
     }
 
-public void setId(<% if (databaseType === 'sql') { %>Long<% } else { %>String<% } %> id) {
+public void setId(<% if (databaseType === 'sql' && authenticationType !== 'oauth2') { %>Long<% } else { %>String<% } %> id) {
     this.id = id;
     }
 
@@ -430,4 +361,3 @@ public String toString() {
     "}";
     }
     }
-<%_ } _%>

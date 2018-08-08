@@ -4,7 +4,7 @@
       "packageName": "com.mycompany.myapp",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "4.13.1",
+    "jhipsterVersion": "5.1.0",
     "baseName": "myapp",
     "packageName": "com.mycompany.myapp",
     "packageFolder": "com/mycompany/myapp",
