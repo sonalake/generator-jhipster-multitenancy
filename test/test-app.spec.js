@@ -15,7 +15,7 @@ const checkTenantisedFiles = function () {
         assert.file(expectedFiles.companyManagement);
         assert.file(expectedFiles.userManagement);
         assert.file(expectedFiles.admin);
-        assert.file(expectedFiles.shared);
+        assert.file(expectedFiles.core);
         assert.file(expectedFiles.tests);
         assert.file(expectedFiles.i18nNew);
 

@@ -5,6 +5,7 @@ const appSharedAuthPrincipalServiceTs = require('./angular/principal.service.ts.
 const e2eAdminSpecTs = require('./angular/administration.spec.ts.js');
 const userMgmtDialogComponentSpecTs = require('./angular/user-management-dialog.component.spec.ts.js');
 const tenantResource = require('./server/_TenantResource.js');
+const tenantService = require('./server/_TenantService.js');
 
 module.exports = {
     angular: {
@@ -16,6 +17,7 @@ module.exports = {
         userMgmtDialogComponentSpecTs: userMgmtDialogComponentSpecTs.tmpl
     },
     server: {
-        tenantResource: tenantResource.tmpl
+        tenantResource: tenantResource.tmpl,
+        tenantService: tenantService.tmpl
     }
 };

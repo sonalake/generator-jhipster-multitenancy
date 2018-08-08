@@ -1,0 +1,79 @@
+<%#
+ Copyright 2013-2018 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+
+import { <%= tenantNameUpperFirst %> } from 'app/admin';
+import { <%= tenantNameUpperFirst %>Service } from 'app/shared';
+import { <%= tenantNameUpperFirst %>MgmtComponent } from './<%= tenantNameLowerFirst %>-management.component';
+import { <%= tenantNameUpperFirst %>MgmtDetailComponent } from './<%= tenantNameLowerFirst %>-management-detail.component';
+import { <%= tenantNameUpperFirst %>MgmtUpdateComponent } from './<%= tenantNameLowerFirst %>-management-update.component';
+import { <%= tenantNameUpperFirst %>RouteAccessService } from './../../core';
+
+@Injectable({ providedIn: 'root' })
+export class <%= tenantNameUpperFirst %>MgmtResolve implements Resolve<any> {
+    constructor(private service: <%= tenantNameUpperFirst %>Service) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id);
+        }
+        return new <%= tenantNameUpperFirst %>();
+    }
+}
+
+export const <%= tenantNameLowerFirst %>MgmtRoute: Routes = [
+    {
+        path: '<%= tenantNameLowerFirst %>-management',
+        component: <%= tenantNameUpperFirst %>MgmtComponent,
+        resolve: {
+            'pagingParams': JhiResolvePagingParams
+        },
+        data: {
+            pageTitle: '<%= tenantNameLowerFirst %>Management.home.title'
+        },
+        canActivate: [<%= tenantNameUpperFirst %>RouteAccessService]
+    },
+    {
+        path: '<%= tenantNameLowerFirst %>-management/:id/view',
+        component: <%= tenantNameUpperFirst %>MgmtDetailComponent,
+        resolve: {
+            <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>MgmtResolve
+        },
+        data: {
+            pageTitle: '<%= tenantNameLowerFirst %>Management.home.title'
+        }
+    },
+    {
+        path: '<%= tenantNameLowerFirst %>-management/new',
+        component: <%= tenantNameUpperFirst %>MgmtUpdateComponent,
+        resolve: {
+            <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>MgmtResolve
+        }
+    },
+    {
+        path: '<%= tenantNameLowerFirst %>-management/:id/edit',
+        component: <%= tenantNameUpperFirst %>MgmtUpdateComponent,
+        resolve: {
+            <%= tenantNameLowerFirst %>: <%= tenantNameUpperFirst %>MgmtResolve
+        }
+    }
+];
