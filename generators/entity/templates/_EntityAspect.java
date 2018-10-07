@@ -1,5 +1,6 @@
 package <%=packageName%>.aop.<%= tenantNameLowerFirst %>;
 
+import <%=packageName%>.repository.<%= entityNameUpperFirst %>Repository;
 import <%=packageName%>.security.SecurityUtils;
 import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.domain.User;
@@ -19,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.hibernate.Filter;
 import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Aspect
 @Component
@@ -27,6 +29,13 @@ public class <%= entityNameUpperFirst %>Aspect {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private <%= entityNameUpperFirst %>Repository <%= entityNameLowerFirst %>Repository;
+
+    /**
+     * Run method if <%= entityNameUpperFirst %> repository save is hit.
+     * Adds tenant information to entity.
+     */
     @Before(value = "execution(* <%=packageName%>.repository.<%= entityNameUpperFirst %>Repository.save(..)) && args(<%= entityNameLowerFirst %>, ..)")
     public void onSave(JoinPoint joinPoint, <%= entityNameUpperFirst %> <%= entityNameLowerFirst %>) {
         Optional<String> login = SecurityUtils.getCurrentUserLogin();
@@ -36,6 +45,27 @@ public class <%= entityNameUpperFirst %>Aspect {
 
             if (loggedInUser.get<%= tenantNameUpperFirst %>() != null) {
                 <%= entityNameLowerFirst %>.set<%= tenantNameUpperFirst %>(loggedInUser.get<%= tenantNameUpperFirst %>());
+            }
+        }
+    }
+
+    /**
+     * Run method if <%= entityNameUpperFirst %> service findOne is hit.
+     * Adds filtering to prevent display of information from another tenant
+     */
+    @Before(value = "execution(* <%=packageName%>.service.<%= entityNameUpperFirst %>Service.findOne(..)) && args(id, ..)")
+    public void onFindOne(JoinPoint joinPoint, Long id) throws Exception {
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+
+        if(login.isPresent())
+        {
+            User loggedInUser = userRepository.findOneByLogin(login.get()).get();
+
+            if (loggedInUser.get<%= tenantNameUpperFirst %>() != null) {
+                <%= entityNameUpperFirst %> <%= entityNameLowerFirst %> = <%= entityNameLowerFirst %>Repository.findById(id).get();
+                if(<%= entityNameLowerFirst %>.get<%= tenantNameUpperFirst %>() != loggedInUser.get<%= tenantNameUpperFirst %>()){
+                    throw new NoSuchElementException();
+                }
             }
         }
     }
