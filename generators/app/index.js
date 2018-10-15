@@ -386,7 +386,7 @@ module.exports = JhipsterGenerator.extend({
             partialFiles.server.tenantResource(this)
         );
 
-        this.template(`src/main/java/package/repository/_TenantRepository.java`,
+        this.template('src/main/java/package/repository/_TenantRepository.java',
         `${this.javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
 
         this.log(chalk.green('\nTenant entity generated successfully.'));
