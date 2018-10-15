@@ -84,7 +84,7 @@
     "gulp-rename": "1.2.2",
     "gulp-sequence": "0.4.6",
     "gulp-shell": "^0.6.5",
-    "mocha": "3.5.3",
+    "mocha": "4.0.1",
     "yeoman-assert": "3.0.0",
     "yeoman-test": "^1.8.0"
   },
