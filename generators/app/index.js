@@ -16,7 +16,7 @@ module.exports = JhipsterGenerator.extend({
     initializing: {
         // read in the jhipster config and set up vars for use in templates
         readConfig() {
-            this.jhipsterAppConfig = this.getJhipsterAppConfig();
+            this.jhipsterAppConfig = this.getAllJhipsterConfig();
             if (!this.jhipsterAppConfig) {
                 this.error('Can\'t read .yo-rc.json');
             }
@@ -67,8 +67,7 @@ module.exports = JhipsterGenerator.extend({
         },
         // check the jhipster-multitenancy module is already installed
         checkIfInstalled() {
-            const multitenancyConfig = this.getJhipsterAppConfig('generator-jhipster-multitenancy');
-            if (multitenancyConfig !== false) {
+            if (this.config.get('tenantName')) {
                 this.error('\nThis module is already installed.\n');
             }
         },
