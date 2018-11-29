@@ -15,8 +15,7 @@ gulp.task('eslint', () => gulp.src(['gulpfile.js', 'generators/app/index.js', 't
     // .pipe(plumber({errorHandler: handleErrors}))
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failOnError())
-);
+    .pipe(eslint.failOnError()));
 
 gulp.task('nsp', (cb) => {
     nsp({ package: path.resolve('package.json') }, cb);
@@ -26,10 +25,9 @@ gulp.task('pre-test', () => gulp.src('generators/app/index.js')
     .pipe(istanbul({
         includeUntested: true
     }))
-    .pipe(istanbul.hookRequire())
-);
+    .pipe(istanbul.hookRequire()));
 
-gulp.task('test', ['pre-test'], (cb) => {
+gulp.task('test', gulp.series(['pre-test'], (cb) => {
     let mochaErr;
 
     gulp.src('test/*.js')
@@ -42,7 +40,7 @@ gulp.task('test', ['pre-test'], (cb) => {
         .on('end', () => {
             cb(mochaErr);
         });
-});
+}));
 
 gulp.task('bump-patch', bump('patch'));
 gulp.task('bump-minor', bump('minor'));
@@ -88,8 +86,8 @@ function version() {
     return JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
 }
 
-gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test']);
+gulp.task('prepublish', gulp.series(['nsp']));
+gulp.task('default', sequence(['test']));
 gulp.task('deploy-patch', sequence('test', 'bump-patch', 'git-commit', 'git-push', 'npm'));
 gulp.task('deploy-minor', sequence('test', 'bump-minor', 'git-commit', 'git-push', 'npm'));
 gulp.task('deploy-major', sequence('test', 'bump-major', 'git-commit', 'git-push', 'npm'));

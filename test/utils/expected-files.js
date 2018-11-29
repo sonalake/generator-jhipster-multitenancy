@@ -8,10 +8,12 @@ const expectedFiles = {
 
     server: [
         '.jhipster/Company.json',
+        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/CompanyParameter.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/UserDTO.java`,
-        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/UserDTO.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/aop/company/CompanyAspect.java`,
+        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/aop/company/UserAspect.java`,
+        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/repository/CompanyRepository.java`,
     ],
     i18nNew: [
         `${CLIENT_MAIN_SRC_DIR}i18n/en/company-management.json`,

@@ -1,8 +1,8 @@
 const fs = require('fs');
 const assert = require('yeoman-assert');
-const mtUtils = require('../generators/multitenancy-utils');
 const describe = require('mocha').describe;
 const it = require('mocha').it;
+const mtUtils = require('../generators/multitenancy-utils');
 
 describe('Multitenancy Utils Methods', () => {
     describe('readConfig', () => {
@@ -14,12 +14,14 @@ describe('Multitenancy Utils Methods', () => {
                     const config = JSON.parse(data);
                     mtUtils.readConfig(config, this);
                     // assert frequently used variable are read into context
-                    assert.equal(this.jhipsterVersion, '4.8.0');
-                    assert.equal(this.packageName, 'com.mycompany.myapp');
-                    assert.equal(this.hibernateCache, 'ehcache');
-                    assert.equal(this.databaseType, 'sql');
-                    assert.equal(this.devDatabaseType, 'h2Disk');
-                    assert.equal(this.prodDatabaseType, 'mysql');
+
+                    assert.equal(this['generator-jhipster'].jhipsterVersion, '5.7.0');
+                    assert.equal(this['generator-jhipster'].packageName, 'com.mycompany.myapp');
+                    assert.equal(this['generator-jhipster'].cacheProvider, 'ehcache');
+                    assert.equal(this['generator-jhipster'].enableHibernateCache, true);
+                    assert.equal(this['generator-jhipster'].databaseType, 'sql');
+                    assert.equal(this['generator-jhipster'].devDatabaseType, 'h2Disk');
+                    assert.equal(this['generator-jhipster'].prodDatabaseType, 'mysql');
                 });
             });
         });
