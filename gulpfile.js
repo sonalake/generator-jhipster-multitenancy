@@ -29,20 +29,20 @@ gulp.task('pre-test', () => gulp.src('generators/app/index.js')
     .pipe(istanbul.hookRequire())
 );
 
-gulp.task('test', ['pre-test'], (cb) => {
-    let mochaErr;
+gulp.task('test', gulp.series(['pre-test'], (cb) => {
+     let mochaErr;
 
-    gulp.src('test/*.js')
-        .pipe(plumber())
-        .pipe(mocha({ reporter: 'spec' }))
-        .on('error', (err) => {
-            mochaErr = err;
-        })
-        .pipe(istanbul.writeReports())
-        .on('end', () => {
-            cb(mochaErr);
-        });
-});
+     gulp.src('test/*.js')
+         .pipe(plumber())
+         .pipe(mocha({ reporter: 'spec' }))
+         .on('error', (err) => {
+             mochaErr = err;
+         })
+         .pipe(istanbul.writeReports())
+         .on('end', () => {
+             cb(mochaErr);
+         });
+ }));
 
 gulp.task('bump-patch', bump('patch'));
 gulp.task('bump-minor', bump('minor'));
@@ -88,8 +88,8 @@ function version() {
     return JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
 }
 
-gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test']);
+gulp.task('prepublish', gulp.series(['nsp']));
+gulp.task('default', sequence(['test']));
 gulp.task('deploy-patch', sequence('test', 'bump-patch', 'git-commit', 'git-push', 'npm'));
 gulp.task('deploy-minor', sequence('test', 'bump-minor', 'git-commit', 'git-push', 'npm'));
 gulp.task('deploy-major', sequence('test', 'bump-major', 'git-commit', 'git-push', 'npm'));
