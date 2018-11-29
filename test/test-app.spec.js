@@ -2,7 +2,6 @@ const path = require('path');
 const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
-const BaseGenerator = require('generator-jhipster/generators/generator-base').prototype;
 const describe = require('mocha').describe;
 const it = require('mocha').it;
 const beforeEach = require('mocha').beforeEach;
@@ -21,9 +20,6 @@ const checkTenantisedFiles = function () {
 
         // server
         assert.file(expectedFiles.server);
-
-        // database
-        //assert.file(`src/main/resources/config/liquibase/changelog/${BaseGenerator.dateFormatForLiquibase()}__user_Company_constraints.xml`);
     });
 
     it('updates files', () => {
@@ -35,10 +31,6 @@ const checkTenantisedFiles = function () {
 };
 
 describe('JHipster generator multitenancy', () => {
-
-
-
-
     describe('Test with no cache', () => {
         beforeEach((done) => {
             helpers
@@ -53,16 +45,16 @@ describe('JHipster generator multitenancy', () => {
     });
 
     describe('Test with hazelcast cache', () => {
-            beforeEach((done) => {
-                helpers
-                    .run(path.join(__dirname, '../generators/app'))
-                    .inTmpDir((dir) => {
-                        fse.copySync(path.join(__dirname, '../test/templates/mainGen/hazelcastCache'), dir);
-                    })
-                    .on('end', done);
-            });
-            checkTenantisedFiles();
+        beforeEach((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/mainGen/hazelcastCache'), dir);
+                })
+                .on('end', done);
         });
+        checkTenantisedFiles();
+    });
 
     describe('Test with Maven and AngularX', () => {
         beforeEach((done) => {

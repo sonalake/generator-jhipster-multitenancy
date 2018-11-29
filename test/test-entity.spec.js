@@ -14,18 +14,18 @@ describe('Multitenancy sub generator', () => {
         let errorMsg = '';
         beforeEach((done) => {
             helpers
-            .run(path.join(__dirname, '../generators/entity'))
-            .inTmpDir((dir) => {
-                fse.copySync(path.join(__dirname, '../test/templates/subGen/module-not-installed'), dir);
-            })
-            .withOptions({
-                testmode: true
-            })
-            .withArguments(['foo'])
-            .on('error', (e) => {
-                errorMsg = `${e} `;
-                done();
-            });
+                .run(path.join(__dirname, '../generators/entity'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/subGen/module-not-installed'), dir);
+                })
+                .withOptions({
+                    testmode: true
+                })
+                .withArguments(['foo'])
+                .on('error', (e) => {
+                    errorMsg = `${e} `;
+                    done();
+                });
         });
 
         it('throws error as multitenancy module not installed', () => {
@@ -37,18 +37,18 @@ describe('Multitenancy sub generator', () => {
         let errorMsg = '';
         beforeEach((done) => {
             helpers
-            .run(path.join(__dirname, '../generators/entity'))
-            .inTmpDir((dir) => {
-                fse.copySync(path.join(__dirname, '../test/templates/subGen/module-installed-no-entity'), dir);
-            })
-            .withOptions({
-                testmode: true
-            })
-            .withArguments(['foo'])
-            .on('error', (e) => {
-                errorMsg = `${e} `;
-                done();
-            });
+                .run(path.join(__dirname, '../generators/entity'))
+                .inTmpDir((dir) => {
+                    fse.copySync(path.join(__dirname, '../test/templates/subGen/module-installed-no-entity'), dir);
+                })
+                .withOptions({
+                    testmode: true
+                })
+                .withArguments(['foo'])
+                .on('error', (e) => {
+                    errorMsg = `${e} `;
+                    done();
+                });
         });
         it('throws an error as entity doesn\'t exist', () => {
             assert.equal(true, errorMsg.indexOf(chalk.yellow(`Entity ${chalk.bold('foo')} doesn't exist. Please generate using yo jhipster:entity foo`)) >= 0);

@@ -15,8 +15,7 @@ gulp.task('eslint', () => gulp.src(['gulpfile.js', 'generators/app/index.js', 't
     // .pipe(plumber({errorHandler: handleErrors}))
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failOnError())
-);
+    .pipe(eslint.failOnError()));
 
 gulp.task('nsp', (cb) => {
     nsp({ package: path.resolve('package.json') }, cb);
@@ -26,23 +25,22 @@ gulp.task('pre-test', () => gulp.src('generators/app/index.js')
     .pipe(istanbul({
         includeUntested: true
     }))
-    .pipe(istanbul.hookRequire())
-);
+    .pipe(istanbul.hookRequire()));
 
 gulp.task('test', gulp.series(['pre-test'], (cb) => {
-     let mochaErr;
+    let mochaErr;
 
-     gulp.src('test/*.js')
-         .pipe(plumber())
-         .pipe(mocha({ reporter: 'spec' }))
-         .on('error', (err) => {
-             mochaErr = err;
-         })
-         .pipe(istanbul.writeReports())
-         .on('end', () => {
-             cb(mochaErr);
-         });
- }));
+    gulp.src('test/*.js')
+        .pipe(plumber())
+        .pipe(mocha({ reporter: 'spec' }))
+        .on('error', (err) => {
+            mochaErr = err;
+        })
+        .pipe(istanbul.writeReports())
+        .on('end', () => {
+            cb(mochaErr);
+        });
+}));
 
 gulp.task('bump-patch', bump('patch'));
 gulp.task('bump-minor', bump('minor'));

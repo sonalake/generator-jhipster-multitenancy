@@ -1,8 +1,8 @@
 const fs = require('fs');
 const assert = require('yeoman-assert');
-const mtUtils = require('../generators/multitenancy-utils');
 const describe = require('mocha').describe;
 const it = require('mocha').it;
+const mtUtils = require('../generators/multitenancy-utils');
 
 describe('Multitenancy Utils Methods', () => {
     describe('readConfig', () => {

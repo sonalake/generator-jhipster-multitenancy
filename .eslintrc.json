@@ -24,6 +24,18 @@
 
         "no-multi-assign": "off",
         "no-param-reassign": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "prefer-destructuring": ["error", {
+            "VariableDeclarator": {
+              "array": false,
+              "object": false
+            },
+            "AssignmentExpression": {
+              "array": false,
+              "object": false
+            }
+          }, {
+            "enforceForRenamedProperties": false
+          }]
     }
-}
+} 

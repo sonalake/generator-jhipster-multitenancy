@@ -1,13 +1,13 @@
 const util = require('util');
 const chalk = require('chalk');
 const generator = require('yeoman-generator');
-const packagejs = require('../../package.json');
 const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const _ = require('lodash');
 const mtUtils = require('../multitenancy-utils');
 const partialFiles = require('./partials');
+const packagejs = require('../../package.json');
 
 const JhipsterGenerator = generator.extend({});
 util.inherits(JhipsterGenerator, BaseGenerator);
@@ -377,16 +377,15 @@ module.exports = JhipsterGenerator.extend({
         );
 
         this.replaceContent(`${this.javaDir}domain/${this.tenantNameUpperFirst}.java`,
-        `    @OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'")`,
-        `\t@OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'", fetch = FetchType.EAGER)`);
+            `    @OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'")`,
+            `\t@OneToMany(mappedBy = "'${this.tenantNameLowerFirst}'", fetch = FetchType.EAGER)`);
 
         this.rewriteFile(`${this.javaDir}web/rest/${this.tenantNameUpperFirst}Resource.java`,
             `${this.tenantNameLowerFirst}Service.delete(id);`,
-            partialFiles.server.tenantResource(this)
-        );
+            partialFiles.server.tenantResource(this));
 
         this.template('src/main/java/package/repository/_TenantRepository.java',
-        `${this.javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
+            `${this.javaDir}repository/${this.tenantNameUpperFirst}Repository.java`);
 
         this.log(chalk.green('\nTenant entity generated successfully.'));
         this.log(chalk.green('Your application now supports multitenancy.\n'));
