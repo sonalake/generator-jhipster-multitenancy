@@ -18,10 +18,9 @@
 -%>
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService } from 'app/core';
+import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService, AccountService } from 'app/core';
 import { HttpResponse } from '@angular/common/http';
 
-import { Principal } from '../../core';
 import { <%= tenantNameUpperFirst %> } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from '../../shared';
 
@@ -45,10 +44,10 @@ export class UserMgmtUpdateComponent implements OnInit {
         private userService: UserService,
         private route: ActivatedRoute,
         private router: Router,
-        private principal: Principal,
+        private accountService: AccountService,
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service
     ) {
-        this.principal.identity().then(account => {
+        this.accountService.identity().then(account => {
             this.currentAccount = account;
         });
     }

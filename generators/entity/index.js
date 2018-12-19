@@ -241,7 +241,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.replaceContent(
                     `${webappDir}app/entities/${entityName}/${entityName}-update.component.ts`,
-                    'private activatedRoute: ActivatedRoute) {}',
+                    'protected activatedRoute: ActivatedRoute) {}',
                     partialFiles.angular.entityUpdateCompTsConstr(this),
                     false
                 );
