@@ -15,7 +15,7 @@ describe('Multitenancy Utils Methods', () => {
                     mtUtils.readConfig(config, this);
                     // assert frequently used variable are read into context
 
-                    assert.equal(this['generator-jhipster'].jhipsterVersion, '5.7.0');
+                    assert.equal(this['generator-jhipster'].jhipsterVersion, '5.7.1');
                     assert.equal(this['generator-jhipster'].packageName, 'com.mycompany.myapp');
                     assert.equal(this['generator-jhipster'].cacheProvider, 'ehcache');
                     assert.equal(this['generator-jhipster'].enableHibernateCache, true);
