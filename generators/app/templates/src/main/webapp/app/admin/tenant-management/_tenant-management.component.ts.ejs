@@ -31,7 +31,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { <%= tenantNameUpperFirst %> } from './<%= tenantNameLowerFirst %>.model';
 import { <%= tenantNameUpperFirst %>Service } from '../../shared';
-import { Principal } from '../../core';
+import { AccountService } from '../../core';
 import { <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent } from '../';
 
 @Component({
@@ -58,7 +58,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
     constructor(
         private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service,
         private alertService: JhiAlertService,
-        private principal: Principal,
+        private accountService: AccountService,
         <%_ if (prodDatabaseType !== 'cassandra') { _%>
         private parseLinks: JhiParseLinks,
         private activatedRoute: ActivatedRoute,
@@ -79,7 +79,7 @@ export class <%= tenantNameUpperFirst %>MgmtComponent implements OnInit, OnDestr
     }
 
     ngOnInit() {
-        this.principal.identity().then(account => {
+        this.accountService.identity().then(account => {
             this.currentAccount = account;
             this.loadAll();
             this.registerChangeIn<%= tenantNamePluralUpperFirst %>();

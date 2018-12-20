@@ -314,9 +314,9 @@ module.exports = JhipsterGenerator.extend({
                 partialFiles.angular.appLayoutsNavbarComponentTs(this)
             );
             this.rewriteFile(
-                `${this.webappDir}app/core/auth/principal.service.ts`,
+                `${this.webappDir}app/core/auth/account.service.ts`,
                 'getImageUrl(): string {',
-                partialFiles.angular.appSharedAuthPrincipalServiceTs(this)
+                partialFiles.angular.appAccountServiceTs(this)
             );
             this.rewriteFile(
                 `${this.webappDir}app/shared/index.ts`,
