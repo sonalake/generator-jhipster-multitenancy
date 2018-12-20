@@ -53,7 +53,7 @@ const expectedFiles = {
         `${CLIENT_MAIN_SRC_DIR}app/app.module.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/layouts/navbar/navbar.component.html`,
         `${CLIENT_MAIN_SRC_DIR}app/layouts/navbar/navbar.component.ts`,
-        `${CLIENT_MAIN_SRC_DIR}app/core/auth/principal.service.ts`,
+        `${CLIENT_MAIN_SRC_DIR}app/core/auth/account.service.ts`,
         `${CLIENT_MAIN_SRC_DIR}app/shared/index.ts`,
         `${CLIENT_TEST_SRC_DIR}e2e/admin/administration.spec.ts`,
         `${CLIENT_MAIN_SRC_DIR}i18n/en/global.json`
