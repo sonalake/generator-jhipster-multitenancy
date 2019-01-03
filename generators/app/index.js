@@ -62,7 +62,7 @@ module.exports = JhipsterGenerator.extend({
             const jhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
             const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
             if (!semver.satisfies(jhipsterVersion, minimumJhipsterVersion)) {
-                this.error(`\nYour generated project used a JHipster version (${jhipsterVersion}) that is currently not supported.)\n`);
+                this.error(`\nYour generated project used a JHipster version (${jhipsterVersion}) that is currently not supported.\n`);
             }
         },
         // check the jhipster-multitenancy module is already installed
