@@ -41,7 +41,6 @@ import {
     <%= tenantNameUpperFirst %>MgmtUpdateComponent,
     <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent,
     LogsComponent,
-    <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
     <%=jhiPrefixCapitalized%>MetricsMonitoringComponent,
     <%=jhiPrefixCapitalized%>HealthModalComponent,
     <%=jhiPrefixCapitalized%>HealthCheckComponent,
@@ -86,8 +85,7 @@ import {
         <%_ if (websocket === 'spring-websocket') { _%>
         <%=jhiPrefixCapitalized%>TrackerComponent,
         <%_ } _%>
-        <%=jhiPrefixCapitalized%>MetricsMonitoringComponent,
-        <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent
+        <%=jhiPrefixCapitalized%>MetricsMonitoringComponent
     ],
 	providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
     entryComponents: [
@@ -95,7 +93,6 @@ import {
         UserMgmtDeleteDialogComponent,
         <%_ } _%>
         <%=jhiPrefixCapitalized%>HealthModalComponent,
-        <%=jhiPrefixCapitalized%>MetricsMonitoringModalComponent,
         <%= tenantNameUpperFirst %>MgmtDeleteDialogComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

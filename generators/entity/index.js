@@ -292,7 +292,7 @@ module.exports = JhipsterGenerator.extend({
 
                 this.rewriteFile(
                     `${webappDir}app/shared/model/${entityName}.model.ts`,
-                    'name?: string;',
+                    'id?: number;',
                     `${tenantNameLowerFirst}?: ${tenantNameUpperFirst};`
                 );
 
