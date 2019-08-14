@@ -7,100 +7,92 @@ Greetings, Java Hipster!
 
 # generator-jhipster-multitenancy
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-> A JHipster module for creating multitenant applications
-
+> A JHipster blueprint for creating multitenant applications
 
 # Introduction
-This module is used for creating multitenant applications. The module will:
 
- - Generate a Tenant entity.
- - Make the User, and any other entities, tenant aware.
-
-# Table of contents
-
-* [Prerequisites](#prerequisites)
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Making an entity tenant aware](#making-an-entity-tenant-aware)
-  * [Applying the tenant filter](#applying-the-tenant-filter)
-* [License](#license)
+This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be used in a JHipster application.
 
 # Prerequisites
 
-As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
+As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
 
-- [Installing JHipster](https://jhipster.github.io/installation.html)
+- [Installing JHipster](https://www.jhipster.tech/installation/)
 
 # Installation
 
-If you are using Yarn:
+## With NPM
+
+To install this blueprint:
 
 ```bash
-# install the module
-yarn global add generator-jhipster-multitenancy
-
-# update the module
-yarn global upgrade generator-jhipster-multitenancy
+npm install -g generator-jhipster-multitenancy
 ```
 
-If you are using npm:
+To update this blueprint:
 
 ```bash
-#install the module
-npm install -g generator-jhipster-multitenancy
-
-# update the module
 npm update -g generator-jhipster-multitenancy
+```
+
+## With Yarn
+
+To install this blueprint:
+
+```bash
+yarn global add generator-jhipster-multitenancy
+```
+
+To update this blueprint:
+
+```bash
+yarn global upgrade generator-jhipster-multitenancy
 ```
 
 # Usage
 
-After installation, run the module on a JHipster generated application:
+To use this blueprint, run the below command
 
 ```bash
-yo jhipster-multitenancy
+jhipster --blueprint multitenancy2
 ```
 
-You will then be prompted for the name of your tenant entity.
 
-## Making an entity tenant aware
+## Running local Blueprint version for development
 
-Once the module has been run on the JHipster generated application, any entity in the application can be made tenant aware. This is done using the `jhipster-multitenancy:entity` sub-generator.
+During development of blueprint, please note the below steps. They are very important.
 
-For an existing entity:
+1. Link your blueprint globally 
+
+Note: If you do not want to link the blueprint(step 3) to each project being created, use NPM instead of Yarn as yeoman doesn't seem to fetch globally linked Yarn modules. On the other hand, this means you have to use NPM in all the below steps as well.
 
 ```bash
-yo jhipster-multitenancy:entity Book
+cd multitenancy2
+npm link
 ```
 
-This sub-generator also hooks into the `jhipster:entity` sub-generator. When creating a new entity, you will be prompted to make an entity tenant aware.
+2. Link a development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
+
+You could also use Yarn for this if you prefer
 
 ```bash
-yo jhipster:entity Book
+cd generator-jhipster
+npm link
 
-# upon generation, you will be asked
-Do you want to make Book tenant aware? (Y/n)
+cd multitenancy2
+npm link generator-jhipster
 ```
 
-## Applying the tenant filter
-
-Tenancy is enforced using a Hibernate filter. The filter identifies a discriminator column that is used to used to uniquely identify a tenant. By default, jhipster-multitenancy adds the filter to the `User` class. For other entities, you must add the filter manually. See below for an example.
+3. Create a new folder for the app to be generated and link JHipster and your blueprint there
 
 ```bash
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
+mkdir my-app && cd my-app
 
-/**
- * A book.
- */
-@Entity
-@Table(name = "book")
-@FilterDef(name = "COMPANY_FILTER", parameters = {@ParamDef(name = "companyId", type = "long")})
-@Filter(name = "COMPANY_FILTER", condition = "company_id = :companyId")
-public class Book extends AbstractAuditingEntity implements Serializable {
-    ...
-}
+npm link generator-jhipster-multitenancy
+npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
+
+jhipster -d --blueprint multitenancy2
+
 ```
 
 # License

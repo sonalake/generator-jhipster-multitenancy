@@ -1,10 +1,10 @@
 {
-  "generator-jhipster-module": {
+  "generator-jhipster-blueprint": {
     "promptValues": {
-      "githubName": "mairead_mccabe",
-      "authorName": "Mairead McCabe",
-      "authorEmail": "mairead.mccabe@sonalake.com",
-      "authorUrl": "https://bitbucket.org/jduggan_sonalake/"
+      "githubName": "mshima",
+      "authorName": "Marcelo Shima",
+      "authorEmail": "marceloshima@gmail.com",
+      "authorUrl": ""
     }
   }
 }
