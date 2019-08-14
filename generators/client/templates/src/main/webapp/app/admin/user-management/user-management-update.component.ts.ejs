@@ -1,0 +1,159 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
+
+import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { JhiAlertService } from 'ng-jhipster';
+import { <% if (enableTranslation) { %>JhiLanguageHelper,<% } %> User, UserService } from 'app/core';
+import { AccountService } from 'app/core';
+
+import { I<%= tenantNameUpperFirst %> } from './../<%= tenantNameLowerFirst %>-management/<%= tenantNameLowerFirst %>.model';
+import { <%= tenantNameUpperFirst %>Service } from '../../shared';
+
+@Component({
+    selector: '<%= jhiPrefixDashed %>-user-mgmt-update',
+    templateUrl: './user-management-update.component.html'
+})
+export class UserMgmtUpdateComponent implements OnInit {
+
+    user: User;
+    languages: any[];
+    authorities: any[];
+    isSaving: boolean;
+    currentAccount: any;
+    <%= tenantNamePluralLowerFirst %>: I<%= tenantNameUpperFirst %>[];
+
+    editForm = this.fb.group({
+        id: [null],
+        login: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[_.@A-Za-z0-9-]*')]],
+        firstName: ['', [Validators.maxLength(50)]],
+        lastName: ['', [Validators.maxLength(50)]],
+        email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+        activated: [true],
+        langKey: [],
+        authorities: [],
+        <%= tenantNameLowerFirst %>: [],
+    });
+
+    constructor(
+        <%_ if (enableTranslation) { _%>
+        private languageHelper: JhiLanguageHelper,
+        <%_ } _%>
+        private userService: UserService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private fb: FormBuilder,
+        private accountService: AccountService,
+        protected jhiAlertService: JhiAlertService,
+        private <%= tenantNameLowerFirst %>Service: <%= tenantNameUpperFirst %>Service
+    ) {
+        this.accountService.identity().then(account => {
+            this.currentAccount = account;
+        });
+    }
+
+    ngOnInit() {
+        this.isSaving = false;
+        this.route.data.subscribe(({user}) => {
+            this.user = user.body ? user.body : user;
+            this.updateForm(this.user);
+        });
+        this.authorities = [];
+        this.userService.authorities().subscribe((authorities) => {
+            this.authorities = authorities;
+        });
+        <%_ if (enableTranslation) { _%>
+        this.languageHelper.getAll().then((languages) => {
+            this.languages = languages;
+        });
+        <%_ } _%>
+
+        this.<%= tenantNameLowerFirst %>Service.query()
+        .pipe(
+            filter((mayBeOk: HttpResponse<I<%= tenantNameUpperFirst %>[]>) => mayBeOk.ok),
+            map((response: HttpResponse<I<%= tenantNameUpperFirst %>[]>) => response.body)
+         )
+         .subscribe(
+             (res: I<%= tenantNameUpperFirst %>[]) => (this.<%= tenantNamePluralLowerFirst %> = res), (res: HttpErrorResponse) => this.onError(res.message)
+         );
+    }
+
+    private updateForm(user: User): void {
+        this.editForm.patchValue({
+            id: user.id,
+            login: user.login,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            activated: user.activated,
+            langKey: user.langKey,
+            authorities: user.authorities,
+            <%= tenantNameLowerFirst %>: user.<%= tenantNameLowerFirst %>,
+        });
+    }
+
+    previousState() {
+        window.history.back();
+    }
+
+    save() {
+        this.isSaving = true;
+        this.updateUser(this.user);
+        if (this.user.id !== null) {
+            this.userService.update(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
+        } else {<% if (!enableTranslation) { %>
+            this.user.langKey = 'en';<% } %>
+            this.userService.create(this.user).subscribe((response) => this.onSaveSuccess(response), () => this.onSaveError());
+        }
+    }
+
+    private updateUser(user: User): void {
+        user.login = this.editForm.get(['login']).value;
+        user.firstName = this.editForm.get(['firstName']).value;
+        user.lastName = this.editForm.get(['lastName']).value;
+        user.email = this.editForm.get(['email']).value;
+        user.activated = this.editForm.get(['activated']).value;
+        user.langKey = this.editForm.get(['langKey']).value;
+        user.authorities = this.editForm.get(['authorities']).value;
+        user.<%= tenantNameLowerFirst %> = this.editForm.get(['<%= tenantNameLowerFirst %>']).value;
+    }
+
+    private onSaveSuccess(result) {
+        this.isSaving = false;
+        this.previousState();
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
+    }
+
+    protected onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
+      }
+
+    track<%= tenantNameUpperFirst %>ById(index: number, item: I<%= tenantNameUpperFirst %>) {
+      return item.id;
+    }
+
+}

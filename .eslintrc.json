@@ -3,12 +3,13 @@
         "node": true,
         "es6": true
     },
-    "extends": ["airbnb-base"],
+    "extends": ["airbnb-base", "plugin:prettier/recommended"],
     "rules": {
+        "prettier/prettier": "error",
         "indent": [2, 4],
         "linebreak-style": 0,
         "eol-last": 2,
-        "quotes": [2, "single"],
+        "quotes": [2, "single", { "avoidEscape": true }],
         "semi": [2, "always"],
         "eqeqeq": [2, "smart"],
         "no-use-before-define": [2, "nofunc"],
@@ -21,21 +22,17 @@
         "class-methods-use-this": "off",
         "no-underscore-dangle": "off",
         "no-plusplus": "off",
+        "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true } ],
+        "prefer-destructuring": "off",
 
         "no-multi-assign": "off",
         "no-param-reassign": "off",
-        "no-shadow": "off",
-        "prefer-destructuring": ["error", {
-            "VariableDeclarator": {
-              "array": false,
-              "object": false
-            },
-            "AssignmentExpression": {
-              "array": false,
-              "object": false
-            }
-          }, {
-            "enforceForRenamedProperties": false
-          }]
-    }
-} 
+        "no-shadow": "off"
+    },
+    "overrides": [
+        {
+            "files": ["test/**/*.js"],
+            "env": { "mocha": true }
+        }
+    ]
+}

@@ -1,0 +1,75 @@
+<%#
+ Copyright 2013-2018 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+<div>
+    <h2>
+        <span id="<%= tenantNameLowerFirst %>-management-page-heading" jhiTranslate="<%= tenantNameLowerFirst %>Management.home.title"><%= tenantNamePluralUpperFirst %></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-<%= tenantNameLowerFirst %>" [routerLink]="['./new']">
+            <fa-icon [icon]="'plus'"></fa-icon> <span jhiTranslate="<%= tenantNameLowerFirst %>Management.home.createLabel">Create a new <%= tenantNameUpperFirst %></span>
+        </button>
+    </h2>
+    <<%= jhiPrefixDashed %>-alert></<%= jhiPrefixDashed %>-alert>
+    <div class="table-responsive" *ngIf="<%= tenantNamePluralLowerFirst %>">
+        <table class="table table-striped">
+            <thead>
+            <tr<% if (databaseType !== 'cassandra') { %> jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)"<% } %>>
+                <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="id"<% } %>><span jhiTranslate="global.field.id">ID</span><% if (databaseType !== 'cassandra') { %> <fa-icon [icon]="'sort'"></fa-icon><% } %></th>
+                <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="name"<% } %>><span jhiTranslate="<%= tenantNameLowerFirst %>Management.name">Name</span><% if (databaseType !== 'cassandra') { %> <fa-icon [icon]="'sort'"></fa-icon><% } %></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody *ngIf ="<%= tenantNamePluralLowerFirst %>">
+            <tr *ngFor="let <%= tenantNameLowerFirst %> of <%= tenantNamePluralLowerFirst %> ;trackBy: trackId">
+                <td><a [routerLink]="['./',<%= tenantNameLowerFirst %>.id, 'view' ]">{{<%= tenantNameLowerFirst %>.id}}</a></td>
+                <td>{{<%= tenantNameLowerFirst %>.name}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                        [routerLink]="['./',<%= tenantNameLowerFirst %>.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['./', <%= tenantNameLowerFirst %>.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="button" (click)="delete<%= tenantNameUpperFirst %>(<%= tenantNameLowerFirst %>)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <%_ if (databaseType !== 'cassandra') { _%>
+    <div *ngIf="users">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+    <%_ } _%>
+</div>
