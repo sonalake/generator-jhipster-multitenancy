@@ -26,13 +26,13 @@ As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you hav
 To install this blueprint:
 
 ```bash
-npm install -g generator-jhipster-multitenancy2
+npm install -g generator-jhipster-multitenancy
 ```
 
 To update this blueprint:
 
 ```bash
-npm update -g generator-jhipster-multitenancy2
+npm update -g generator-jhipster-multitenancy
 ```
 
 ## With Yarn
@@ -40,13 +40,13 @@ npm update -g generator-jhipster-multitenancy2
 To install this blueprint:
 
 ```bash
-yarn global add generator-jhipster-multitenancy2
+yarn global add generator-jhipster-multitenancy
 ```
 
 To update this blueprint:
 
 ```bash
-yarn global upgrade generator-jhipster-multitenancy2
+yarn global upgrade generator-jhipster-multitenancy
 ```
 
 # Usage
@@ -88,7 +88,7 @@ npm link generator-jhipster
 ```bash
 mkdir my-app && cd my-app
 
-npm link generator-jhipster-multitenancy2
+npm link generator-jhipster-multitenancy
 npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
 
 jhipster -d --blueprint multitenancy2
