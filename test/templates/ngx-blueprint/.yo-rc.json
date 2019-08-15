@@ -1,5 +1,5 @@
 {
-    "generator-jhipster-multitenancy2": {
+    "generator-jhipster-multitenancy": {
         "promptValues": {
             "packageName": "com.mycompany.myapp"
         },
@@ -43,6 +43,6 @@
             "en",
             "fr"
         ],
-        "blueprint": "generator-jhipster-multitenancy2"
+        "blueprint": "generator-jhipster-multitenancy"
     }
 }

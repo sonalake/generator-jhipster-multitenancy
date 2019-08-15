@@ -2,7 +2,7 @@ const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-describe('Subgenerator server of multitenancy2 JHipster blueprint', () => {
+describe('Subgenerator server of multitenancy JHipster blueprint', () => {
     describe('Sample test', () => {
         before(done => {
             helpers
@@ -10,13 +10,13 @@ describe('Subgenerator server of multitenancy2 JHipster blueprint', () => {
                 .withOptions({
                     'from-cli': true,
                     skipInstall: true,
-                    blueprint: 'multitenancy2',
+                    blueprint: 'multitenancy',
                     skipChecks: true
                 })
                 .withGenerators([
                     [
                         require('../generators/server/index.js'), // eslint-disable-line global-require
-                        'jhipster-multitenancy2:server',
+                        'jhipster-multitenancy:server',
                         path.join(__dirname, '../generators/server/index.js')
                     ]
                 ])
