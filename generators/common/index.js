@@ -163,6 +163,9 @@ module.exports = class extends CommonGenerator {
 
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
+
+                //setting this for tenant entity generation for now
+                this.config.set('enableTranslation', false);
             },
             generateTenant() {
                 if(this.tenantExists && !this.firstExec) return;
