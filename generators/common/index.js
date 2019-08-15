@@ -41,7 +41,7 @@ module.exports = class extends CommonGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint multitenancy2')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint multitenancy')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
@@ -135,7 +135,6 @@ module.exports = class extends CommonGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         const configuring = super._configuring()
         const configuringCustomPhaseSteps = {
             saveConf() {
@@ -164,6 +163,9 @@ module.exports = class extends CommonGenerator {
 
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
+
+                //setting this for tenant entity generation for now
+                this.config.set('enableTranslation', false);
             },
             generateTenant() {
                 if(this.tenantExists && !this.firstExec) return;

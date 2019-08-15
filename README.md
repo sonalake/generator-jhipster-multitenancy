@@ -54,7 +54,7 @@ yarn global upgrade generator-jhipster-multitenancy
 To use this blueprint, run the below command
 
 ```bash
-jhipster --blueprint multitenancy2
+jhipster --blueprint multitenancy
 ```
 
 
@@ -67,7 +67,7 @@ During development of blueprint, please note the below steps. They are very impo
 Note: If you do not want to link the blueprint(step 3) to each project being created, use NPM instead of Yarn as yeoman doesn't seem to fetch globally linked Yarn modules. On the other hand, this means you have to use NPM in all the below steps as well.
 
 ```bash
-cd multitenancy2
+cd multitenancy
 npm link
 ```
 
