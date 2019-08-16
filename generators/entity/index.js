@@ -208,14 +208,13 @@ module.exports = class extends EntityGenerator {
                 });
             }
         };
-        return Object.assign(myCustomPhaseSteps);
+        return Object.assign(prompting, myCustomPhaseSteps);
     }
 
     get configuring() {
         const myCustomPrePhaseSteps = {
-                loadTenantDef() {
+                loadTenantDefinition() {
                     const context = this.context;
-
                     this.tenantName = this.config.get('tenantName');
 
                     let tenantAware;
@@ -242,9 +241,10 @@ module.exports = class extends EntityGenerator {
 
                     if(this.context.tenantAware){
                         context.service = 'serviceClass';
-
+                        context.dto = 'no';
+                        
                         const relationships = context.relationships;
-                        // if any relationship exisits already in the entity to the tenant remove it and regenerated
+                        // if any relationship exisits already in the entity to the tenant remove it and regenerate
                         for (let i = relationships.length - 1; i >= 0; i--) {
                             if (relationships[i].otherEntityName === this.tenantName) {
                                 relationships.splice(i);
@@ -279,6 +279,10 @@ module.exports = class extends EntityGenerator {
                     }
 
                     if(this.context.tenantAware){
+                        if(!this.configOptions.tenantAwareEntities)
+                        {
+                            this.configOptions.tenantAwareEntities = [];
+                        }
                         this.configOptions.tenantAwareEntities.push(this.context.entityClass); 
                     }
 
