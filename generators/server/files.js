@@ -16,14 +16,8 @@ module.exports = {
 };
 
 function writeFiles() {
-    this.packageFolder = this.config.get('packageFolder');
     // references to the various directories we'll be copying files to
-
-    this.tenantisedEntityServices = `@Before("execution(* ${this.packageName}.service.UserService.*(..))`;
-    this.configOptions.tenantAwareEntities.forEach(tenantAwareEntity => {
-        this.tenantisedEntityServices = this.tenantisedEntityServices + ` || execution(* ${this.packageName}.service.${tenantAwareEntity}Service.*(..))`
-    });
-    this.tenantisedEntityServices = this.tenantisedEntityServices + '")';
+    this.packageFolder = this.config.get('packageFolder');
 
     // template variables
     mtUtils.tenantVariables(this.config.get('tenantName'), this);

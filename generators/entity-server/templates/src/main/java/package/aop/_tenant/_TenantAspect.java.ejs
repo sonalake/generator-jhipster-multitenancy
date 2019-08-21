@@ -37,7 +37,7 @@ public class <%= tenantNameUpperFirst %>Aspect {
      * Filter users based on which <%= tenantNameLowerCase %> the user is associated with.
      * Skip filter if user has no <%= tenantNameLowerCase %>
      */
-    @Before("execution(* <%=packageName%>.service.UserService.*(..))")
+    <%- tenantisedEntityServices %>
     public void beforeExecution() throws Throwable {
         Optional<String> login = SecurityUtils.getCurrentUserLogin();
 
