@@ -6,7 +6,6 @@ const mtUtils = require('../multitenancy-utils');
 
 let isTenant;
 let tenantManagement;
-let experimentalTenantManagement;
 
 module.exports = class extends EntityI18nGenerator {
     constructor(args, opts) {
@@ -22,7 +21,6 @@ module.exports = class extends EntityI18nGenerator {
 
         isTenant = this.isTenant;
         tenantManagement = this.tenantManagement;
-        experimentalTenantManagement = this.experimentalTenantManagement;
     }
 
     get initializing() {
@@ -132,8 +130,6 @@ module.exports = class extends EntityI18nGenerator {
                 });
             },
         };
-
-        if(!experimentalTenantManagement) return myCustomPhaseSteps;
 
         return Object.assign(writing, myCustomPhaseSteps);
     }

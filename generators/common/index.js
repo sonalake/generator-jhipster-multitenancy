@@ -19,12 +19,6 @@ module.exports = class extends CommonGenerator {
             defaults: undefined
         });
 
-        this.option('experimental-tenant-management', {
-            desc: 'Create experimental tenant management client',
-            type: Boolean,
-            defaults: false
-        });
-
         this.option('tenant-management', {
             desc: 'Create tenant management client',
             type: Boolean,
@@ -36,7 +30,6 @@ module.exports = class extends CommonGenerator {
 
         // INFO Saved config is never used for now, doesn't work with current option config
         this.tenantManagement = this.options['tenant-management'] || this.config.get('tenantManagement');
-        this.experimentalTenantManagement = this.options['experimental-tenant-management'] || this.config.get('experimentalTenantManagement');
 
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
@@ -97,8 +90,6 @@ module.exports = class extends CommonGenerator {
                     this.tenantChangelogDate = this.dateFormatForLiquibase();
                 }
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
-
-                this.configOptions.tenantAwareEntities = [];
             },
         };
         return Object.assign(initializing, myCustomPhaseSteps);
@@ -150,16 +141,11 @@ module.exports = class extends CommonGenerator {
                 if(this.tenantManagement === undefined){
                     this.tenantManagement = !this.tenantExists;
                 }
-                if(this.experimentalTenantManagement === undefined){
-                    this.experimentalTenantManagement = false;
-                }
 
                 // Pass to others subgens
                 this.configOptions.tenantManagement = this.tenantManagement;
-                this.configOptions.experimentalTenantManagement = this.experimentalTenantManagement;
 
                 this.config.set('tenantManagement', this.tenantManagement);
-                this.config.set('experimentalTenantManagement', this.experimentalTenantManagement);
 
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
