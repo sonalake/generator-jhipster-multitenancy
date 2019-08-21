@@ -24,28 +24,48 @@ module.exports = {
 };
 
 function writeFiles() {
+
+    this.tenantisedEntityServices = `@Before("execution(* ${this.packageName}.service.UserService.*(..))`;
+    if(this.configOptions.tenantAwareEntities)
+    {
+        this.configOptions.tenantAwareEntities.forEach(tenantAwareEntity => {
+            this.tenantisedEntityServices = this.tenantisedEntityServices + ` || execution(* ${this.packageName}.service.${tenantAwareEntity}Service.*(..))`
+        });
+    }
+    this.tenantisedEntityServices = this.tenantisedEntityServices + '")';
+
     const files = {
-            templates:
-                [{
-                    condition: generator => generator.tenantAware,
-                    path: this.SERVER_MAIN_SRC_DIR,
-                    templates: [
-                        {
-                            file: 'package/_EntityAspect.java',
-                            renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.entityClass}Aspect.java`
-                        }
-                        ]
-                },
-                {
-                    condition: generator => generator.isTenant,
-                    path: this.SERVER_MAIN_SRC_DIR,
-                    templates: [
-                        {
-                            file: 'package/repository/_TenantRepository.java',
-                            renameTo: generator => `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
-                        }
-                        ]
-                }],
+        templates:
+            [{
+                condition: generator => generator.tenantAware,
+                path: this.SERVER_MAIN_SRC_DIR,
+                templates: [
+                    {
+                        file: 'package/_EntityAspect.java',
+                        renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.entityClass}Aspect.java`
+                    }
+                    ]
+            },
+            {
+                condition: generator => generator.isTenant,
+                path: this.SERVER_MAIN_SRC_DIR,
+                templates: [
+                    {
+                        file: 'package/repository/_TenantRepository.java',
+                        renameTo: generator => `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
+                    }
+                    ]
+            },
+            {
+                condition: generator => generator.tenantAware,
+                path: this.SERVER_MAIN_SRC_DIR,
+                templates: [
+                    {
+                        file: 'package/aop/_tenant/_TenantAspect.java',
+                        renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`
+                    }
+                ]
+            }],
     };
 
     // parse the templates and write files to the appropriate locations

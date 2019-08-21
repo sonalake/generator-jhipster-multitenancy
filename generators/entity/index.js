@@ -91,70 +91,6 @@ module.exports = class extends EntityGenerator {
                                 this.config.set('nextChangelogDate', context.changelogDate);
                             }
                         }
-                        return;
-                    }
-
-                    if(!context.fileData){
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
-
-                        context.fields = [{
-                            fieldName: 'name',
-                            fieldType: 'String',
-                            fieldValidateRules: [
-                                'required'
-                                ]
-                        }];
-
-                        context.relationships = [{
-                            relationshipName: 'users',
-                            otherEntityName: 'user',
-                            relationshipType: 'one-to-many',
-                            otherEntityField: 'login',
-                            relationshipValidateRules: 'required',
-                            ownerSide: true,
-                            otherEntityRelationshipName: this._.toLower(this.tenantName)
-                        }];
-                    }else{
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
-
-                        let containsName = false;
-
-                        context.fields.forEach(field => {
-                            if(field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name'){
-                                containsName = true;
-                            }
-                        });
-                        if(!containsName){
-                            context.fields.push({
-                                fieldName: 'name',
-                                fieldType: 'String',
-                                fieldValidateRules: [
-                                    'required'
-                                    ]
-                            });
-                        }
-
-                        let containsUsers = false;
-                        context.relationships.forEach(relationship => {
-                            if(relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users'){
-                                containsUsers = true;
-                            }
-                        });
-                        if(!containsUsers){
-                            context.relationships.push({
-                                relationshipName: 'users',
-                                otherEntityName: 'user',
-                                relationshipType: 'one-to-many',
-                                otherEntityField: 'login',
-                                relationshipValidateRules: 'required',
-                                ownerSide: true,
-                                otherEntityRelationshipName: this._.toLower(this.tenantName)
-                            });
-                        }
                     }
                 },
         }
@@ -279,11 +215,13 @@ module.exports = class extends EntityGenerator {
                     }
 
                     if(this.context.tenantAware){
+                        this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');
                         if(!this.configOptions.tenantAwareEntities)
                         {
                             this.configOptions.tenantAwareEntities = [];
                         }
-                        this.configOptions.tenantAwareEntities.push(this.context.entityClass); 
+                        this.configOptions.tenantAwareEntities.push(this.context.entityClass);
+                        this.config.set('tenantAwareEntities',  this.configOptions.tenantAwareEntities);
                     }
 
                     this.log(chalk.white(`Saving ${chalk.bold(this.options.name)} tenantAware`));
