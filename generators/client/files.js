@@ -3,11 +3,8 @@ const mtUtils = require('../multitenancy-utils');
 
 const angularTemplates = [
     'account.model.ts',
-    'account.service.ts',
-    'navbar.component.html',
-    'navbar.component.ts',
-] 
-
+    'account.service.ts'
+]
 
 module.exports = {
     writeFiles,

@@ -24,6 +24,7 @@ module.exports = class extends EntityGenerator {
 
         // pass to entity-* subgen
         this.context.isTenant = this.isTenant;
+        this.context.tenantAware = this.tenantAware;
         this.context.tenantManagement = this.configOptions.tenantManagement;
         this.context.experimentalTenantManagement = this.configOptions.experimentalTenantManagement;
     }
@@ -155,9 +156,55 @@ module.exports = class extends EntityGenerator {
     }
 
     get writing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._writing();
+        return {
+            cleanup() {
+                const context = this.context;
+                const entityName = context.name;
+                if (this.isJhipsterVersionLessThan('5.0.0')) {
+                    this.removeFile(`${constants.ANGULAR_DIR}entities/${entityName}/${entityName}.model.ts`);
+                }
+            },
 
+            composeServer() {
+                const context = this.context;
+                if (context.skipServer) return;
+                const configOptions = this.configOptions;
+
+                this.composeWith(require.resolve('../entity-server'), {
+                    context,
+                    configOptions,
+                    force: context.options.force,
+                    debug: context.isDebugEnabled
+                });
+            },
+
+            composeClient() {
+                const context = this.context;
+                if (context.skipClient) return;
+                const configOptions = this.configOptions;
+
+                this.composeWith(require.resolve('../entity-client'), {
+                    context,
+                    configOptions,
+                    'skip-install': context.options['skip-install'],
+                    force: context.options.force,
+                    debug: context.isDebugEnabled
+                });
+            },
+
+            composeI18n() {
+                const context = this.context;
+                if (context.skipClient) return;
+                const configOptions = this.configOptions;
+                this.composeWith(require.resolve('generator-jhipster/generators/entity-i18n'), {
+                    context,
+                    configOptions,
+                    'skip-install': context.options['skip-install'],
+                    force: context.options.force,
+                    debug: context.isDebugEnabled
+                });
+            }
+        };
     }
 
     get install() {

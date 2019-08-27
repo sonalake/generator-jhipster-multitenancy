@@ -4,7 +4,8 @@ const mtUtils = require('../multitenancy-utils');
 const serverTemplates = [
     'UserDTO.java',
     'User.java',
-] 
+    'UserResource.java'
+];
 
 module.exports = {
     writeFiles,
