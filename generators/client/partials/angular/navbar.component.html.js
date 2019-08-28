@@ -28,7 +28,7 @@ const tmpls = [
             return `<li [hidden]="has${context.tenantNameUpperFirst}()">
                         <a class="dropdown-item" routerLink="admin/${context.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="'asterisk'" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.admin.${context.tenantNameLowerFirst}Management">${context.tenantNameUpperFirst} Management</span>
+                            <span jhiTranslate="global.menu.entities.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</span>
                         </a>
                     </li>`;
         }
