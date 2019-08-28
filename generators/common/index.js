@@ -28,9 +28,6 @@ module.exports = class extends CommonGenerator {
         this.tenantName = this.options['tenant-name'] || this.config.get('tenantName');
         this.tenantChangelogDate = this.options['tenant-changelog-date'] || this.config.get('tenantChangelogDate');
 
-        // INFO Saved config is never used for now, doesn't work with current option config
-        this.tenantManagement = this.options['tenant-management'] || this.config.get('tenantManagement');
-
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
@@ -144,29 +141,9 @@ module.exports = class extends CommonGenerator {
 
                 // Pass to others subgens
                 this.configOptions.tenantManagement = this.tenantManagement;
-
                 this.config.set('tenantManagement', this.tenantManagement);
-
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
-
-                //setting this for tenant entity generation for now
-                this.config.set('enableTranslation', false);
-            },
-            generateTenant() {
-                if(this.tenantExists && !this.firstExec) return;
-
-                const options = this.options;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('../entity-tenant'), {
-                    ...options,
-                    configOptions,
-                    regenerate: false,
-                    'skip-install': false,
-                    debug: this.isDebugEnabled,
-                    arguments: [this.tenantName]
-                });
             },
         };
         // configuringCustomPhaseSteps should be run after configuring, otherwise tenantName will be overridden
@@ -184,7 +161,31 @@ module.exports = class extends CommonGenerator {
 
     get install() {
         // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._install();
+        const install = super._install();
+        const myCustomPhaseSteps = {
+             generateTenant() {
+                 this.tenantExists = false;
+                 this.getExistingEntities().forEach(entity => {
+                     if(this._.toLower(entity.definition.name) === this._.toLower(this.tenantName)){
+                         this.tenantExists = true;
+                     }
+                 });
+                 if(this.tenantExists) return;
+
+                 const options = this.options;
+                 const configOptions = this.configOptions;
+
+                 this.composeWith(require.resolve('../entity-tenant'), {
+                     ...options,
+                     configOptions,
+                     regenerate: false,
+                     'skip-install': false,
+                     debug: this.isDebugEnabled,
+                     arguments: [this.tenantName]
+                 });
+             },
+        };
+        return Object.assign(myCustomPhaseSteps, install);
     }
 
     get end() {

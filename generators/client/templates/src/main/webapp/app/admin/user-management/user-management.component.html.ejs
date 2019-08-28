@@ -32,7 +32,7 @@
                 <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="login"<% } %>><span jhiTranslate="userManagement.login">Login</span><% if (databaseType !== 'cassandra') { %> <fa-icon [icon]="'sort'"></fa-icon><% } %></th>
                 <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="email"<% } %>><span jhiTranslate="userManagement.email">Email</span><% if (databaseType !== 'cassandra') { %> <fa-icon [icon]="'sort'"></fa-icon><% } %></th>
                 <th></th>
-                <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="<%= tenantNameLowerFirst %>"<% } %> *ngIf="!currentAccount.<%= tenantNameLowerFirst %>"><span jhiTranslate="userManagement<%= tenantNameUpperFirst %>"><%= tenantNameUpperFirst %></span><% if (databaseType !== 'cassandra') { %> <span class="fa fa-sort"></span><% } %></th>
+                <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="<%= tenantNameLowerFirst %>"<% } %> *ngIf="!currentAccount.<%= tenantNameLowerFirst %>"><span jhiTranslate="jhipsterApp.<%= tenantNameLowerFirst %>.detail.title"><%= tenantNameUpperFirst %></span><% if (databaseType !== 'cassandra') { %> <span class="fa fa-sort"></span><% } %></th>
                 <%_ if (enableTranslation) { _%>
                 <th<% if (databaseType !== 'cassandra') { %> jhiSortBy="langKey"<% } %>> <span jhiTranslate="userManagement.langKey">Lang Key</span><% if (databaseType !== 'cassandra') { %> <fa-icon [icon]="'sort'"></fa-icon><% } %></th>
                 <%_ } _%>

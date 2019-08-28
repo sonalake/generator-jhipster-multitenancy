@@ -83,28 +83,7 @@ module.exports = class extends EntityClientGenerator {
     }
 
     get writing() {
-        // TODO copy generated files instead of creating ours
-        if (isTenant) return;
-
-        var phaseFromJHipster = super._writing();
-        var myCustomPhaseSteps = {
-            generateClientCode() {
-                if(this.isTenant) return;
-                if (this.tenantAware) {
-                    mtUtils.tenantVariables(this.config.get('tenantName'), this);
-
-                    mtUtils.processPartialTemplates(files.angular.templates(this), this);
-
-                    // e2e test
-                    if (this.testFrameworks.indexOf('protractor') !== -1) {
-                        this.CLIENT_TEST_SRC_DIR = jhipsterConstants.CLIENT_TEST_SRC_DIR;
-                        mtUtils.processPartialTemplates(files.angular.testTemplates(this), this);
-                    }
-                }
-            }
-        }
-        return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
-
+        return super._writing();
     }
 
     get install() {

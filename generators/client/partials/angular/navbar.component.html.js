@@ -11,9 +11,9 @@ const tmpls = [
         },
         tmpl: (context) => {
             return `<li [hidden]="has${context.tenantNameUpperFirst}()">
-                        <a class="dropdown-item" routerLink="admin/${context.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
-                            <fa-icon icon="'asterisk'" fixedWidth="true"></fa-icon>
-                            <span>${context.tenantNameUpperFirst} Management</span>
+                        <a class="dropdown-item" routerLink="${context.tenantNameLowerFirst}" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span>${context.tenantNamePluralUpperFirst}</span>
                         </a>
                     </li>`;
         }
@@ -26,9 +26,9 @@ const tmpls = [
         },
         tmpl: (context) => {
             return `<li [hidden]="has${context.tenantNameUpperFirst}()">
-                        <a class="dropdown-item" routerLink="admin/${context.tenantNameLowerFirst}-management" routerLinkActive="active" (click)="collapseNavbar()">
-                            <fa-icon icon="'asterisk'" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.admin.${context.tenantNameLowerFirst}Management">${context.tenantNameUpperFirst} Management</span>
+                        <a class="dropdown-item" routerLink="${context.tenantNameLowerFirst}" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="jhipsterApp.${context.tenantNameLowerFirst}.home.title">${context.tenantNamePluralUpperFirst}</span>
                         </a>
                     </li>`;
         }
