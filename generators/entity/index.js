@@ -12,9 +12,9 @@ module.exports = class extends EntityGenerator {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important
 
         this.option('default-tenant-aware', {
-            desc: 'Always discover relationship with tenant',
+            desc: 'Default for whether you make an entity tenant aware or not',
             type: Boolean,
-            defaults: false
+            defaults: true
         });
 
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
@@ -109,28 +109,13 @@ module.exports = class extends EntityGenerator {
                     return;
                 }
 
-                // look for tenantAware entities
-                let relationWithTenant = false;
-                if(context.fileData !== undefined && context.fileData.relationships !== undefined){
-                    context.relationships.forEach((field) => {
-                        if(this._.toLower(field.otherEntityName) === this._.toLower(this.tenantName)){
-                            relationWithTenant = true;
-                        }
-                    });
-                }
-
-                // Always use default value
-                if(this.options.defaultTenantAware){
-                    this.newTenantAware = relationWithTenant;
-                }
-
                 const prompts = [
                     {
                         when: this.newTenantAware === undefined,
                         type: 'confirm',
                         name: 'tenantAware',
                         message: `Do you want to make ${context.name} tenant aware?`,
-                        default: relationWithTenant
+                        default: this.options.defaultTenantAware
                     }
                     ];
                 const done = this.async();
