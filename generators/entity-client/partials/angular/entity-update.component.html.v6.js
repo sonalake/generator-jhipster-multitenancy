@@ -7,16 +7,6 @@ const tmpls = [
         type: 'replaceContent',
         regex: true,
         target: (context) => {
-            return `jhiTranslate="(.*\\.)${context.tenantNameLowerFirst}"`;
-        },
-        tmpl: (context) => {
-            return `jhiTranslate="userManagement${context.tenantNameUpperFirst}"`;
-        }
-    },
-    {
-        type: 'replaceContent',
-        regex: true,
-        target: (context) => {
             return `<div class="form-group">(\\s*)(.*)(for="field_${context.tenantNameLowerFirst})"`;
         },
         tmpl: (context) => {
@@ -32,7 +22,7 @@ const tmpls = [
         tmpl: (context) => {
             return `<div *ngIf="!currentAccount.${context.tenantNameLowerFirst} && editForm.get('${context.tenantNameLowerFirst}`;
         }
-    },
+    }
 ]
 
 module.exports = {

@@ -7,16 +7,6 @@ const tmpls = [
         type: 'replaceContent',
         regex: true,
         target: (context) => {
-            return `jhiTranslate="(.*\\.)${context.tenantNameLowerFirst}"`;
-        },
-        tmpl: (context) => {
-            return `jhiTranslate="userManagement${context.tenantNameUpperFirst}"`;
-        }
-    },
-    {
-        type: 'replaceContent',
-        regex: true,
-        target: (context) => {
             return `<th><span(.*)>${context.tenantNameUpperFirst}</span>`;
         },
         tmpl: (context) => {
@@ -32,27 +22,7 @@ const tmpls = [
         tmpl: (context) => {
             return `<td *ngIf="!currentAccount.${context.tenantNameLowerFirst}">\n$1$2`;
         }
-    },
-    {
-        type: 'replaceContent',
-        regex: false,
-        target: (context) => {
-            return `[routerLink]="['../${context.tenantNameLowerFirst}'`;
-        },
-        tmpl: (context) => {
-            return `[routerLink]="['/admin/${context.tenantNameLowerFirst}-management'`;
-        }
-    },
-    {
-        type: 'replaceContent',
-        regex: false,
-        target: (context) => {
-            return `{{${context.entityInstance}.${context.tenantNameLowerFirst}?.id}}`;
-        },
-        tmpl: (context) => {
-            return `{{${context.entityInstance}.${context.tenantNameLowerFirst}?.name}}`;
-        }
-    },
+    }
 ]
 module.exports = {
     file,
