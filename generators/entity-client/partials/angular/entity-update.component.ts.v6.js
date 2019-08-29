@@ -12,24 +12,6 @@ const tmpls = [
     },
     {
         type: 'replaceContent',
-        target: (context) => {
-            return `'app/shared/model/${context.tenantNameLowerFirst}.model'`;
-        },
-        tmpl: (context) => {
-            return `'../../admin/${context.tenantNameLowerFirst}-management/${context.tenantNameLowerFirst}.model'`;
-        }
-    },
-    {
-        type: 'replaceContent',
-        target: (context) => {
-            return `'app/entities/${context.tenantNameLowerFirst}'`;
-        },
-        tmpl: (context) => {
-            return `'../../shared/company/${context.tenantNameLowerFirst}.service'`;
-        }
-    },
-    {
-        type: 'replaceContent',
         regex: true,
         target: '\n(\\s*)isSaving: boolean;',
         tmpl: '\n$1currentAccount: any;\n$1isSaving: boolean;'
@@ -38,7 +20,6 @@ const tmpls = [
         type: 'replaceContent',
         regex: true,
         target: '\n(\\s*)private fb: FormBuilder\n(\\s*)\\) {(\\s*)}',
-//        target: '\n(\\s*)private fb: FormBuilder\n(\\s*)\\) \\{\\}',
         tmpl: (context) => {
             return `\n$1private fb: FormBuilder,
 $1private accountService: AccountService
@@ -49,6 +30,19 @@ $1});
 $2}`;
         }
     },
+     {
+         type: 'replaceContent',
+         regex: true,
+         target: (context) => {
+            return `this.updateForm\\(${context.entityInstance}\\);`
+         },
+         tmpl: (context) => {
+             return `if (this.currentAccount.${context.tenantNameLowerFirst}){
+                 \n${context.entityInstance}.${context.tenantNameLowerFirst} = this.currentAccount.${context.tenantNameLowerFirst};
+             \n}
+             this.updateForm(${context.entityInstance});`;
+         }
+     }
 ]
 
 module.exports = {

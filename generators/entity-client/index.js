@@ -6,8 +6,6 @@ const jhipsterConstants = require('generator-jhipster/generators/generator-const
 const mtUtils = require('../multitenancy-utils');
 const files = require('./files');
 
-let isTenant;
-
 module.exports = class extends EntityClientGenerator {
     constructor(args, opts) {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important
@@ -22,8 +20,6 @@ module.exports = class extends EntityClientGenerator {
 
         // This sets up options for this sub generator and is being reused from JHipster
         jhContext.setupEntityOptions(this, jhContext, this);
-
-        isTenant = this.isTenant;
     }
 
     get initializing() {
@@ -83,7 +79,19 @@ module.exports = class extends EntityClientGenerator {
     }
 
     get writing() {
-        return super._writing();
+        var phaseFromJHipster = super._writing();
+
+        var myCustomPhaseSteps = {
+            generateClientCode() {
+                if(this.isTenant) return;
+                if (this.tenantAware) {
+                    mtUtils.tenantVariables(this.config.get('tenantName'), this);
+                    mtUtils.processPartialTemplates(files.angular.templates(this), this);
+                }
+            }
+        }
+        return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
+
     }
 
     get install() {
