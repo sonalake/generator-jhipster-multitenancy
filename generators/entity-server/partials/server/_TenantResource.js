@@ -18,7 +18,7 @@ const tmpls = [
     {
         type: 'rewriteFile',
         target: context => `public class ${context.tenantNameUpperFirst}Resource {`,
-        tmpl: context => '@PreAuthorize("hasRole(" + AuthoritiesConstants.ADMIN + "\\")")'
+        tmpl: context => '@PreAuthorize("hasAnyRole(\\"" + AuthoritiesConstants.ADMIN + "\\")")'
     },
     {
         type: 'rewriteFile',
@@ -33,3 +33,4 @@ module.exports = {
     file,
     tmpls
 };
+
