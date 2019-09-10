@@ -120,15 +120,6 @@ module.exports = class extends CommonGenerator {
         const configuring = super._configuring()
         const configuringCustomPhaseSteps = {
             saveConf() {
-                this.firstExec = this.config.get('tenantName') === undefined;
-
-                this.tenantExists = false;
-                this.getExistingEntities().forEach(entity => {
-                    if(this._.toLower(entity.definition.name) === this._.toLower(this.tenantName)){
-                        this.tenantExists = true;
-                    }
-                });
-
                 // Pass to others subgens
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
@@ -152,14 +143,6 @@ module.exports = class extends CommonGenerator {
         const install = super._install();
         const myCustomPhaseSteps = {
              generateTenant() {
-                 this.tenantExists = false;
-                 this.getExistingEntities().forEach(entity => {
-                     if(this._.toLower(entity.definition.name) === this._.toLower(this.tenantName)){
-                         this.tenantExists = true;
-                     }
-                 });
-                 if(this.tenantExists) return;
-
                  const options = this.options;
                  const configOptions = this.configOptions;
 

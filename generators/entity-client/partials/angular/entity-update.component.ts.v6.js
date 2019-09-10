@@ -50,7 +50,7 @@ $2}`;
               return `this.${context.tenantNameLowerFirst}Service`
            },
            tmpl: (context) => {
-               return `if (this.currentAccount.${context.tenantNameLowerFirst}) {return;}
+               return `if (this.currentAccount.${context.tenantNameLowerFirst}) return;
                \nthis.${context.tenantNameLowerFirst}Service`;
            }
      }
