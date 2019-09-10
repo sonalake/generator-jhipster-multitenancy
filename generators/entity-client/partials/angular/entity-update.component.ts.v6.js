@@ -42,6 +42,17 @@ $2}`;
              \n}
              this.updateForm(${context.entityInstance});`;
          }
+     },
+     {
+           type: 'replaceContent',
+           regex: true,
+           target: (context) => {
+              return `this.${context.tenantNameLowerFirst}Service`
+           },
+           tmpl: (context) => {
+               return `if (this.currentAccount.${context.tenantNameLowerFirst}) {return;}
+               \nthis.${context.tenantNameLowerFirst}Service`;
+           }
      }
 ]
 
