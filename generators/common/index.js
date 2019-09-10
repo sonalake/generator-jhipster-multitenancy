@@ -19,12 +19,6 @@ module.exports = class extends CommonGenerator {
             defaults: undefined
         });
 
-        this.option('tenant-management', {
-            desc: 'Create tenant management client',
-            type: Boolean,
-            defaults: true
-        });
-
         this.tenantName = this.options['tenant-name'] || this.config.get('tenantName');
         this.tenantChangelogDate = this.options['tenant-changelog-date'] || this.config.get('tenantChangelogDate');
 
@@ -135,13 +129,7 @@ module.exports = class extends CommonGenerator {
                     }
                 });
 
-                if(this.tenantManagement === undefined){
-                    this.tenantManagement = !this.tenantExists;
-                }
-
                 // Pass to others subgens
-                this.configOptions.tenantManagement = this.tenantManagement;
-                this.config.set('tenantManagement', this.tenantManagement);
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
             },
