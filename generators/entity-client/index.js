@@ -79,19 +79,25 @@ module.exports = class extends EntityClientGenerator {
     }
 
     get writing() {
-        var phaseFromJHipster = super._writing();
+        const phaseFromJHipster = super._writing();
+        const myCustomPhaseSteps = {
+            // sets up all the variables we'll need for the templating
+            setUpVariables() {
+                this.SERVER_MAIN_SRC_DIR = jhipsterConstants.SERVER_MAIN_SRC_DIR;
 
-        var myCustomPhaseSteps = {
+                // template variables
+                mtUtils.tenantVariables(this.config.get('tenantName'), this);
+            },
             generateClientCode() {
-                if(this.isTenant) return;
-                if (this.tenantAware) {
-                    mtUtils.tenantVariables(this.config.get('tenantName'), this);
-                    mtUtils.processPartialTemplates(files.angular.templates(this), this);
-                }
-            }
-        }
+                if(this.tenantAware){
+                    // tenant aware entity
+                    mtUtils.processPartialTemplates(files.angular.entityTenantAwareTemplates(this), this);
+                }else if(this.isTenant){
+                     mtUtils.processPartialTemplates(files.angular.tenantTemplates(this), this);
+                 }
+             }
+         }
         return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
-
     }
 
     get install() {
