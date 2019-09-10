@@ -19,14 +19,10 @@ module.exports = class extends EntityGenerator {
 
         // current subgen
         this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get("tenantName"));
-        this.tenantManagement = this.configOptions.tenantManagement;
-        this.experimentalTenantManagement = this.configOptions.experimentalTenantManagement;
 
         // pass to entity-* subgen
         this.context.isTenant = this.isTenant;
         this.context.tenantAware = this.tenantAware;
-        this.context.tenantManagement = this.configOptions.tenantManagement;
-        this.context.experimentalTenantManagement = this.configOptions.experimentalTenantManagement;
     }
 
     get initializing() {
