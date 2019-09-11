@@ -115,7 +115,7 @@ module.exports = class extends EntityGenerator {
                         message: `Do you want to make ${context.name} tenant aware?`,
                         default: this.options.defaultTenantAware
                     }
-                    ];
+                 ];
                 const done = this.async();
                 this.prompt(prompts).then(props => {
                     if(!this.isTenant && props.tenantAware !== undefined){
@@ -179,6 +179,16 @@ module.exports = class extends EntityGenerator {
                             otherEntityRelationshipName: this._.toLower(context.name)
                         };
                         relationships.push(real);
+
+                        if(this.newTenantAware){
+                            this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');
+                            if(!this.configOptions.tenantAwareEntities)
+                            {
+                                this.configOptions.tenantAwareEntities = [];
+                            }
+                            this.configOptions.tenantAwareEntities.push(context.name);
+                            this.config.set('tenantAwareEntities',  this.configOptions.tenantAwareEntities);
+                        }
                     }
                 },
         }
@@ -193,16 +203,6 @@ module.exports = class extends EntityGenerator {
                             this.updateEntityConfig(this.context.filename, 'changelogDate', this.context.changelogDate);
                         }
                         return;
-                    }
-
-                    if(this.context.tenantAware){
-                        this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');
-                        if(!this.configOptions.tenantAwareEntities)
-                        {
-                            this.configOptions.tenantAwareEntities = [];
-                        }
-                        this.configOptions.tenantAwareEntities.push(this.context.entityClass);
-                        this.config.set('tenantAwareEntities',  this.configOptions.tenantAwareEntities);
                     }
 
                     this.log(chalk.white(`Saving ${chalk.bold(this.options.name)} tenantAware`));
