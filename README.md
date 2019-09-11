@@ -1,6 +1,6 @@
 <div>
-    <a href="http://jhipster.github.io">
-        <img src="https://github.com/sonalake/generator-jhipster-multitenancy/raw/master/images/logo-jhipster.png">
+    <a href="https://www.jhipster.tech/">
+        <img src="https://www.jhipster.tech/images/logo/jhipster_family_member_1.svg">
     </a>
 </div>
 Greetings, Java Hipster!
@@ -11,7 +11,7 @@ Greetings, Java Hipster!
 
 
 # Introduction
-This [JHipster](https://www.jhipster.tech/) blueprint for creating multitenant applications. The blueprint will:
+This is a [JHipster](https://www.jhipster.tech/) blueprint for creating multitenant applications. The blueprint will:
 
  - Generate a JHipster application
  - Generate a Tenant entity
@@ -21,9 +21,12 @@ This [JHipster](https://www.jhipster.tech/) blueprint for creating multitenant a
 
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
+  * [With NPM](#with-npm)
+  * [With Yarn](#with-yarn)
 * [Usage](#usage)
+  * [Generate Multitenant Application](#generate-multitenant-application)
   * [Making an entity tenant aware](#making-an-entity-tenant-aware)
-  * [Applying the tenant filter](#applying-the-tenant-filter)
+* [Running A Development Version](#running-a-development-version)
 * [License](#license)
 
 # Prerequisites
