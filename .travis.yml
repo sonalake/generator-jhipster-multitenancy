@@ -2,13 +2,10 @@ os:
     - linux
 language: node_js
 node_js:
-    - "8.11.3"
+    - "10.16.0"
 before_install:
     - npm install -g npm
-    - npm install -g yarn
 install:
-    - yarn install
-    - yarn link
+    - npm install
 script:
-    - gulp eslint
-    - gulp test
+    - npm test
