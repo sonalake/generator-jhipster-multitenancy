@@ -1,6 +1,6 @@
 <div>
     <a href="https://www.jhipster.tech/">
-        <img src="https://www.jhipster.tech/images/logo/jhipster_family_member_1.svg">
+        <img src="https://www.jhipster.tech/images/logo/jhipster_family_member_1.svg" height="200px">
     </a>
 </div>
 Greetings, Java Hipster!
