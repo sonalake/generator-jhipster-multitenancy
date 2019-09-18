@@ -67,21 +67,37 @@ module.exports = class extends EntityGenerator {
                 setUpVariables() {
                     this.tenantName = this.config.get("tenantName");
                     const context = this.context;
+                    context.service = 'serviceClass';
+                    context.pagination = 'pagination';
+                    context.changelogDate = this.config.get("tenantChangelogDate");
 
-                    if(!context.fileData){
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
+                    let containsName = false;
 
-                        context.fields = [{
+                    context.fields.forEach(field => {
+                        if(field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name'){
+                            containsName = true;
+                        }
+                    });
+
+                    if(!containsName){
+                        context.fields.push({
                             fieldName: 'name',
                             fieldType: 'String',
                             fieldValidateRules: [
                                 'required'
                                 ]
-                        }];
+                        });
+                    }
 
-                        context.relationships = [{
+                    let containsUsers = false;
+                    context.relationships.forEach(relationship => {
+                        if(relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users'){
+                            containsUsers = true;
+                        }
+                    });
+
+                    if(!containsUsers){
+                        context.relationships.push({
                             relationshipName: 'users',
                             otherEntityName: 'user',
                             relationshipType: 'one-to-many',
@@ -89,48 +105,7 @@ module.exports = class extends EntityGenerator {
                             relationshipValidateRules: 'required',
                             ownerSide: true,
                             otherEntityRelationshipName: this._.toLower(this.tenantName)
-                        }];
-                    }else{
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
-
-                        let containsName = false;
-
-                        context.fields.forEach(field => {
-                            if(field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name'){
-                                containsName = true;
-                            }
                         });
-
-                        if(!containsName){
-                            context.fields.push({
-                                fieldName: 'name',
-                                fieldType: 'String',
-                                fieldValidateRules: [
-                                    'required'
-                                    ]
-                            });
-                        }
-
-                        let containsUsers = false;
-                        context.relationships.forEach(relationship => {
-                            if(relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users'){
-                                containsUsers = true;
-                            }
-                        });
-
-                        if(!containsUsers){
-                            context.relationships.push({
-                                relationshipName: 'users',
-                                otherEntityName: 'user',
-                                relationshipType: 'one-to-many',
-                                otherEntityField: 'login',
-                                relationshipValidateRules: 'required',
-                                ownerSide: true,
-                                otherEntityRelationshipName: this._.toLower(this.tenantName)
-                            });
-                        }
                     }
                 },
         }
