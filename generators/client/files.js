@@ -1,17 +1,12 @@
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const mtUtils = require('../multitenancy-utils');
 
-const angularTemplates = [
-    'account.model.ts',
-    'account.service.ts'
-]
+const angularTemplates = ['account.model.ts', 'account.service.ts'];
 
 module.exports = {
     writeFiles,
     angular: {
-        templates: function (context) {
-            return mtUtils.requireTemplates('./client/partials/angular/', angularTemplates, context);
-        },
+        templates: context => mtUtils.requireTemplates('./client/partials/angular/', angularTemplates, context)
     }
 };
 
@@ -25,16 +20,14 @@ function writeFiles() {
                     { file: 'admin/user-management/user-management.component.html', method: 'processHtml' },
                     { file: 'admin/user-management/user-management-detail.component.html', method: 'processHtml' },
                     { file: 'admin/user-management/user-management-update.component.ts', method: 'processJs' },
-                    { file: 'admin/user-management/user-management-update.component.html', method: 'processHtml' },
+                    { file: 'admin/user-management/user-management-update.component.html', method: 'processHtml' }
                 ]
             }
         ],
         shared: [
             {
                 path: this.angularDir,
-                templates: [
-                    'core/user/user.model.ts'
-                ]
+                templates: ['core/user/user.model.ts']
             }
         ]
     };

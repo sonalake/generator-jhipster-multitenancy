@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const files = require('./files');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const mtUtils = require('../multitenancy-utils');
 
