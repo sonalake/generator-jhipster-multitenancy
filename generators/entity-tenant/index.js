@@ -18,7 +18,7 @@ module.exports = class extends EntityGenerator {
         jhContext.setupEntityOptions(this, jhContext, this);
 
         // current subgen
-        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get("tenantName"));
+        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get('tenantName'));
 
         // pass to entity-* subgen
         this.context.isTenant = this.isTenant;
@@ -64,51 +64,49 @@ module.exports = class extends EntityGenerator {
          */
         const phaseFromJHipster = super._initializing();
         const postCustomPhaseSteps = {
-                setUpVariables() {
-                    this.tenantName = this.config.get("tenantName");
-                    const context = this.context;
-                    context.service = 'serviceClass';
-                    context.pagination = 'pagination';
-                    context.changelogDate = this.config.get("tenantChangelogDate");
+            setUpVariables() {
+                this.tenantName = this.config.get('tenantName');
+                const context = this.context;
+                context.service = 'serviceClass';
+                context.pagination = 'pagination';
+                context.changelogDate = this.config.get('tenantChangelogDate');
 
-                    let containsName = false;
+                let containsName = false;
 
-                    context.fields.forEach(field => {
-                        if(field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name'){
-                            containsName = true;
-                        }
-                    });
-
-                    if(!containsName){
-                        context.fields.push({
-                            fieldName: 'name',
-                            fieldType: 'String',
-                            fieldValidateRules: [
-                                'required'
-                                ]
-                        });
+                context.fields.forEach(field => {
+                    if (field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name') {
+                        containsName = true;
                     }
+                });
 
-                    let containsUsers = false;
-                    context.relationships.forEach(relationship => {
-                        if(relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users'){
-                            containsUsers = true;
-                        }
+                if (!containsName) {
+                    context.fields.push({
+                        fieldName: 'name',
+                        fieldType: 'String',
+                        fieldValidateRules: ['required']
                     });
+                }
 
-                    if(!containsUsers){
-                        context.relationships.push({
-                            relationshipName: 'users',
-                            otherEntityName: 'user',
-                            relationshipType: 'one-to-many',
-                            otherEntityField: 'login',
-                            relationshipValidateRules: 'required',
-                            ownerSide: true,
-                            otherEntityRelationshipName: this._.toLower(this.tenantName)
-                        });
+                let containsUsers = false;
+                context.relationships.forEach(relationship => {
+                    if (relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users') {
+                        containsUsers = true;
                     }
-                },
-        }
+                });
+
+                if (!containsUsers) {
+                    context.relationships.push({
+                        relationshipName: 'users',
+                        otherEntityName: 'user',
+                        relationshipType: 'one-to-many',
+                        otherEntityField: 'login',
+                        relationshipValidateRules: 'required',
+                        ownerSide: true,
+                        otherEntityRelationshipName: this._.toLower(this.tenantName)
+                    });
+                }
+            }
+        };
 
         return Object.assign(phaseFromJHipster, postCustomPhaseSteps);
     }
