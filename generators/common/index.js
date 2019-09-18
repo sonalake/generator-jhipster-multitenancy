@@ -144,6 +144,7 @@ module.exports = class extends CommonGenerator {
         const myCustomPhaseSteps = {
              generateTenant() {
                  const options = this.options;
+                 options.force = true;
                  const configOptions = this.configOptions;
 
                  this.composeWith(require.resolve('../entity-tenant'), {
