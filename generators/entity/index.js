@@ -2,8 +2,8 @@
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 
-const pluralize = require('pluralize');
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+// const pluralize = require('pluralize');
+// const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const mtUtils = require('../multitenancy-utils');
 
@@ -29,7 +29,7 @@ module.exports = class extends EntityGenerator {
         jhContext.setupEntityOptions(this, jhContext, this);
 
         // current subgen
-        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get("tenantName"));
+        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get('tenantName'));
 
         // pass to entity-* subgen
         this.context.isTenant = this.isTenant;
@@ -74,36 +74,36 @@ module.exports = class extends EntityGenerator {
          */
         const phaseFromJHipster = super._initializing();
         const postCustomPhaseSteps = {
-                setUpVariables() {
-                    this.tenantName = this.config.get("tenantName");
-                    const context = this.context;
+            setUpVariables() {
+                this.tenantName = this.config.get('tenantName');
+                const context = this.context;
 
-                    if(!this.isTenant) {
-                        // if tenantAware is undefined (first pass), then override changelogDate
-                        if(context.fileData == undefined || context.fileData.tenantAware == undefined){
-                            let nextChangelogDate = this.config.get('nextChangelogDate');
-                            if(nextChangelogDate !== undefined){
-                                context.changelogDate = '' + (Number(nextChangelogDate) + 1);
-                                this.config.set('nextChangelogDate', context.changelogDate);
-                            }
+                if (!this.isTenant) {
+                    // if tenantAware is undefined (first pass), then override changelogDate
+                    if (context.fileData === undefined || context.fileData.tenantAware === undefined) {
+                        const nextChangelogDate = this.config.get('nextChangelogDate');
+                        if (nextChangelogDate !== undefined) {
+                            context.changelogDate = `${Number(nextChangelogDate) + 1}`;
+                            this.config.set('nextChangelogDate', context.changelogDate);
                         }
                     }
-                },
-        }
+                }
+            }
+        };
 
         return Object.assign(phaseFromJHipster, postCustomPhaseSteps);
     }
 
     get prompting() {
-        const prompting = super._prompting()
+        const prompting = super._prompting();
         const myCustomPhaseSteps = {
             askTenantAware() {
                 const context = this.context;
 
-                if(this.isTenant) return;
+                if (this.isTenant) return;
 
                 // tenantAware is already defined
-                if(context.fileData !== undefined && context.fileData.tenantAware !== undefined){
+                if (context.fileData !== undefined && context.fileData.tenantAware !== undefined) {
                     return;
                 }
 
@@ -115,10 +115,10 @@ module.exports = class extends EntityGenerator {
                         message: `Do you want to make ${context.name} tenant aware?`,
                         default: this.options.defaultTenantAware
                     }
-                 ];
+                ];
                 const done = this.async();
                 this.prompt(prompts).then(props => {
-                    if(!this.isTenant && props.tenantAware !== undefined){
+                    if (!this.isTenant && props.tenantAware !== undefined) {
                         this.newTenantAware = props.tenantAware;
                     }
                     done();
@@ -130,86 +130,85 @@ module.exports = class extends EntityGenerator {
 
     get configuring() {
         const myCustomPrePhaseSteps = {
-                loadTenantDefinition() {
-                    const context = this.context;
-                    this.tenantName = this.config.get('tenantName');
+            loadTenantDefinition() {
+                const context = this.context;
+                this.tenantName = this.config.get('tenantName');
 
-                    let tenantAware;
-                    if (this.newTenantAware === undefined){
-                        tenantAware = context.fileData ? context.fileData.tenantAware : false;
-                    }else {
-                        tenantAware = this.newTenantAware;
-                    }
-                    // pass to entity-* subgen
-                    context.tenantAware = tenantAware;
+                let tenantAware;
+                if (this.newTenantAware === undefined) {
+                    tenantAware = context.fileData ? context.fileData.tenantAware : false;
+                } else {
+                    tenantAware = this.newTenantAware;
+                }
+                // pass to entity-* subgen
+                context.tenantAware = tenantAware;
 
-                    /* tenant variables */
-                    mtUtils.tenantVariables(this.tenantName, this);
-                },
-                preJson() {
-                    const context = this.context;
+                /* tenant variables */
+                mtUtils.tenantVariables(this.tenantName, this);
+            },
+            preJson() {
+                const context = this.context;
 
-                    if(this.isTenant) {
-                        // force tenant to be serviceClass
-                        context.service = 'serviceClass';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
-                        return;
-                    }
+                if (this.isTenant) {
+                    // force tenant to be serviceClass
+                    context.service = 'serviceClass';
+                    context.changelogDate = this.config.get('tenantChangelogDate');
+                    return;
+                }
 
-                    if(this.context.tenantAware){
-                        context.service = 'serviceClass';
-                        context.dto = 'no';
-                        
-                        const relationships = context.relationships;
-                        // if any relationship exisits already in the entity to the tenant remove it and regenerate
-                        for (let i = relationships.length - 1; i >= 0; i--) {
-                            if (relationships[i].otherEntityName === this.tenantName) {
-                                relationships.splice(i);
-                            }
-                        }
+                if (this.context.tenantAware) {
+                    context.service = 'serviceClass';
+                    context.dto = 'no';
 
-                        this.log(chalk.white(`Entity ${chalk.bold(this.options.name)} found. Adding relationship`));
-                        const real = {
-                            relationshipName: this._.toLower(this.tenantName),
-                            otherEntityName: this._.toLower(this.tenantName),
-                            relationshipType: 'many-to-one',
-                            otherEntityField: 'name',
-                            relationshipValidateRules: 'required',
-                            ownerSide: true,
-                            otherEntityRelationshipName: this._.toLower(context.name)
-                        };
-                        relationships.push(real);
-
-                        if(this.newTenantAware){
-                            this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');
-                            if(!this.configOptions.tenantAwareEntities)
-                            {
-                                this.configOptions.tenantAwareEntities = [];
-                            }
-                            this.configOptions.tenantAwareEntities.push(context.name);
-                            this.config.set('tenantAwareEntities',  this.configOptions.tenantAwareEntities);
+                    const relationships = context.relationships;
+                    // if any relationship exisits already in the entity to the tenant remove it and regenerate
+                    for (let i = relationships.length - 1; i >= 0; i--) {
+                        if (relationships[i].otherEntityName === this.tenantName) {
+                            relationships.splice(i);
                         }
                     }
-                },
-        }
+
+                    this.log(chalk.white(`Entity ${chalk.bold(this.options.name)} found. Adding relationship`));
+                    const real = {
+                        relationshipName: this._.toLower(this.tenantName),
+                        otherEntityName: this._.toLower(this.tenantName),
+                        relationshipType: 'many-to-one',
+                        otherEntityField: 'name',
+                        relationshipValidateRules: 'required',
+                        ownerSide: true,
+                        otherEntityRelationshipName: this._.toLower(context.name)
+                    };
+                    relationships.push(real);
+
+                    if (this.newTenantAware) {
+                        this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');
+                        if (!this.configOptions.tenantAwareEntities) {
+                            this.configOptions.tenantAwareEntities = [];
+                        }
+                        this.configOptions.tenantAwareEntities.push(context.name);
+                        this.config.set('tenantAwareEntities', this.configOptions.tenantAwareEntities);
+                    }
+                }
+            }
+        };
         const configuring = super._configuring();
 
         const myCustomPostPhaseSteps = {
-                postJson() {
-                    if(this.isTenant) {
-                        // jhipster will override tenant's changelogDate
-                        if(!this.context.useConfigurationFile){
-                            this.context.changelogDate = this.config.get('tenantChangelogDate');
-                            this.updateEntityConfig(this.context.filename, 'changelogDate', this.context.changelogDate);
-                        }
-                        return;
+            postJson() {
+                if (this.isTenant) {
+                    // jhipster will override tenant's changelogDate
+                    if (!this.context.useConfigurationFile) {
+                        this.context.changelogDate = this.config.get('tenantChangelogDate');
+                        this.updateEntityConfig(this.context.filename, 'changelogDate', this.context.changelogDate);
                     }
+                    return;
+                }
 
-                    this.log(chalk.white(`Saving ${chalk.bold(this.options.name)} tenantAware`));
-                    // Super class creates a new file without tenantAware (6.1.2), so add tenantAware to it.
-                    this.updateEntityConfig(this.context.filename, 'tenantAware', this.context.tenantAware);
-                },
-        }
+                this.log(chalk.white(`Saving ${chalk.bold(this.options.name)} tenantAware`));
+                // Super class creates a new file without tenantAware (6.1.2), so add tenantAware to it.
+                this.updateEntityConfig(this.context.filename, 'tenantAware', this.context.tenantAware);
+            }
+        };
         return Object.assign(myCustomPrePhaseSteps, configuring, myCustomPostPhaseSteps);
     }
 
@@ -221,7 +220,6 @@ module.exports = class extends EntityGenerator {
     get writing() {
         // Here we are not overriding this phase and hence its being handled by JHipster
         return super._writing();
-
     }
 
     get install() {
