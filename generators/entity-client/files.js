@@ -14,10 +14,10 @@ const tenantTemplates = [
 
 module.exports = {
     angular: {
-        entityTenantAwareTemplates(context) {
+        entityTenantAwareTemplatescontext {
             return mtUtils.requireTemplates('./entity-client/partials/angular/', entityTenantAwareTemplates, context);
         },
-        tenantTemplates(context) {
+        tenantTemplatescontext {
             return mtUtils.requireTemplates('./entity-client/partials/angular/', tenantTemplates, context);
         }
     }
