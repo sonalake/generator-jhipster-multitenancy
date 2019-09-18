@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const files = require('./files');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const mtUtils = require('../multitenancy-utils');
 
@@ -59,7 +59,7 @@ module.exports = class extends ClientGenerator {
          *      return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
          * ```
          */
-        // Here we are not overriding this phase and hence its being handled by JHipster
+       // Here we are not overriding this phase and hence its being handled by JHipster
         return super._initializing();
     }
 
@@ -79,7 +79,7 @@ module.exports = class extends ClientGenerator {
     }
 
     get writing() {
-        const writing = super._writing();
+        const writing = super._writing()
         const myCustomPhaseSteps = {
             // sets up all the variables we'll need for the templating
             setUpVariables() {
@@ -96,6 +96,7 @@ module.exports = class extends ClientGenerator {
             },
             // make the necessary client code changes and adds the tenant UI
             generateClientCode() {
+
                 // Rewrites to existing files
                 mtUtils.processPartialTemplates(files.angular.templates(this), this);
             }
