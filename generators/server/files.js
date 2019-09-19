@@ -27,8 +27,7 @@ function writeFiles() {
                 templates: [
                     {
                         file: 'config/liquibase/changelog/_user_tenant_constraints.xml',
-                        renameTo: generator =>
-                            `config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`
+                        renameTo: `config/liquibase/changelog/${this.changelogDate}__user_${this.tenantNameUpperFirst}_constraints.xml`
                     }
                 ]
             }
@@ -41,16 +40,15 @@ function writeFiles() {
                 templates: [
                     {
                         file: 'package/domain/_TenantParameter.java',
-                        renameTo: generator => `${this.packageFolder}/domain/${this.tenantNameUpperFirst}Parameter.java`
+                        renameTo: `${this.packageFolder}/domain/${this.tenantNameUpperFirst}Parameter.java`
                     },
                     {
                         file: 'package/aop/_tenant/_TenantAspect.java',
-                        renameTo: generator =>
-                            `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`
+                        renameTo: `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`
                     },
                     {
                         file: 'package/aop/_tenant/_UserAspect.java',
-                        renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/UserAspect.java`
+                        renameTo: `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/UserAspect.java`
                     }
                 ]
             }

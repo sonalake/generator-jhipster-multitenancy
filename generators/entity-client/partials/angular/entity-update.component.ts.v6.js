@@ -6,7 +6,7 @@ const tmpls = [
         // imports
         type: 'rewriteFile',
         target: "import { Observable } from 'rxjs';",
-        tmpl: context => "import { AccountService } from 'app/core';"
+        tmpl: "import { AccountService } from 'app/core';"
     },
     {
         type: 'replaceContent',
@@ -19,7 +19,7 @@ const tmpls = [
         type: 'replaceContent',
         regex: true,
         target: '\n(\\s*)private fb: FormBuilder\n(\\s*)\\) {(\\s*)}',
-        tmpl: context => `\n$1private fb: FormBuilder,
+        tmpl: `\n$1private fb: FormBuilder,
 $1private accountService: AccountService
 $2) {
 $1this.accountService.identity().then(account => {

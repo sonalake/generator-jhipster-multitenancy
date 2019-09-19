@@ -1,4 +1,3 @@
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const mtUtils = require('../multitenancy-utils');
 
 const angularTemplates = ['account.model.ts', 'account.service.ts'];

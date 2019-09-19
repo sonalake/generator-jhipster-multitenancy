@@ -2,9 +2,6 @@
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 
-// const pluralize = require('pluralize');
-// const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-
 const mtUtils = require('../multitenancy-utils');
 
 module.exports = class extends EntityGenerator {

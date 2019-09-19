@@ -5,7 +5,7 @@ const tmpls = [
     {
         type: 'rewriteFile',
         target: 'import javax.persistence.*;',
-        tmpl: context => `import org.hibernate.annotations.Filter;
+        tmpl: `import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 `

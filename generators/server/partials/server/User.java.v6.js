@@ -5,8 +5,8 @@ const tmpls = [
     {
         type: 'replaceContent',
         regex: true,
-        target: context => '(import org\\.hibernate\\.annotations\\.BatchSize;)',
-        tmpl: context => `$1
+        target: '(import org\\.hibernate\\.annotations\\.BatchSize;)',
+        tmpl: `$1
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;`
@@ -14,7 +14,7 @@ import org.hibernate.annotations.ParamDef;`
     {
         type: 'replaceContent',
         regex: true,
-        target: context => '(public class User)',
+        target: '(public class User)',
         tmpl: context => `@FilterDef(name = "${context.tenantNameUpperCase}_FILTER", parameters = {@ParamDef(name = "${context.tenantNameSpinalCased}Id", type = "long")})
 @Filter(name = "${context.tenantNameUpperCase}_FILTER", condition = "${context.tenantNameSpinalCased}_id = :${context.tenantNameSpinalCased}Id")
 $1`
@@ -22,7 +22,7 @@ $1`
     {
         type: 'replaceContent',
         regex: true,
-        target: context => '((.*)public Long getId)',
+        target: '((.*)public Long getId)',
         tmpl: context => `$2@ManyToOne
 $2private ${context.tenantNameUpperFirst} ${context.tenantNameLowerFirst};
 
@@ -31,7 +31,7 @@ $1`
     {
         type: 'replaceContent',
         regex: true,
-        target: context => '(@Override\n(.*)public boolean equals\\(Object o\\) \\{\n(.*)if)',
+        target: '(@Override\n(.*)public boolean equals\\(Object o\\) \\{\n(.*)if)',
         tmpl: context => `public ${context.tenantNameUpperFirst} get${context.tenantNameUpperFirst}() {
 $3return ${context.tenantNameLowerFirst};
 $2}
@@ -45,7 +45,7 @@ $2$1`
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `((.*)", activationKey='" \\+ activationKey \\+ '\\\\'' \\+)`,
+        target: '((.*)", activationKey=\'" \\+ activationKey \\+ \'\\\\\'\' \\+)', // check this
         tmpl: context => `$1
 $2", ${context.tenantNameLowerFirst}='" + ${context.tenantNameLowerFirst} + '\\'' +`
     }

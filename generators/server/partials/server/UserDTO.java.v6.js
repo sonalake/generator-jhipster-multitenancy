@@ -11,13 +11,13 @@ import ${context.packageName}.domain.${context.tenantNameUpperFirst};`
     },
     {
         type: 'rewriteFile',
-        target: context => 'public UserDTO() {',
+        target: 'public UserDTO() {',
         tmpl: context => `private ${context.tenantNameUpperFirst} ${context.tenantNameLowerFirst};`
     },
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `(\n(.*)this\\.authorities = user\\.getAuthorities\\(\\)\\.stream\\(\\)
+        target: `(\n(.*)this\\.authorities = user\\.getAuthorities\\(\\)\\.stream\\(\\)
 (.*)\\.map\\(Authority::getName\\)
 (.*)collect\\(Collectors.toSet\\(\\)\\);)`,
         tmpl: context => `$1
@@ -26,7 +26,7 @@ $2this.${context.tenantNameLowerFirst} = user.get${context.tenantNameUpperFirst}
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `(\n(.*)this\\.authorities = authorities;
+        target: `(\n(.*)this\\.authorities = authorities;
 (.*)\\})`,
         tmpl: context => `$1
 
@@ -41,7 +41,7 @@ $3}`
     {
         type: 'replaceContent',
         regex: true,
-        target: context => '((.*)", authorities=" \\+ authorities \\+)',
+        target: '((.*)", authorities=" \\+ authorities \\+)',
         tmpl: context => `$1
 $2", ${context.tenantNameLowerFirst}='" + ${context.tenantNameLowerFirst} + '\\'' +`
     }

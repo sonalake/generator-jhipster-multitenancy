@@ -130,7 +130,7 @@ module.exports = class extends EntityGenerator {
                 const context = this.context;
                 const entityName = context.name;
                 if (this.isJhipsterVersionLessThan('5.0.0')) {
-                    this.removeFile(`${constants.ANGULAR_DIR}entities/${entityName}/${entityName}.model.ts`);
+                    this.removeFile(`${jhipsterConstants.ANGULAR_DIR}entities/${entityName}/${entityName}.model.ts`);
                 }
             },
 

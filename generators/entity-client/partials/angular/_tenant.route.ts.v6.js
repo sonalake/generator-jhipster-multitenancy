@@ -5,8 +5,8 @@ const tmpls = [
         // Add ROLE
         type: 'replaceContent',
         regex: true,
-        target: context => "authorities: \\['ROLE_USER'\\]",
-        tmpl: context => "authorities: ['ROLE_ADMIN']"
+        target: "authorities: \\['ROLE_USER'\\]",
+        tmpl: "authorities: ['ROLE_ADMIN']"
     }
 ];
 

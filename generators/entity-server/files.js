@@ -29,7 +29,7 @@ function writeFiles() {
                 templates: [
                     {
                         file: 'package/_EntityAspect.java',
-                        renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.entityClass}Aspect.java`
+                        renameTo: `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.entityClass}Aspect.java`
                     }
                 ]
             },
@@ -39,7 +39,7 @@ function writeFiles() {
                 templates: [
                     {
                         file: 'package/repository/_TenantRepository.java',
-                        renameTo: generator => `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
+                        renameTo: `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
                     }
                 ]
             },
@@ -49,8 +49,7 @@ function writeFiles() {
                 templates: [
                     {
                         file: 'package/aop/_tenant/_TenantAspect.java',
-                        renameTo: generator =>
-                            `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`
+                        renameTo: `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.tenantNameUpperFirst}Aspect.java`
                     }
                 ]
             }
