@@ -1,11 +1,7 @@
 /* eslint-disable consistent-return */
-const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 
-const pluralize = require('pluralize');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-
-const mtUtils = require('../multitenancy-utils');
 
 module.exports = class extends EntityGenerator {
     constructor(args, opts) {
@@ -18,7 +14,7 @@ module.exports = class extends EntityGenerator {
         jhContext.setupEntityOptions(this, jhContext, this);
 
         // current subgen
-        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get("tenantName"));
+        this.isTenant = this._.lowerFirst(args[0]) === this._.lowerFirst(this.config.get('tenantName'));
 
         // pass to entity-* subgen
         this.context.isTenant = this.isTenant;
@@ -64,76 +60,49 @@ module.exports = class extends EntityGenerator {
          */
         const phaseFromJHipster = super._initializing();
         const postCustomPhaseSteps = {
-                setUpVariables() {
-                    this.tenantName = this.config.get("tenantName");
-                    const context = this.context;
+            setUpVariables() {
+                this.tenantName = this.config.get('tenantName');
+                const context = this.context;
+                context.service = 'serviceClass';
+                context.pagination = 'pagination';
+                context.changelogDate = this.config.get('tenantChangelogDate');
 
-                    if(!context.fileData){
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
+                let containsName = false;
 
-                        context.fields = [{
-                            fieldName: 'name',
-                            fieldType: 'String',
-                            fieldValidateRules: [
-                                'required'
-                                ]
-                        }];
-
-                        context.relationships = [{
-                            relationshipName: 'users',
-                            otherEntityName: 'user',
-                            relationshipType: 'one-to-many',
-                            otherEntityField: 'login',
-                            relationshipValidateRules: 'required',
-                            ownerSide: true,
-                            otherEntityRelationshipName: this._.toLower(this.tenantName)
-                        }];
-                    }else{
-                        context.service = 'serviceClass';
-                        context.pagination = 'pagination';
-                        context.changelogDate = this.config.get("tenantChangelogDate");
-
-                        let containsName = false;
-
-                        context.fields.forEach(field => {
-                            if(field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name'){
-                                containsName = true;
-                            }
-                        });
-
-                        if(!containsName){
-                            context.fields.push({
-                                fieldName: 'name',
-                                fieldType: 'String',
-                                fieldValidateRules: [
-                                    'required'
-                                    ]
-                            });
-                        }
-
-                        let containsUsers = false;
-                        context.relationships.forEach(relationship => {
-                            if(relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users'){
-                                containsUsers = true;
-                            }
-                        });
-
-                        if(!containsUsers){
-                            context.relationships.push({
-                                relationshipName: 'users',
-                                otherEntityName: 'user',
-                                relationshipType: 'one-to-many',
-                                otherEntityField: 'login',
-                                relationshipValidateRules: 'required',
-                                ownerSide: true,
-                                otherEntityRelationshipName: this._.toLower(this.tenantName)
-                            });
-                        }
+                context.fields.forEach(field => {
+                    if (field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name') {
+                        containsName = true;
                     }
-                },
-        }
+                });
+
+                if (!containsName) {
+                    context.fields.push({
+                        fieldName: 'name',
+                        fieldType: 'String',
+                        fieldValidateRules: ['required']
+                    });
+                }
+
+                let containsUsers = false;
+                context.relationships.forEach(relationship => {
+                    if (relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users') {
+                        containsUsers = true;
+                    }
+                });
+
+                if (!containsUsers) {
+                    context.relationships.push({
+                        relationshipName: 'users',
+                        otherEntityName: 'user',
+                        relationshipType: 'one-to-many',
+                        otherEntityField: 'login',
+                        relationshipValidateRules: 'required',
+                        ownerSide: true,
+                        otherEntityRelationshipName: this._.toLower(this.tenantName)
+                    });
+                }
+            }
+        };
 
         return Object.assign(phaseFromJHipster, postCustomPhaseSteps);
     }
@@ -157,7 +126,7 @@ module.exports = class extends EntityGenerator {
                 const context = this.context;
                 const entityName = context.name;
                 if (this.isJhipsterVersionLessThan('5.0.0')) {
-                    this.removeFile(`${constants.ANGULAR_DIR}entities/${entityName}/${entityName}.model.ts`);
+                    this.removeFile(`${jhipsterConstants.ANGULAR_DIR}entities/${entityName}/${entityName}.model.ts`);
                 }
             },
 

@@ -90,17 +90,15 @@ module.exports = class extends EntityServerGenerator {
             },
             // make the necessary server code changes
             customServerCode() {
-                if(!this.isTenant && !this.tenantAware) return
-
+                if (!this.isTenant && !this.tenantAware) return;
                 files.writeFiles.call(this);
 
-                if(this.tenantAware){
+                if (this.tenantAware) {
                     mtUtils.processPartialTemplates(files.partials.entityTenantAwareTemplates(this), this);
-
-                }else if(this.isTenant){
+                } else if (this.isTenant) {
                     mtUtils.processPartialTemplates(files.partials.tenantTemplates(this), this);
                 }
-            },
+            }
         };
         return Object.assign(writing, writeCustomPhaseSteps);
     }
