@@ -1,38 +1,55 @@
 // Add jpa filter to the entity to remove entries from another tenant
-const file = context => `${context.SERVER_MAIN_SRC_DIR}${context.packageFolder}/domain/User.java`;
+const file = (context) => {
+    return `${context.SERVER_MAIN_SRC_DIR}${context.packageFolder}/domain/User.java`;
+};
 
 const tmpls = [
     {
         type: 'replaceContent',
         regex: true,
-        target: '(import org\\.hibernate\\.annotations\\.BatchSize;)',
-        tmpl: `$1
+        target: (context) => {
+            return `(import org\\.hibernate\\.annotations\\.BatchSize;)`;
+        },
+        tmpl: (context) => {
+            return `$1
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;`
+import org.hibernate.annotations.ParamDef;`;
+        }
     },
     {
         type: 'replaceContent',
         regex: true,
-        target: '(public class User)',
-        tmpl: context => `@FilterDef(name = "${context.tenantNameUpperCase}_FILTER", parameters = {@ParamDef(name = "${context.tenantNameSpinalCased}Id", type = "long")})
+        target: (context) => {
+            return `(public class User)`;
+        },
+        tmpl: (context) => {
+            return `@FilterDef(name = "${context.tenantNameUpperCase}_FILTER", parameters = {@ParamDef(name = "${context.tenantNameSpinalCased}Id", type = "long")})
 @Filter(name = "${context.tenantNameUpperCase}_FILTER", condition = "${context.tenantNameSpinalCased}_id = :${context.tenantNameSpinalCased}Id")
-$1`
+$1`;
+        }
     },
     {
         type: 'replaceContent',
         regex: true,
-        target: '((.*)public Long getId)',
-        tmpl: context => `$2@ManyToOne
+        target: (context) => {
+            return `((.*)public Long getId)`;
+        },
+        tmpl: (context) => {
+            return `$2@ManyToOne
 $2private ${context.tenantNameUpperFirst} ${context.tenantNameLowerFirst};
 
-$1`
+$1`;
+        }
     },
     {
         type: 'replaceContent',
         regex: true,
-        target: '(@Override\n(.*)public boolean equals\\(Object o\\) \\{\n(.*)if)',
-        tmpl: context => `public ${context.tenantNameUpperFirst} get${context.tenantNameUpperFirst}() {
+        target: (context) => {
+            return `(@Override\n(.*)public boolean equals\\(Object o\\) \\{\n(.*)if)`;
+        },
+        tmpl: (context) => {
+            return `public ${context.tenantNameUpperFirst} get${context.tenantNameUpperFirst}() {
 $3return ${context.tenantNameLowerFirst};
 $2}
 
@@ -40,16 +57,21 @@ $2public void set${context.tenantNameUpperFirst}(${context.tenantNameUpperFirst}
 $3this.${context.tenantNameLowerFirst} = ${context.tenantNameLowerFirst};
 $2}
 
-$2$1`
+$2$1`;
+        }
     },
     {
         type: 'replaceContent',
         regex: true,
-        target: '((.*)", activationKey=\'" \\+ activationKey \\+ \'\\\\\'\' \\+)', // check this
-        tmpl: context => `$1
-$2", ${context.tenantNameLowerFirst}='" + ${context.tenantNameLowerFirst} + '\\'' +`
-    }
-];
+        target: (context) => {
+            return `((.*)", activationKey='" \\+ activationKey \\+ '\\\\'' \\+)`;
+        },
+        tmpl: (context) => {
+            return `$1
+$2", ${context.tenantNameLowerFirst}='" + ${context.tenantNameLowerFirst} + '\\'' +`;
+        }
+    },
+]
 
 module.exports = {
     file,

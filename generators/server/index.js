@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const ServerGenerator = require('generator-jhipster/generators/server');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const files = require('./files');
 const mtUtils = require('../multitenancy-utils');
 
@@ -83,7 +84,7 @@ module.exports = class extends ServerGenerator {
             writeAdditionalFile() {
                 files.writeFiles.call(this);
                 mtUtils.processPartialTemplates(files.server.templates(this), this);
-            }
+            },
         };
 
         return Object.assign(writing, myCustomPhaseSteps);

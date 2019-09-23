@@ -89,14 +89,14 @@ module.exports = class extends EntityClientGenerator {
                 mtUtils.tenantVariables(this.config.get('tenantName'), this);
             },
             generateClientCode() {
-                if (this.tenantAware) {
+                if(this.tenantAware){
                     // tenant aware entity
                     mtUtils.processPartialTemplates(files.angular.entityTenantAwareTemplates(this), this);
-                } else if (this.isTenant) {
-                    mtUtils.processPartialTemplates(files.angular.tenantTemplates(this), this);
-                }
-            }
-        };
+                }else if(this.isTenant){
+                     mtUtils.processPartialTemplates(files.angular.tenantTemplates(this), this);
+                 }
+             }
+         }
         return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
     }
 

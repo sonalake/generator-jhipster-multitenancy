@@ -1,6 +1,6 @@
 <div>
-    <a href="https://www.jhipster.tech/">
-        <img src="https://www.jhipster.tech/images/logo/jhipster_family_member_1.svg" height="200px">
+    <a href="http://jhipster.github.io">
+        <img src="https://github.com/sonalake/generator-jhipster-multitenancy/raw/master/images/logo-jhipster.png">
     </a>
 </div>
 Greetings, Java Hipster!
@@ -9,25 +9,9 @@ Greetings, Java Hipster!
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 > A JHipster blueprint for creating multitenant applications
 
-
 # Introduction
-This is a [JHipster](https://www.jhipster.tech/) blueprint for creating multitenant applications. The blueprint will:
 
- - Generate a JHipster application
- - Generate a Tenant entity
- - Make the User, and any other entities, tenant aware
-
-# Table of contents
-
-* [Prerequisites](#prerequisites)
-* [Installation](#installation)
-  * [With NPM](#with-npm)
-  * [With Yarn](#with-yarn)
-* [Usage](#usage)
-  * [Generate Multitenant Application](#generate-multitenant-application)
-  * [Making an entity tenant aware](#making-an-entity-tenant-aware)
-* [Running A Development Version](#running-a-development-version)
-* [License](#license)
+This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be used in a JHipster application.
 
 # Prerequisites
 
@@ -67,29 +51,14 @@ yarn global upgrade generator-jhipster-multitenancy
 
 # Usage
 
-## Generate Multitenant Application
-
-To generate your JHipster Multitenant application using the blueprint, run the below command
+To use this blueprint, run the below command
 
 ```bash
 jhipster --blueprint multitenancy
 ```
 
-## Making an entity tenant aware
 
-Once the blueprint has generated your application, a tenant entity has been created. All entitites created now can be made tenant aware. Cretae a new entity using the standard JHipster command.
-
-```bash
-jhipster entity Book
-```
-
-Upon generation, you will then be asked if you want to make your entity tenant aware.
-
-```bash
-Do you want to make Book tenant aware? (Y/n)
-```
-
-# Running A Development Version
+## Running local Blueprint version for development
 
 During development of blueprint, please note the below steps. They are very important.
 
@@ -110,7 +79,7 @@ You could also use Yarn for this if you prefer
 cd generator-jhipster
 npm link
 
-cd multitenancy
+cd multitenancy2
 npm link generator-jhipster
 ```
 
@@ -122,7 +91,7 @@ mkdir my-app && cd my-app
 npm link generator-jhipster-multitenancy
 npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
 
-jhipster -d --blueprint multitenancy
+jhipster -d --blueprint multitenancy2
 
 ```
 

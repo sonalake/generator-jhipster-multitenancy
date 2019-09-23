@@ -72,22 +72,22 @@ module.exports = class extends CommonGenerator {
          *      return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
          * ```
          */
-        const initializing = super._initializing();
+        const initializing = super._initializing()
         const myCustomPhaseSteps = {
             loadConf() {
-                if (this.options['tenant-changelog-date'] !== undefined) {
+                if(this.options['tenant-changelog-date'] !== undefined){
                     this.config.set('nextChangelogDate', this.tenantChangelogDate);
-                } else if (this.tenantChangelogDate === undefined) {
+                }else if(this.tenantChangelogDate === undefined){
                     this.tenantChangelogDate = this.dateFormatForLiquibase();
                 }
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
-            }
+            },
         };
         return Object.assign(initializing, myCustomPhaseSteps);
     }
 
     get prompting() {
-        const prompting = super._prompting();
+        const prompting = super._prompting()
         const myCustomPhaseSteps = {
             askTenantAware() {
                 const prompts = [
@@ -96,7 +96,7 @@ module.exports = class extends CommonGenerator {
                         name: 'tenantName',
                         message: 'What is the alias given tenants in your application?',
                         default: 'Company',
-                        validate: input => {
+                        validate: (input) => {
                             if (_.toLower(input) === 'account') {
                                 return `${input} is a reserved word.`;
                             }
@@ -106,24 +106,24 @@ module.exports = class extends CommonGenerator {
                 ];
                 const done = this.async();
                 this.prompt(prompts).then(props => {
-                    if (props.tenantName) {
+                    if(props.tenantName){
                         this.tenantName = props.tenantName;
                     }
                     done();
                 });
-            }
+            },
         };
         return Object.assign(prompting, myCustomPhaseSteps);
     }
 
     get configuring() {
-        const configuring = super._configuring();
+        const configuring = super._configuring()
         const configuringCustomPhaseSteps = {
             saveConf() {
                 // Pass to others subgens
                 this.config.set('tenantName', this.tenantName);
                 this.config.set('tenantChangelogDate', this.tenantChangelogDate);
-            }
+            },
         };
         // configuringCustomPhaseSteps should be run after configuring, otherwise tenantName will be overridden
         return Object.assign(configuring, configuringCustomPhaseSteps);
@@ -142,20 +142,19 @@ module.exports = class extends CommonGenerator {
         // Here we are not overriding this phase and hence its being handled by JHipster
         const install = super._install();
         const myCustomPhaseSteps = {
-            generateTenant() {
-                const options = this.options;
-                options.force = true;
-                const configOptions = this.configOptions;
+             generateTenant() {
+                 const options = this.options;
+                 const configOptions = this.configOptions;
 
-                this.composeWith(require.resolve('../entity-tenant'), {
-                    ...options,
-                    configOptions,
-                    regenerate: false,
-                    'skip-install': false,
-                    debug: this.isDebugEnabled,
-                    arguments: [this.tenantName]
-                });
-            }
+                 this.composeWith(require.resolve('../entity-tenant'), {
+                     ...options,
+                     configOptions,
+                     regenerate: false,
+                     'skip-install': false,
+                     debug: this.isDebugEnabled,
+                     arguments: [this.tenantName]
+                 });
+             },
         };
         return Object.assign(myCustomPhaseSteps, install);
     }

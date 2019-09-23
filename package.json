@@ -34,7 +34,7 @@
     {
       "name": "Marcelo Shima",
       "email": "marceloshima@gmail.com",
-      "url": "https://github.com/mshima"
+      "url": ""
     },
     {
       "name": "Mairead McCabe",
@@ -55,6 +55,7 @@
   "files": [
     "generators"
   ],
+  "main": "generators/app/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/sonalake/generator-jhipster-multitenancy.git"
