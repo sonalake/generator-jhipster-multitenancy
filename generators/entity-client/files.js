@@ -5,12 +5,9 @@ const entityTenantAwareTemplates = [
     'entity-detail.component.html',
     'entity-update.component.html',
     'entity-update.component.ts'
-]
+];
 
-const tenantTemplates = [
-    'navbar.component.html',
-    '_tenant.route.ts'
-]
+const tenantTemplates = ['navbar.component.html', '_tenant.route.ts'];
 
 module.exports = {
     angular: {
