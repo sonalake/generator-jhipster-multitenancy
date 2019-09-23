@@ -7,12 +7,6 @@ module.exports = class extends EntityGenerator {
     constructor(args, opts) {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important
 
-        this.option('default-tenant-aware', {
-            desc: 'Default for whether you make an entity tenant aware or not',
-            type: Boolean,
-            defaults: true
-        });
-
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
@@ -74,16 +68,7 @@ module.exports = class extends EntityGenerator {
                 this.tenantName = this.config.get('tenantName');
                 const context = this.context;
 
-                if (!this.isTenant) {
-                    // if tenantAware is undefined (first pass), then override changelogDate
-                    if (context.fileData === undefined || context.fileData.tenantAware === undefined) {
-                        const nextChangelogDate = this.config.get('nextChangelogDate');
-                        if (nextChangelogDate !== undefined) {
-                            context.changelogDate = `${Number(nextChangelogDate) + 1}`;
-                            this.config.set('nextChangelogDate', context.changelogDate);
-                        }
-                    }
-                }
+                if (!this.isTenant) {}
             }
         };
 
@@ -109,7 +94,7 @@ module.exports = class extends EntityGenerator {
                         type: 'confirm',
                         name: 'tenantAware',
                         message: `Do you want to make ${context.name} tenant aware?`,
-                        default: this.options.defaultTenantAware
+                        default: true
                     }
                 ];
                 const done = this.async();

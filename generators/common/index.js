@@ -2,6 +2,7 @@
 const _ = require('lodash');
 const chalk = require('chalk');
 const CommonGenerator = require('generator-jhipster/generators/common');
+const debug = require('debug')('jhipster:multitenancy:common');
 
 module.exports = class extends CommonGenerator {
     constructor(args, opts) {
@@ -13,14 +14,8 @@ module.exports = class extends CommonGenerator {
             defaults: undefined
         });
 
-        this.option('tenant-changelog-date', {
-            desc: 'Use liquibase changelog date to reproducible builds',
-            type: String,
-            defaults: undefined
-        });
-
         this.tenantName = this.options['tenant-name'] || this.config.get('tenantName');
-        this.tenantChangelogDate = this.options['tenant-changelog-date'] || this.config.get('tenantChangelogDate');
+        this.tenantChangelogDate = this.config.get('tenantChangelogDate');
 
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
@@ -75,12 +70,14 @@ module.exports = class extends CommonGenerator {
         const initializing = super._initializing();
         const myCustomPhaseSteps = {
             loadConf() {
-                if (this.options['tenant-changelog-date'] !== undefined) {
-                    this.config.set('nextChangelogDate', this.tenantChangelogDate);
-                } else if (this.tenantChangelogDate === undefined) {
+                this.configOptions.baseName = this.baseName;
+
+                if (this.config.get('tenantChangelogDate') === undefined) {
                     this.tenantChangelogDate = this.dateFormatForLiquibase();
+                    debug(`Using tenantChangelogDate ${this.tenantChangelogDate}`);
+                    this.config.set('tenantChangelogDate', this.tenantChangelogDate);
+                    this.configOptions.tenantChangelogDate = this.tenantChangelogDate;
                 }
-                this.config.set('tenantChangelogDate', this.tenantChangelogDate);
             }
         };
         return Object.assign(initializing, myCustomPhaseSteps);
