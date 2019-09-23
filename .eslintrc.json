@@ -25,9 +25,14 @@
         "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true } ],
         "prefer-destructuring": "off",
 
+        "prettier/prettier": "warn",
+        "global-require": "warn",
+        "import/no-dynamic-require": "warn",
+        "no-unused-vars": "off",
         "no-multi-assign": "off",
         "no-param-reassign": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "no-empty": "warn"
     },
     "overrides": [
         {

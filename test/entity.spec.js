@@ -9,12 +9,13 @@ describe('Subgenerator entity of multitenancy JHipster blueprint', () => {
             helpers
                 .run('generator-jhipster/generators/entity')
                 .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
+                    fse.copySync(path.join(__dirname, './templates/ngx-blueprint'), dir);
                 })
                 .withOptions({
                     'from-cli': true,
                     skipInstall: true,
                     blueprint: 'multitenancy',
+                    tenantName: 'Company',
                     skipChecks: true
                 })
                 .withGenerators([
@@ -30,7 +31,8 @@ describe('Subgenerator entity of multitenancy JHipster blueprint', () => {
                     relationshipAdd: false,
                     dto: 'no',
                     service: 'no',
-                    pagination: 'infinite-scroll'
+                    pagination: 'no',
+                    tenantAware: 'yes'
                 })
                 .on('end', done);
         });
