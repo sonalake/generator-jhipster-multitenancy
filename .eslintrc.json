@@ -28,7 +28,7 @@
         "prettier/prettier": "warn",
         "global-require": "warn",
         "import/no-dynamic-require": "warn",
-        "no-unused-vars": "warn",
+        "no-unused-vars": "off",
         "no-multi-assign": "off",
         "no-param-reassign": "off",
         "no-shadow": "off",
