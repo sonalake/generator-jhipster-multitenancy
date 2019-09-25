@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+const _ = require('lodash');
 const chalk = require('chalk');
 const ServerGenerator = require('generator-jhipster/generators/server');
 const files = require('./files');
@@ -67,8 +68,16 @@ module.exports = class extends ServerGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._configuring();
+        const configuring = super._configuring();
+        const myPrePhaseSteps = {
+            validateCompatibility() {
+                // validate project has the correct db type
+                if (_.toLower(this.databaseType) !== 'sql') {
+                    this.error('This module currently only supports SQL DB types\n');
+                }
+            }
+        };
+        return Object.assign(myPrePhaseSteps, configuring);
     }
 
     get default() {
