@@ -2,8 +2,7 @@
 const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const files = require('./files');
-
+const angularFiles = require('./files-angular');
 const mtUtils = require('../multitenancy-utils');
 
 module.exports = class extends ClientGenerator {
@@ -92,12 +91,18 @@ module.exports = class extends ClientGenerator {
                 mtUtils.tenantVariables(this.config.get('tenantName'), this);
             },
             writeAdditionalFile() {
-                files.writeFiles.call(this);
+                // make the necessary client code changes and adds the tenant UI
+                switch (this.clientFramework) {
+                    case 'angularX':
+                        return angularFiles.writeFiles.call(this);
+                }
             },
-            // make the necessary client code changes and adds the tenant UI
-            generateClientCode() {
+            rewriteExistingFiles() {
                 // Rewrites to existing files
-                mtUtils.processPartialTemplates(files.angular.templates(this), this);
+                switch (this.clientFramework) {
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                }
             }
         };
         return Object.assign(writing, myCustomPhaseSteps);
