@@ -165,7 +165,7 @@ module.exports = class extends EntityGenerator {
                         if (!this.configOptions.tenantAwareEntities) {
                             this.configOptions.tenantAwareEntities = [];
                         }
-                        this.configOptions.tenantAwareEntities.push(context.name);
+                        this.configOptions.tenantAwareEntities.push(context.entityNameCapitalized);
                         this.config.set('tenantAwareEntities', this.configOptions.tenantAwareEntities);
                     }
                 }
