@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-multitenancy",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A JHipster blueprint for creating multitenant applications",
   "keywords": [
     "yeoman-generator",
