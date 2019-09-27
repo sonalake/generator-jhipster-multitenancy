@@ -4,7 +4,7 @@ const tmpls = [
     {
         type: 'rewriteFile',
         target: context => 'public imageUrl: string',
-        tmpl: context => 'public company: string,'
+        tmpl: context => `public ${context.tenantNameLowerFirst}: string,`
     }
 ];
 
