@@ -9,7 +9,7 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
             helpers
                 .run('generator-jhipster/generators/server')
                 .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, './templates/server-template'), dir);
+                    fse.copySync(path.join(__dirname, './templates/ngx-blueprint'), dir);
                 })
                 .withOptions({
                     'from-cli': true,
@@ -26,10 +26,36 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
                 ])
                 .on('end', done);
         });
-
-        it('it works', () => {
-            // Adds your tests here
-            assert.textEqual('Write your own tests!', 'Write your own tests!');
+        describe('Validation check for "SQL" database type', () => {
+            before(done => {
+                helpers
+                    .run('generator-jhipster/generators/server')
+                    .withOptions({
+                        'from-cli': true,
+                        skipInstall: true,
+                        blueprint: 'multitenancy',
+                        skipChecks: true
+                    })
+                    .withPrompts({
+                        baseName: 'sampleMysql',
+                        packageName: 'com.mycompany.myapp',
+                        applicationType: 'monolith',
+                        databaseType: 'sql',
+                        devDatabaseType: 'h2Disk',
+                        prodDatabaseType: 'mysql',
+                        cacheProvider: 'ehcache',
+                        authenticationType: 'session',
+                        enableTranslation: true,
+                        nativeLanguage: 'en',
+                        languages: ['fr', 'de'],
+                        buildTool: 'maven',
+                        rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
+                    })
+                    .on('end', done);
+            });
+            it('contains databaseType with sql value', () => {
+                assert.fileContent('.yo-rc.json', /"databaseType": "sql"/);
+            });
         });
     });
 });

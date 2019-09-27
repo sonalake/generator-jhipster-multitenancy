@@ -13,7 +13,7 @@
         "cacheProvider": "ehcache",
         "enableHibernateCache": true,
         "websocket": false,
-        "databaseType": "sql",
+        "databaseType": "mongodb",
         "devDatabaseType": "h2Disk",
         "prodDatabaseType": "mysql",
         "searchEngine": false,

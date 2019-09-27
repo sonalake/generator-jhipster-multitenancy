@@ -73,7 +73,7 @@ module.exports = class extends ServerGenerator {
             validateCompatibility() {
                 // validate project has the correct db type
                 if (_.toLower(this.databaseType) !== 'sql') {
-                    this.error('This module currently only supports SQL DB types\n');
+                    throw new TypeError('This module currently only supports SQL DB types\n');
                 }
             }
         };
