@@ -9,7 +9,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
             helpers
                 .run('generator-jhipster/generators/client')
                 .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, './templates/client-template'), dir);
+                    fse.copySync(path.join(__dirname, './templates/default'), dir);
                 })
                 .withOptions({
                     'from-cli': true,

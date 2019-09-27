@@ -9,7 +9,7 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
             helpers
                 .run('generator-jhipster/generators/common')
                 .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, './templates/ngx-blueprint'), dir);
+                    fse.copySync(path.join(__dirname, './templates/default'), dir);
                 })
                 .withOptions({
                     'from-cli': true,
