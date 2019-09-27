@@ -1,12 +1,9 @@
 const mtUtils = require('../multitenancy-utils');
-
 const angularTemplates = ['account.model.ts', 'account.service.ts'];
 
 module.exports = {
     writeFiles,
-    angular: {
-        templates: context => mtUtils.requireTemplates('./client/partials/angular/', angularTemplates, context)
-    }
+    templates: context => mtUtils.requireTemplates('./client/partials/angular/', angularTemplates, context)
 };
 
 function writeFiles() {
@@ -32,5 +29,5 @@ function writeFiles() {
     };
 
     // parse the templates and write files to the appropriate locations
-    this.writeFilesToDisk(files, this, false);
+    this.writeFilesToDisk(files, this, false, 'angular');
 }
