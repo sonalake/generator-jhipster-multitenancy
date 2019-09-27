@@ -6,7 +6,7 @@ const tmpls = [
         // imports
         type: 'rewriteFile',
         target: "import { Observable } from 'rxjs';",
-        tmpl: context => "import { AccountService } from 'app/core';"
+        tmpl: context => "import { AccountService } from 'app/core/auth/account.service';"
     },
     {
         type: 'replaceContent',
