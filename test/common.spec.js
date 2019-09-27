@@ -17,6 +17,13 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
                     blueprint: 'multitenancy',
                     skipChecks: true
                 })
+                .withGenerators([
+                    [
+                        require('../generators/common/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:common',
+                        path.join(__dirname, '../generators/common/index.js')
+                    ]
+                ])
                 .on('end', done);
         });
 

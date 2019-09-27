@@ -18,6 +18,13 @@ describe('Subgenerator entity of multitenancy JHipster blueprint', () => {
                     tenantName: 'Company',
                     skipChecks: true
                 })
+                .withGenerators([
+                    [
+                        require('../generators/entity/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
+                    ]
+                ])
                 .withArguments(['foo'])
                 .withPrompts({
                     fieldAdd: false,

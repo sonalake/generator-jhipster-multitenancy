@@ -17,6 +17,13 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
                     blueprint: 'multitenancy',
                     skipChecks: true
                 })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ]
+                ])
                 .on('end', done);
         });
     });
