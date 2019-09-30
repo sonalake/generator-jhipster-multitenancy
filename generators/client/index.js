@@ -69,16 +69,7 @@ module.exports = class extends ClientGenerator {
     }
 
     get configuring() {
-        const configuring = super._configuring();
-        const myPrePhaseSteps = {
-            validateCompatibility() {
-                // validate project has the correct db type
-                if (_.toLower(this.clientFramework) !== 'angularx' && _.toLower(this.clientFramework) !== 'react') {
-                    this.error('This module currently only supports Angular and React\n');
-                }
-            }
-        };
-        return Object.assign(myPrePhaseSteps, configuring);
+        return super._configuring();
     }
 
     get default() {
@@ -102,20 +93,20 @@ module.exports = class extends ClientGenerator {
             writeAdditionalFile() {
                 // make the necessary client code changes and adds the tenant UI
                 switch (this.clientFramework) {
-                case 'angularX':
-                    return angularFiles.writeFiles.call(this);
-                default:
-                    return angularFiles.writeFiles.call(this);
+                    case 'angularX':
+                        return angularFiles.writeFiles.call(this);
+                    default:
+                        return angularFiles.writeFiles.call(this);
                 }
             },
             rewriteExistingFiles() {
                 // Rewrites to existing files
                 switch (this.clientFramework) {
-                case 'angularX':
-                    mtUtils.processPartialTemplates(angularFiles.templates(this), this);
-                    break;
-                default:
-                    mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                        break;
+                    default:
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
                 }
             }
         };

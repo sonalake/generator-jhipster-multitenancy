@@ -68,16 +68,7 @@ module.exports = class extends ServerGenerator {
     }
 
     get configuring() {
-        const configuring = super._configuring();
-        const myPrePhaseSteps = {
-            validateCompatibility() {
-                // validate project has the correct db type
-                if (_.toLower(this.databaseType) !== 'sql') {
-                    throw new TypeError('This module currently only supports SQL DB types\n');
-                }
-            }
-        };
-        return Object.assign(myPrePhaseSteps, configuring);
+        return super._configuring();
     }
 
     get default() {

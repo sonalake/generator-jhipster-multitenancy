@@ -115,6 +115,23 @@ module.exports = class extends CommonGenerator {
 
     get configuring() {
         const configuring = super._configuring();
+        const myPrePhaseSteps = {
+            validateCompatibility() {
+                // validate project has the correct db type
+                if (_.toLower(this.configOptions.applicationType) !== 'monolith') {
+                    this.error('This module currently only supports Monolith apps\n');
+                }
+                if (
+                    _.toLower(this.configOptions.clientFramework) !== 'angularx' &&
+                    _.toLower(this.configOptions.clientFramework) !== 'react'
+                ) {
+                    this.error('This module currently only supports Angular and React\n');
+                }
+                if (_.toLower(this.configOptions.databaseType) !== 'sql') {
+                    throw new TypeError('This module currently only supports SQL DB types\n');
+                }
+            }
+        };
         const configuringCustomPhaseSteps = {
             saveConf() {
                 // Pass to others subgens
@@ -123,7 +140,7 @@ module.exports = class extends CommonGenerator {
             }
         };
         // configuringCustomPhaseSteps should be run after configuring, otherwise tenantName will be overridden
-        return Object.assign(configuring, configuringCustomPhaseSteps);
+        return Object.assign(myPrePhaseSteps, configuring, configuringCustomPhaseSteps);
     }
 
     get default() {
