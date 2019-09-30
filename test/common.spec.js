@@ -7,10 +7,7 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
     describe('Sample test', () => {
         before(done => {
             helpers
-                .run('generator-jhipster/generators/common')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, './templates/default'), dir);
-                })
+                .run('generator-jhipster/generators/app')
                 .withOptions({
                     'from-cli': true,
                     skipInstall: true,
@@ -24,6 +21,22 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
                         path.join(__dirname, '../generators/common/index.js')
                     ]
                 ])
+                .withPrompts({
+                    baseName: 'sampleMysql',
+                    clientFramework: 'angularX',
+                    packageName: 'com.mycompany.myapp',
+                    applicationType: 'monolith',
+                    databaseType: 'sql',
+                    devDatabaseType: 'h2Disk',
+                    prodDatabaseType: 'mysql',
+                    cacheProvider: 'ehcache',
+                    authenticationType: 'session',
+                    enableTranslation: true,
+                    nativeLanguage: 'en',
+                    languages: ['fr', 'de'],
+                    buildTool: 'maven',
+                    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
+                })
                 .on('end', done);
         });
 

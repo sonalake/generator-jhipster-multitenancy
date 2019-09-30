@@ -3,7 +3,6 @@
         "promptValues": {
             "packageName": "com.mycompany.myapp"
         },
-        "applicationType": "monolith",
         "jhipsterVersion": "6.2.0",
         "baseName": "jhipsterBlueprint",
         "packageName": "com.mycompany.myapp",

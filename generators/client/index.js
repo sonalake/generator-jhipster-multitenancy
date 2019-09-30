@@ -70,16 +70,7 @@ module.exports = class extends ClientGenerator {
     }
 
     get configuring() {
-        const configuring = super._configuring();
-        const myPrePhaseSteps = {
-            validateCompatibility() {
-                // validate project has the correct db type
-                if (_.toLower(this.clientFramework) !== 'angularx' && _.toLower(this.clientFramework) !== 'react') {
-                    this.error('This module currently only supports Angular and React\n');
-                }
-            }
-        };
-        return Object.assign(myPrePhaseSteps, configuring);
+        return super._configuring();
     }
 
     get default() {
