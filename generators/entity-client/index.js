@@ -4,7 +4,7 @@ const EntityClientGenerator = require('generator-jhipster/generators/entity-clie
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const mtUtils = require('../multitenancy-utils');
-const files = require('./files');
+const angularFiles = require('./files-angular');
 
 module.exports = class extends EntityClientGenerator {
     constructor(args, opts) {
@@ -90,10 +90,21 @@ module.exports = class extends EntityClientGenerator {
             },
             generateClientCode() {
                 if (this.tenantAware) {
-                    // tenant aware entity
-                    mtUtils.processPartialTemplates(files.angular.entityTenantAwareTemplates(this), this);
+                    switch (this.clientFramework) {
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                        break;
+                    default:
+                        mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                    }
                 } else if (this.isTenant) {
-                    mtUtils.processPartialTemplates(files.angular.tenantTemplates(this), this);
+                    switch (this.clientFramework) {
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                        break;
+                    default:
+                        mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                    }
                 }
             }
         };
