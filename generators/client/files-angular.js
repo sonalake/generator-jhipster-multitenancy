@@ -1,4 +1,5 @@
 const mtUtils = require('../multitenancy-utils');
+
 const angularTemplates = ['account.model.ts', 'account.service.ts'];
 
 module.exports = {
