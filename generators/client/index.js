@@ -93,20 +93,20 @@ module.exports = class extends ClientGenerator {
             writeAdditionalFile() {
                 // make the necessary client code changes and adds the tenant UI
                 switch (this.clientFramework) {
-                case 'angularX':
-                    return angularFiles.writeFiles.call(this);
-                default:
-                    return angularFiles.writeFiles.call(this);
+                    case 'angularX':
+                        return angularFiles.writeFiles.call(this);
+                    default:
+                        return angularFiles.writeFiles.call(this);
                 }
             },
             rewriteExistingFiles() {
                 // Rewrites to existing files
                 switch (this.clientFramework) {
-                case 'angularX':
-                    mtUtils.processPartialTemplates(angularFiles.templates(this), this);
-                    break;
-                default:
-                    mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                        break;
+                    default:
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
                 }
             }
         };
