@@ -95,6 +95,8 @@ module.exports = class extends ClientGenerator {
                 switch (this.clientFramework) {
                     case 'angularX':
                         return angularFiles.writeFiles.call(this);
+                    case 'react':
+                        return () => {};
                     default:
                         return angularFiles.writeFiles.call(this);
                 }
@@ -104,6 +106,8 @@ module.exports = class extends ClientGenerator {
                 switch (this.clientFramework) {
                     case 'angularX':
                         mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                        break;
+                    case 'react':
                         break;
                     default:
                         mtUtils.processPartialTemplates(angularFiles.templates(this), this);
