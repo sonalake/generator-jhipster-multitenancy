@@ -53,6 +53,13 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
                     buildTool: 'maven',
                     rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
                 })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ]
+                ])
                 .on('end', done);
         });
         it('contains clientFramework with angularx value', () => {
@@ -85,6 +92,13 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
                     buildTool: 'maven',
                     rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
                 })
+                .withGenerators([
+                    [
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:client',
+                        path.join(__dirname, '../generators/client/index.js')
+                    ]
+                ])
                 .on('end', done);
         });
         it('contains clientFramework with angularx value', () => {

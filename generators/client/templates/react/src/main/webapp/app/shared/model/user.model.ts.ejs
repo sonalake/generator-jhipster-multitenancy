@@ -32,7 +32,7 @@ export interface IUser {
   lastModifiedBy?: string;
   lastModifiedDate?: Date;
   password?: string;
-  <%= tenantNameLowerFirst %>?: I<%= tenantNameUpperFirst %>["name"];
+  <%= tenantNameLowerFirst %>?: I<%= tenantNameUpperFirst %>;
 }
 
 export const defaultValue: Readonly<IUser> = {
@@ -49,5 +49,5 @@ export const defaultValue: Readonly<IUser> = {
   lastModifiedBy: '',
   lastModifiedDate: null,
   password: '',
-  <%= tenantNameLowerFirst %>:  ''
+  <%= tenantNameLowerFirst %>:  null
 };

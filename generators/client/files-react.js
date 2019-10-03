@@ -1,6 +1,6 @@
 const mtUtils = require('../multitenancy-utils');
 
-const reactTemplates = ['user-management-detail.tsx', 'user-management.tsx'];
+const reactTemplates = ['user-management-detail.tsx'];
 
 module.exports = {
     writeFiles,
@@ -13,6 +13,16 @@ function writeFiles() {
             {
                 path: this.reactDir,
                 templates: [{ file: 'shared/model/user.model.ts', method: 'processJs' }]
+            }
+        ],
+        userManagement: [
+            {
+                path: this.reactDir,
+                templates: [{ file: 'modules/administration/user-management/user-management.tsx', method: 'processJs' }]
+            },
+            {
+                path: this.reactDir,
+                templates: [{ file: 'modules/administration/user-management/user-management-update.tsx', method: 'processJs' }]
             }
         ]
     };
