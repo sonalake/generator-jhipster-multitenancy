@@ -23,6 +23,10 @@ function writeFiles() {
             {
                 path: this.reactDir,
                 templates: [{ file: 'modules/administration/user-management/user-management-update.tsx', method: 'processJs' }]
+            },
+            {
+                path: this.reactDir,
+                templates: [{ file: 'modules/administration/user-management/user-management.reducer.ts', method: 'processJs' }]
             }
         ]
     };

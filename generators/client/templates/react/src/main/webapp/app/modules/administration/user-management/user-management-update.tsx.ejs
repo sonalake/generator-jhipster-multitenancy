@@ -43,7 +43,6 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
   }
 
     saveUser = (event, values) => {
-      console.log(values);
         const { User } = this.props;
         const entity = {
           ...User,
@@ -201,7 +200,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                     <Translate contentKey="jhipsterApp.<%= tenantNameLowerFirst %>.detail.title"><%= tenantNameUpperFirst %></Translate>
                   </Label>
                     {User.company ? <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id" value={User.<%= tenantNameLowerFirst %>.id}>
-                    <option></option>
+                    <option value="" key="0"></option>
                     {companies
                       ? companies.map(company => (
                         <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
@@ -209,8 +208,8 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                         </option>
                       )) : null}
                     </AvInput>:
-                  <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id" value={<option></option>}>
-                  <option></option>
+                  <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id">
+                  <option value="" key="0"></option>
                   {companies
                     ? companies.map(company => (
                       <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
