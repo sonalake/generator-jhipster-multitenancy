@@ -114,7 +114,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
                 ])
                 .on('end', done);
         });
-        it('contains clientFramework with angularx value', () => {
+        it('contains clientFramework with react value', () => {
             assert.fileContent('.yo-rc.json', /"clientFramework": "react"/);
         });
 
