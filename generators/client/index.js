@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const angularFiles = require('./files-angular');
+const reactFiles = require('./files-react');
 const mtUtils = require('../multitenancy-utils');
 
 module.exports = class extends ClientGenerator {
@@ -85,6 +86,7 @@ module.exports = class extends ClientGenerator {
                 // Ok
                 this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
                 this.angularDir = jhipsterConstants.ANGULAR_DIR;
+                this.reactDir = jhipsterConstants.REACT_DIR;
                 this.CLIENT_TEST_SRC_DIR = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
                 // template variables
@@ -95,6 +97,8 @@ module.exports = class extends ClientGenerator {
                 switch (this.clientFramework) {
                     case 'angularX':
                         return angularFiles.writeFiles.call(this);
+                    case 'react':
+                        return reactFiles.writeFiles.call(this);
                     default:
                         return angularFiles.writeFiles.call(this);
                 }
@@ -104,6 +108,9 @@ module.exports = class extends ClientGenerator {
                 switch (this.clientFramework) {
                     case 'angularX':
                         mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                        break;
+                    case 'react':
+                        mtUtils.processPartialTemplates(reactFiles.templates(this), this);
                         break;
                     default:
                         mtUtils.processPartialTemplates(angularFiles.templates(this), this);

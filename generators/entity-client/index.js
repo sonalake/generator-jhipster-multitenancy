@@ -91,19 +91,23 @@ module.exports = class extends EntityClientGenerator {
             generateClientCode() {
                 if (this.tenantAware) {
                     switch (this.clientFramework) {
-                    case 'angularX':
-                        mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
-                        break;
-                    default:
-                        mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                        case 'angularX':
+                            mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                            break;
+                        case 'react':
+                            break;
+                        default:
+                            mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
                     }
                 } else if (this.isTenant) {
                     switch (this.clientFramework) {
-                    case 'angularX':
-                        mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
-                        break;
-                    default:
-                        mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                        case 'angularX':
+                            mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                            break;
+                        case 'react':
+                            break;
+                        default:
+                            mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
                     }
                 }
             }
