@@ -97,7 +97,6 @@ module.exports = class extends EntityClientGenerator {
                             mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
                             break;
                         case 'react':
-                            mtUtils.processPartialTemplates(reactFiles.templates(this), this);
                             break;
                         default:
                             mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
@@ -108,7 +107,7 @@ module.exports = class extends EntityClientGenerator {
                             mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
                             break;
                         case 'react':
-                            mtUtils.processPartialTemplates(reactFiles.templates(this), this);
+                            mtUtils.processPartialTemplates(reactFiles.tenantTemplates(this), this);
                             break;
                         default:
                             mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
