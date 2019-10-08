@@ -86,11 +86,25 @@ module.exports = class extends EntityClientGenerator {
             setUpVariables() {
                 this.SERVER_MAIN_SRC_DIR = jhipsterConstants.SERVER_MAIN_SRC_DIR;
                 this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
+                this.reactDir = jhipsterConstants.REACT_DIR;
 
                 // template variables
                 mtUtils.tenantVariables(this.config.get('tenantName'), this);
             },
-            generateClientCode() {
+            writeAdditionalFile() {
+                if (this.tenantAware) {
+                    switch (this.clientFramework) {
+                        case 'angularX':
+                            return () => {};
+                        case 'react':
+                            return reactFiles.writeFiles.call(this);
+                        default:
+                            return () => {};
+                    }
+                }
+            },
+
+            rewriteExistingFiles() {
                 if (this.tenantAware) {
                     switch (this.clientFramework) {
                         case 'angularX':
