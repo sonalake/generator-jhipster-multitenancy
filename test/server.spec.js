@@ -26,9 +26,8 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
                 ])
                 .on('end', done);
         });
-        it('it works', () => {
-            // Adds your tests here
-            assert.textEqual('Write your own tests!', 'Write your own tests!');
+        it('contains databaseType with sql value', () => {
+            assert.fileContent('.yo-rc.json', /"databaseType": "sql"/);
         });
     });
 });
