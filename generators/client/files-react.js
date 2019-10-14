@@ -1,6 +1,6 @@
 const mtUtils = require('../multitenancy-utils');
 
-const reactTemplates = ['user-management-detail.tsx'];
+const reactTemplates = ['user-management-detail.tsx', 'user-management.reducer.spec.ts'];
 
 module.exports = {
     writeFiles,
