@@ -26,25 +26,25 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
                 ])
                 .on('end', done);
         });
+    });
 
-        describe('Validation check for "SQL" database type', () => {
-            before(done => {
-                helpers
-                    .run('generator-jhipster/generators/server')
-                    .inTmpDir(dir => {
-                        fse.copySync(path.join(__dirname, './templates/default'), dir);
-                    })
-                    .withOptions({
-                        'from-cli': true,
-                        skipInstall: true,
-                        blueprint: 'multitenancy',
-                        skipChecks: true
-                    })
-                    .on('end', done);
-            });
-            it('contains databaseType with sql value', () => {
-                assert.fileContent('.yo-rc.json', /"databaseType": "sql"/);
-            });
+    describe('Validation check for "SQL" database type', () => {
+        before(done => {
+            helpers
+                .run('generator-jhipster/generators/server')
+                .inTmpDir(dir => {
+                    fse.copySync(path.join(__dirname, './templates/default'), dir);
+                })
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'multitenancy',
+                    skipChecks: true
+                })
+                .on('end', done);
+        });
+        it('contains databaseType with sql value', () => {
+            assert.fileContent('.yo-rc.json', /"databaseType": "sql"/);
         });
     });
 });
