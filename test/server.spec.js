@@ -41,6 +41,13 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
                     blueprint: 'multitenancy',
                     skipChecks: true
                 })
+                .withGenerators([
+                    [
+                        require('../generators/server/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:server',
+                        path.join(__dirname, '../generators/server/index.js')
+                    ]
+                ])
                 .on('end', done);
         });
         it('contains databaseType with sql value', () => {
