@@ -14,6 +14,13 @@ describe('Subgenerator entity of multitenancy JHipster blueprint', () => {
                 .inTmpDir(dir => {
                     fse.copySync(path.join(__dirname, './templates/default'), dir);
                 })
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'multitenancy',
+                    tenantName: 'Company',
+                    skipChecks: true
+                })
                 .withGenerators([
                     [
                         require('../generators/entity/index.js'), // eslint-disable-line global-require
