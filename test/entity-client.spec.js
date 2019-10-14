@@ -73,6 +73,13 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
                         path.join(__dirname, '../generators/entity-client/index.js')
                     ]
                 ])
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'multitenancy',
+                    tenantName: 'Company',
+                    skipChecks: true
+                })
                 .withArguments([entity])
                 .withPrompts({
                     fieldAdd: false,
