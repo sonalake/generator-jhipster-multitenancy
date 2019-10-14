@@ -34,8 +34,9 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
                 .on('end', done);
         });
 
-        it('admin.tsx partial rewrite is being done', () => {
-            assert.fileContent(`${dir}entities/foo/foo-update.tsx`, `this.props.account.${tenant}`);
+        it('entity-update.tsx partial rewrite is being done', () => {
+            assert.fileContent(`${dir}entities/foo/foo-update.tsx`, `{!this.props.account.${tenant} ? (
+                    <AvInput`);
         });
     });
 });
