@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { locales, languages } from 'app/config/translation';
 import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
-import { getEntities as getCompanies } from '../../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.reducer'
+import { getEntities as get<%= tenantNamePluralUpperFirst %> } from '../../../entities/<%= tenantNameLowerFirst %>/<%= tenantNameLowerFirst %>.reducer'
 import { IRootState } from 'app/shared/reducers';
 
 export interface IUserManagementUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {}
@@ -39,7 +39,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
       this.props.getUser(this.props.match.params.login)
     }
     this.props.getRoles();
-    this.props.getCompanies();
+    this.props.get<%= tenantNamePluralUpperFirst %>();
   }
 
     saveUser = (event, values) => {
@@ -63,7 +63,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
 
     render() {
     const { isNew } = this.state;
-    const { User, companies, loading, updating, roles } = this.props;
+    const { User, <%= tenantNamePluralLowerFirst %>, loading, updating, roles } = this.props;
     return (
       <div>
         <Row className="justify-content-center">
@@ -202,24 +202,24 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                   </AvField> }
                 </AvGroup>
                 <AvGroup>
-                  <Label for="company">
+                  <Label for="<%= tenantNameLowerFirst %>">
                     <Translate contentKey="jhipsterApp.<%= tenantNameLowerFirst %>.detail.title"><%= tenantNameUpperFirst %></Translate>
                   </Label>
-                    {User.company ? <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id" value={User.<%= tenantNameLowerFirst %>.id}>
+                    {User.<%= tenantNameLowerFirst %> ? <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id" value={User.<%= tenantNameLowerFirst %>.id}>
                     <option value="" key="0"></option>
-                    {companies
-                      ? companies.map(company => (
+                    {<%= tenantNamePluralLowerFirst %>
+                      ? <%= tenantNamePluralLowerFirst %>.map(<%= tenantNameLowerFirst %> => (
                         <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
-                          {company.name}
+                          {<%= tenantNameLowerFirst %>.name}
                         </option>
                       )) : null}
                     </AvInput>:
                   <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id">
                   <option value="" key="0"></option>
-                  {companies
-                    ? companies.map(company => (
+                  {<%= tenantNamePluralLowerFirst %>
+                    ? <%= tenantNamePluralLowerFirst %>.map(<%= tenantNameLowerFirst %> => (
                       <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
-                        {company.name}
+                        {<%= tenantNameLowerFirst %>.name}
                       </option>
                     )) : null}
                 </AvInput>}
@@ -264,10 +264,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
   updateSuccess: storeState.userManagement.updateSuccess,
-  companies: storeState.company.entities
+  <%= tenantNamePluralLowerFirst %>: storeState.<%= tenantNameLowerFirst %>.entities
 });
 
-const mapDispatchToProps = { getCompanies, getUser, getRoles, updateUser, createUser, reset };
+const mapDispatchToProps = { get<%= tenantNamePluralUpperFirst %>, getUser, getRoles, updateUser, createUser, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
