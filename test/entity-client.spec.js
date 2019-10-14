@@ -17,9 +17,9 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-client/index.js'), // eslint-disable-line global-require
-                        'jhipster-multitenancy:entity-client',
-                        path.join(__dirname, '../generators/entity-client/index.js')
+                        require('../generators/entity/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withOptions({
@@ -58,9 +58,9 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-client/index.js'), // eslint-disable-line global-require
-                        'jhipster-multitenancy:entity-client',
-                        path.join(__dirname, '../generators/entity-client/index.js')
+                        require('../generators/entity/index.js'), // eslint-disable-line global-require
+                        'jhipster-multitenancy:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments([entity])
