@@ -29,18 +29,20 @@ const tmpls = [
                                   </option>
                                 ))
                               : null}
-                          </AvInput> : <AvInput
-                          id="${context.entityFileName}-${context.tenantNameLowerFirst}"
-                          type="select"
-                          className="form-control"
-                          name="${context.tenantNameLowerFirst}.id"
-                          value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
-                          required>{this.props.account.${context.tenantNameLowerFirst} ? <option value={this.props.account.${context.tenantNameLowerFirst}.id}>{this.props.account.${context.tenantNameLowerFirst}.name} </option> : null}</AvInput>}`
+                          </AvInput> : ''}`
     },
     {
         type: 'rewriteFile',
         target: context => `${context.entityFileName}Entity: storeState.${context.entityFileName}.entity,`,
         tmpl: context => 'account: storeState.authentication.account,'
+    },
+    {
+      type: 'replaceContent',
+      regex: true,
+      target: context => `<Label for="blog-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
+      tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="blog-company">
+                    <Translate contentKey="jhipsterApp.blog.company">Company</Translate>
+                  </Label>: ''}`
     }
 ];
 
