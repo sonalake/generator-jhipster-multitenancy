@@ -4,6 +4,9 @@ const helpers = require('yeoman-test');
 const fse = require('fs-extra');
 
 const dir = 'src/main/webapp/app/';
+const tenant = 'company';
+const tenantNameUpperFirst = 'Company';
+const tenantNamePluralLowerFirst = 'companies';
 
 describe('Subgenerator client of multitenancy JHipster blueprint', () => {
     describe('Sample test', () => {
@@ -56,40 +59,40 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         });
 
         it('account.model.ts partial rewrite is being done', () => {
-            assert.fileContent(`${dir}core/user/account.model.ts`, 'public company: string,');
+            assert.fileContent(`${dir}core/user/account.model.ts`, `public ${tenant}: string,`);
         });
 
         it('account.service.ts partial rewrite is being done', () => {
-            assert.fileContent(`${dir}core/auth/account.service.ts`, 'this.isIdentityResolved() ? this.userIdentity.company : null');
+            assert.fileContent(`${dir}core/auth/account.service.ts`, `this.isIdentityResolved() ? this.userIdentity.${tenant} : null`);
         });
 
         it('user-management-detail is being overwritten', () => {
-            assert.fileContent(`${dir}admin/user-management/user-management-detail.component.html`, '<dd>{{user.company?.name}}</dd>');
+            assert.fileContent(`${dir}admin/user-management/user-management-detail.component.html`, `<dd>{{user.${tenant}?.name}}</dd>`);
         });
 
         it('user-management-update html is being overwritten', () => {
             assert.fileContent(
                 `${dir}admin/user-management/user-management-update.component.html`,
-                '<div class="form-group" *ngIf="!currentAccount.company && companies && companies.length > 0">'
+                `<div class="form-group" *ngIf="!currentAccount.${tenant} && ${tenantNamePluralLowerFirst} && ${tenantNamePluralLowerFirst}.length > 0">`
             );
         });
 
         it('user-management-update ts is being overwritten', () => {
             assert.fileContent(
                 `${dir}admin/user-management/user-management-update.component.ts`,
-                'trackCompanyById(index: number, item: ICompany)'
+                `track${tenantNameUpperFirst}ById(index: number, item: I${tenantNameUpperFirst})`
             );
         });
 
         it('user-management is being overwritten', () => {
             assert.fileContent(
                 `${dir}admin/user-management/user-management.component.html`,
-                '<td *ngIf="!currentAccount.company">{{user.company?.name}}</td>'
+                `<td *ngIf="!currentAccount.${tenant}">{{user.${tenant}?.name}}</td>`
             );
         });
 
         it('user.model.ts is being overwritten', () => {
-            assert.fileContent(`${dir}core/user/user.model.ts`, 'public company?: Company');
+            assert.fileContent(`${dir}core/user/user.model.ts`, `public ${tenant}?: ${tenantNameUpperFirst}`);
         });
     });
     describe('Validation check for "React" client framework', () => {
@@ -128,14 +131,14 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         it('user-management is being overwritten', () => {
             assert.fileContent(
                 `${dir}modules/administration/user-management/user-management.tsx`,
-                '<Translate contentKey="jhipsterApp.company.detail.title">Company</Translate>'
+                `<Translate contentKey="jhipsterApp.${tenant}.detail.title">${tenantNameUpperFirst}</Translate>`
             );
         });
 
         it('user-management-detail partial rewrite is being done', () => {
             assert.fileContent(
                 `${dir}modules/administration/user-management/user-management-detail.tsx`,
-                '<dd>{user.company ? user.company.name : null}</dd>'
+                `<dd>{user.${tenant} ? user.${tenant}.name : null}</dd>`
             );
         });
 
