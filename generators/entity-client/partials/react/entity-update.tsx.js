@@ -2,6 +2,16 @@ const file = context => `${context.webappDir}app/entities/${context.entityFolder
 
 const tmpls = [
     {
+        type: 'rewriteFile',
+        target: context => 'const entity = {',
+        tmpl: context => `const ${context.tenantNameLowerFirst} = this.props.account.${context.tenantNameLowerFirst}`
+    },
+    {
+        type: 'rewriteFile',
+        target: context => '...values',
+        tmpl: context => `${context.tenantNameLowerFirst},`
+    },
+    {
         type: 'replaceContent',
         target: context => `this.props.get${context.tenantNamePluralUpperFirst}();`,
         tmpl: context =>
@@ -19,7 +29,6 @@ const tmpls = [
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-                            value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
