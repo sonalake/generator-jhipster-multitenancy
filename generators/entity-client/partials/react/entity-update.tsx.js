@@ -48,9 +48,9 @@ const tmpls = [
     {
       type: 'replaceContent',
       regex: true,
-      target: context => `<Label for="blog-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
-      tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="blog-company">
-                    <Translate contentKey="jhipsterApp.blog.company">Company</Translate>
+      target: context => `<Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
+      tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">
+                    <Translate contentKey="jhipsterApp.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
                   </Label>: ''}`
     }
 ];
