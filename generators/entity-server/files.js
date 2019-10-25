@@ -34,16 +34,6 @@ function writeFiles() {
                 ]
             },
             {
-                condition: generator => generator.isTenant,
-                path: this.SERVER_MAIN_SRC_DIR,
-                templates: [
-                    {
-                        file: 'package/repository/_TenantRepository.java',
-                        renameTo: generator => `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
-                    }
-                ]
-            },
-            {
                 condition: generator => generator.tenantAware,
                 path: this.SERVER_MAIN_SRC_DIR,
                 templates: [
