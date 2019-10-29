@@ -7,7 +7,12 @@ const tmpls = [
         regex: true,
         target: context => `<dt><span(.*)>${context.tenantNameUpperFirst}</span></dt>(\\s*)<dd>`,
         tmpl: context =>
-            `<dt *ngIf="${context.entityInstance}.${context.tenantNameLowerFirst}"><span$1>${context.tenantNameUpperFirst}</span></dt>$2<dd>`
+            `<dt *ngIf="currentAccount && !currentAccount.${context.tenantNameLowerFirst}"><span$1>${context.tenantNameUpperFirst}</span></dt>$2<dd>`
+    },
+    {
+        type: 'replaceContent',
+        target: context => `<div *ngIf="${context.entityFileName}.${context.tenantNameLowerFirst}">`,
+        tmpl: context => `<div *ngIf="currentAccount && !currentAccount.${context.tenantNameLowerFirst}">`
     }
 ];
 

@@ -93,8 +93,16 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
         });
 
         it('entity-detail.component.html partial rewrite is being done', () => {
-            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.html`, `<dt *ngIf="${entity}.${tenant}">`);
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.html`, `<dt *ngIf="currentAccount && !currentAccount.${tenant}">`);
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.html`, `<div *ngIf="currentAccount && !currentAccount.${tenant}">`);
         });
+        it('entity-detail.component.ts partial rewrite is being done', () => {
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'import { AccountService }');
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'currentAccount: any;');
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'this.accountService.identity().then(account => {'); // eslint-disable-line
+            assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'protected accountService: AccountService');
+        });
+
 
         it('entity-update.component.html partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.html`, `<div class="form-group" *ngIf="!currentAccount.${tenant}">`); // eslint-disable-line
@@ -105,18 +113,13 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
             assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, 'import { AccountService }');
             assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, 'currentAccount: any;');
             assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, 'this.accountService.identity().then(account => {'); // eslint-disable-line
-            assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, `if (this.currentAccount.${tenant}) {`);
+            assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, `this.currentAccount.${tenant}`);
             // eslint-disable-next-line
-            assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, `if (this.currentAccount.${tenant}) {
-      return;
-    }`); // eslint-disable-line
+            assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.ts`, `return;`); // eslint-disable-line
         });
 
         it('entity.component.html partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/${entity}/${entity}.component.html`, `<th *ngIf="!currentAccount.${tenant}">`);
-        });
-
-        it('entity.component.html partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/${entity}/${entity}.component.html`, `<td *ngIf="!currentAccount.${tenant}">`);
         });
     });
