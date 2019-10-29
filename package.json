@@ -64,7 +64,7 @@
     "chalk": "2.4.1",
     "debug": "^4.1.1",
     "ejs": "2.6.1",
-    "generator-jhipster": "6.2.0",
+    "generator-jhipster": "6.3.1",
     "glob": "7.1.2",
     "gulp-filter": "5.1.0",
     "insight": "0.10.1",
