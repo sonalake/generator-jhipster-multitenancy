@@ -29,7 +29,7 @@ const tmpls = [
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-                            value={isNew ? ${context.tenantNamePluralUpperFirst}[0] && ${context.tenantNamePluralUpperFirst}[0].id : ${context.entityInstance}Entity.${context.tenantNameLowerFirst}.id}
+                            value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityInstance}Entity.${context.tenantNameLowerFirst} && ${context.entityInstance}Entity.${context.tenantNameLowerFirst}.id}
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
@@ -51,7 +51,7 @@ const tmpls = [
       regex: true,
       target: context => `<Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
       tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">
-                    <Translate contentKey="jhipsterApp.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
+                    <Translate contentKey="${context.baseName}App.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
                   </Label>: ''}`
     }
 ];
