@@ -29,7 +29,7 @@ const tmpls = [
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-                            value={isNew ? companies[0] && companies[0].id : ${context.entityInstance}Entity.company.id}
+                            value={isNew ? ${context.tenantNamePluralUpperFirst}[0] && ${context.tenantNamePluralUpperFirst}[0].id : ${context.entityInstance}Entity.${context.tenantNameLowerFirst}.id}
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
