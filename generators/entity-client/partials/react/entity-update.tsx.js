@@ -29,7 +29,7 @@ const tmpls = [
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-                            value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
+                            value={isNew ? companies[0] && companies[0].id : ${context.entityInstance}Entity.company.id}
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
@@ -43,7 +43,7 @@ const tmpls = [
     },
     {
         type: 'rewriteFile',
-        target: context => `${context.entityFileName}Entity: storeState.${context.entityFileName}.entity,`,
+        target: context => `${context.entityInstance}Entity: storeState.${context.entityInstance}.entity,`,
         tmpl: context => 'account: storeState.authentication.account,'
     },
     {
