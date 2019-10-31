@@ -29,11 +29,7 @@ const tmpls = [
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-<<<<<<< Updated upstream
                             value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
-=======
-                            value={isNew ? companies[0] && companies[0].id : ${context.entityFileName}Entity.company.id}
->>>>>>> Stashed changes
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
