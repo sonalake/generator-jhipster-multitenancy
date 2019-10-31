@@ -23,13 +23,17 @@ const tmpls = [
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `<AvInput\n(\\s*)id="${context.entityFileName}-${context.tenantNameLowerFirst}"\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)(\\s*)(.*)\n(.*)\n(\\s*)</AvInput>`,
+        target: context => `<AvInput(\\s*)id="${context.entityFileName}-${context.tenantNameLowerFirst}"([^]+)</option>([^]+)</AvInput>`,
         tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <AvInput
                             id="${context.entityFileName}-${context.tenantNameLowerFirst}"
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
+<<<<<<< Updated upstream
                             value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
+=======
+                            value={isNew ? companies[0] && companies[0].id : ${context.entityFileName}Entity.company.id}
+>>>>>>> Stashed changes
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
