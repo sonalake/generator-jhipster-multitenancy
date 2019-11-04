@@ -86,7 +86,7 @@ public class <%= entityClass %>Aspect {
             User loggedInUser = userRepository.findOneByLogin(login.get()).get();
 
             if (loggedInUser.get<%= tenantNameUpperFirst %>() != null) {
-                if(optional.isPresent() && !optional.get().get<%= tenantNameUpperFirst %>().equals(loggedInUser.get<%= tenantNameUpperFirst %>())){
+                if(optional.isPresent() && optional.get().get<%= tenantNameUpperFirst %>() != loggedInUser.get<%= tenantNameUpperFirst %>()){
                     throw new NoSuchElementException();
                 }
             }
