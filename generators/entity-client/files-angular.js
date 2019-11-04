@@ -4,7 +4,8 @@ const entityTenantAwareTemplates = [
     'entity.component.html',
     'entity-detail.component.html',
     'entity-update.component.html',
-    'entity-update.component.ts'
+    'entity-update.component.ts',
+    'entity-detail.component.ts'
 ];
 
 const tenantTemplates = ['navbar.component.html', '_tenant.route.ts'];
