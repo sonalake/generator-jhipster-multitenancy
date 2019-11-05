@@ -176,7 +176,7 @@ module.exports = class extends EntityGenerator {
                             relationshipName: this._.toLower(this.tenantName),
                             otherEntityName: this._.toLower(this.tenantName),
                             relationshipType: 'many-to-one',
-                            otherEntityField: 'name',
+                            otherEntityField: 'id',
                             relationshipValidateRules: 'required',
                             ownerSide: true,
                             otherEntityRelationshipName: this._.toLower(context.name)
