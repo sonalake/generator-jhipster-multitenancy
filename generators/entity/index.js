@@ -150,27 +150,12 @@ module.exports = class extends EntityGenerator {
                 const context = this.context;
 
                 if (this.isTenant) {
+                    // force tenant to be serviceClass
                     this.tenantName = this.config.get('tenantName');
                     const context = this.context;
                     context.service = 'serviceClass';
                     context.pagination = 'pagination';
                     context.changelogDate = this.config.get('tenantChangelogDate');
-
-                    let containsName = false;
-
-                    context.fields.forEach(field => {
-                        if (field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name') {
-                            containsName = true;
-                        }
-                    });
-
-                    if (!containsName) {
-                        context.fields.push({
-                            fieldName: 'name',
-                            fieldType: 'String',
-                            fieldValidateRules: ['required']
-                        });
-                    }
 
                     let containsUsers = false;
                     context.relationships.forEach(relationship => {
