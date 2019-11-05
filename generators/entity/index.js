@@ -151,11 +151,9 @@ module.exports = class extends EntityGenerator {
 
                 if (this.isTenant) {
                     // force tenant to be serviceClass
-                    this.tenantName = this.config.get('tenantName');
-                    const context = this.context;
                     context.service = 'serviceClass';
-                    context.pagination = 'pagination';
                     context.changelogDate = this.config.get('tenantChangelogDate');
+                    return;
                 }
 
                 if (this.context.tenantAware) {
