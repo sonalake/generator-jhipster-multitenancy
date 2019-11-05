@@ -4,7 +4,7 @@ const tmpls = [
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `<li>\n(\\s*)<a(.*)routerLink="${context.tenantNameLowerFirst}"([^]+)Company</span>(\\s*)</a>(\\s*)</li>`,
+        target: context => `<li>\n(\\s*)<a(.*)routerLink="${context.tenantNameLowerFirst}"([^]+)${context.tenantNameUpperFirst}</span>(\\s*)</a>(\\s*)</li>`,
         tmpl: context => ''
     },
     {
