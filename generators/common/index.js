@@ -118,7 +118,7 @@ module.exports = class extends CommonGenerator {
         const myPrePhaseSteps = {
             validateCompatibility() {
                 // validate project has the correct db type
-                if (_.toLower(this.configOptions.applicationType || this.config.get('applicationType')) !== 'monolith') {
+                if (_.toLower(this.configOptions.applicationType) !== 'monolith'|| _.toLower(this.config.get('applicationType')) !== 'monolith') {
                     this.error('This module currently only supports Monolith apps\n');
                 }
                 if (
