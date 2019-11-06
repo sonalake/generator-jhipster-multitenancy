@@ -56,7 +56,7 @@
                     <button class="btn btn-success btn-sm" (click)="setActive(user, false)" *ngIf="user.activated"
                             [disabled]="currentAccount.login === user.login" jhiTranslate="userManagement.activated">Activated</button>
                 </td>
-                <td *ngIf="!currentAccount.<%= tenantNameLowerFirst %>">{{user.<%= tenantNameLowerFirst %>?.name}}</td>
+                <td *ngIf="!currentAccount.<%= tenantNameLowerFirst %>">{{user.<%= tenantNameLowerFirst %>?.id}}</td>
                 <% if (enableTranslation) { %><td>{{user.langKey}}</td><% } %>
                 <td>
                     <div *ngFor="let authority of user.authorities">
