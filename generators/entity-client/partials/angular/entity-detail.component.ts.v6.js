@@ -10,7 +10,8 @@ const tmpls = [
     },
     {
         type: 'rewriteFile',
-        target: context => `${context.entityFileName}: I${context.entityClass}`,
+        regex: true,
+        target: context => `${context.entityInstance}: I${context.entityClass}`,
         tmpl: context => 'currentAccount: any;'
     },
     {
