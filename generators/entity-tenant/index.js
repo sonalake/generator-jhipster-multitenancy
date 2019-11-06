@@ -65,41 +65,6 @@ module.exports = class extends EntityGenerator {
                 context.service = 'serviceClass';
                 context.pagination = 'pagination';
                 context.changelogDate = this.config.get('tenantChangelogDate');
-
-                let containsName = false;
-
-                context.fields.forEach(field => {
-                    if (field.fieldName !== undefined && this._.toLower(field.fieldName) === 'name') {
-                        containsName = true;
-                    }
-                });
-
-                if (!containsName) {
-                    context.fields.push({
-                        fieldName: 'name',
-                        fieldType: 'String',
-                        fieldValidateRules: ['required']
-                    });
-                }
-
-                let containsUsers = false;
-                context.relationships.forEach(relationship => {
-                    if (relationship.relationshipName !== undefined && this._.toLower(relationship.relationshipName) === 'users') {
-                        containsUsers = true;
-                    }
-                });
-
-                if (!containsUsers) {
-                    context.relationships.push({
-                        relationshipName: 'users',
-                        otherEntityName: 'user',
-                        relationshipType: 'one-to-many',
-                        otherEntityField: 'login',
-                        relationshipValidateRules: 'required',
-                        ownerSide: true,
-                        otherEntityRelationshipName: this._.toLower(this.tenantName)
-                    });
-                }
             }
         };
 
