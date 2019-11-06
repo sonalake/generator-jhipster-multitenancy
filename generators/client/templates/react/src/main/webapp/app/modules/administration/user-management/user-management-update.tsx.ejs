@@ -210,7 +210,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                     {<%= tenantNamePluralLowerFirst %>
                       ? <%= tenantNamePluralLowerFirst %>.map(<%= tenantNameLowerFirst %> => (
                         <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
-                          {<%= tenantNameLowerFirst %>.name}
+                          {<%= tenantNameLowerFirst %>.id}
                         </option>
                       )) : null}
                     </AvInput>:
@@ -219,7 +219,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                   {<%= tenantNamePluralLowerFirst %>
                     ? <%= tenantNamePluralLowerFirst %>.map(<%= tenantNameLowerFirst %> => (
                       <option value={<%= tenantNameLowerFirst %>.id} key={<%= tenantNameLowerFirst %>.id}>
-                        {<%= tenantNameLowerFirst %>.name}
+                        {<%= tenantNameLowerFirst %>.id}
                       </option>
                     )) : null}
                 </AvInput>}
