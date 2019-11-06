@@ -67,7 +67,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         });
 
         it('user-management-detail is being overwritten', () => {
-            assert.fileContent(`${dir}admin/user-management/user-management-detail.component.html`, `<dd>{{user.${tenant}?.name}}</dd>`);
+            assert.fileContent(`${dir}admin/user-management/user-management-detail.component.html`, `<dd>{{user.${tenant}?.id}}</dd>`);
         });
 
         it('user-management-update html is being overwritten', () => {
@@ -87,7 +87,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         it('user-management is being overwritten', () => {
             assert.fileContent(
                 `${dir}admin/user-management/user-management.component.html`,
-                `<td *ngIf="!currentAccount.${tenant}">{{user.${tenant}?.name}}</td>`
+                `<td *ngIf="!currentAccount.${tenant}">{{user.${tenant}?.id}}</td>`
             );
         });
 
@@ -138,7 +138,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         it('user-management-detail partial rewrite is being done', () => {
             assert.fileContent(
                 `${dir}modules/administration/user-management/user-management-detail.tsx`,
-                `<dd>{user.${tenant} ? user.${tenant}.name : null}</dd>`
+                `<dd>{user.${tenant} ? user.${tenant}.id : null}</dd>`
             );
         });
 
