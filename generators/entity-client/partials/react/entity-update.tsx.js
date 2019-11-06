@@ -23,13 +23,13 @@ const tmpls = [
     {
         type: 'replaceContent',
         regex: true,
-        target: context => `<AvInput\n(\\s*)id="${context.entityFileName}-${context.tenantNameLowerFirst}"\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)(\\s*)(.*)\n(.*)\n(\\s*)</AvInput>`,
+        target: context => `<AvInput(\\s*)id="${context.entityFileName}-${context.tenantNameLowerFirst}"([^]+)</option>([^]+)</AvInput>`,
         tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <AvInput
                             id="${context.entityFileName}-${context.tenantNameLowerFirst}"
                             type="select"
                             className="form-control"
                             name="${context.tenantNameLowerFirst}.id"
-                            value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityFileName}Entity.${context.tenantNameLowerFirst}.id}
+                            value={isNew ? ${context.tenantNamePluralLowerFirst}[0] && ${context.tenantNamePluralLowerFirst}[0].id : ${context.entityInstance}Entity.${context.tenantNameLowerFirst} && ${context.entityInstance}Entity.${context.tenantNameLowerFirst}.id}
                             required
                           >
                             {${context.tenantNamePluralLowerFirst}
@@ -43,7 +43,7 @@ const tmpls = [
     },
     {
         type: 'rewriteFile',
-        target: context => `${context.entityFileName}Entity: storeState.${context.entityFileName}.entity,`,
+        target: context => `${context.entityInstance}Entity: storeState.${context.entityInstance}.entity,`,
         tmpl: context => 'account: storeState.authentication.account,'
     },
     {
@@ -51,7 +51,7 @@ const tmpls = [
       regex: true,
       target: context => `<Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
       tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">
-                    <Translate contentKey="jhipsterApp.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
+                    <Translate contentKey="${context.baseName}App.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
                   </Label>: ''}`
     }
 ];
