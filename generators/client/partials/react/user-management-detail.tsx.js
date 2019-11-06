@@ -7,7 +7,7 @@ const tmpls = [
         tmpl: context => `<dt>
         <Translate contentKey="jhipsterApp.${context.tenantNameLowerFirst}.detail.title">${context.tenantNameUpperFirst}</Translate>
         </dt>
-        <dd>{user.${context.tenantNameLowerFirst} ? user.${context.tenantNameLowerFirst}.name : null}</dd>`
+        <dd>{user.${context.tenantNameLowerFirst} ? user.${context.tenantNameLowerFirst}.id : null}</dd>`
     }
 ];
 
