@@ -35,7 +35,7 @@ const tmpls = [
                             {${context.tenantNamePluralLowerFirst}
                               ? ${context.tenantNamePluralLowerFirst}.map(otherEntity => (
                                   <option value={otherEntity.id} key={otherEntity.id}>
-                                    {otherEntity.id}
+                                    {otherEntity.name}
                                   </option>
                                 ))
                               : null}

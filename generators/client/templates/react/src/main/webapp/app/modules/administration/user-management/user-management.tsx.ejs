@@ -127,7 +127,7 @@ export const UserManagement = (props: IUserManagementProps) => {
               </td>
               <td>{user.login}</td>
               <td>{user.email}</td>
-              <td>{user.<%= tenantNameLowerFirst %> ? user.<%= tenantNameLowerFirst %>.id : ''}</td>
+              <td>{user.<%= tenantNameLowerFirst %> ? user.<%= tenantNameLowerFirst %>.name : ''}</td>
               <td>
                 {user.activated ? (
                   <Button color="success" onClick={toggleActive(user)}>
