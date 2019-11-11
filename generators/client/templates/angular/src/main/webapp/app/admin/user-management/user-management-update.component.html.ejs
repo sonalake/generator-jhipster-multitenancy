@@ -117,7 +117,7 @@
                     <label class="form-control-label" jhiTranslate="<%= baseName %>App.<%= tenantNameLowerFirst %>.detail.title" for="field_<%= tenantNameLowerFirst %>"><%= tenantNameUpperFirst %></label>
                     <select class="form-control" id="field_<%= tenantNameLowerFirst %>" name="<%= tenantNameLowerFirst %>" formControlName="<%= tenantNameLowerFirst %>">
                         <option *ngIf="!editForm.get('<%= tenantNameLowerFirst %>').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="<%= tenantNameLowerFirst %>Option.id === editForm.get('<%= tenantNameLowerFirst %>').value?.id ? editForm.get('<%= tenantNameLowerFirst %>').value : <%= tenantNameLowerFirst %>Option" *ngFor="let <%= tenantNameLowerFirst %>Option of <%= tenantNamePluralLowerFirst %> trackBy: track<%= tenantNameUpperFirst %>ById">{{<%= tenantNameLowerFirst %>Option.name}}</option>
+                        <option [ngValue]="<%= tenantNameLowerFirst %>Option.id === editForm.get('<%= tenantNameLowerFirst %>').value?.id ? editForm.get('<%= tenantNameLowerFirst %>').value : <%= tenantNameLowerFirst %>Option" *ngFor="let <%= tenantNameLowerFirst %>Option of <%= tenantNamePluralLowerFirst %> trackBy: track<%= tenantNameUpperFirst %>ById">{{<%= tenantNameLowerFirst %>Option.id}}</option>
                     </select>
                 </div>
 
