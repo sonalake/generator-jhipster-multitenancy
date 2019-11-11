@@ -2,7 +2,7 @@ const mtUtils = require('../multitenancy-utils');
 
 const entityTenantAwareTemplates = ['Entity.java'];
 
-const tenantTemplates = ['_TenantResource', '_TenantService', '_Tenant.java'];
+const tenantTemplates = ['_TenantResource', '_Tenant.java'];
 
 module.exports = {
     writeFiles,
@@ -30,16 +30,6 @@ function writeFiles() {
                     {
                         file: 'package/_EntityAspect.java',
                         renameTo: generator => `${this.packageFolder}/aop/${this.tenantNameLowerFirst}/${this.entityClass}Aspect.java`
-                    }
-                ]
-            },
-            {
-                condition: generator => generator.isTenant,
-                path: this.SERVER_MAIN_SRC_DIR,
-                templates: [
-                    {
-                        file: 'package/repository/_TenantRepository.java',
-                        renameTo: generator => `${this.packageFolder}/repository/${this.tenantNameUpperFirst}Repository.java`
                     }
                 ]
             },
