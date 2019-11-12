@@ -131,7 +131,7 @@ describe('Subgenerator client of multitenancy JHipster blueprint', () => {
         it('user-management is being overwritten', () => {
             assert.fileContent(
                 `${dir}modules/administration/user-management/user-management.tsx`,
-                `<Translate contentKey="jhipsterApp.${tenant}.detail.title">${tenantNameUpperFirst}</Translate>`
+                `<Translate contentKey="jhipsterBlueprintApp.${tenant}.detail.title">${tenantNameUpperFirst}</Translate>`
             );
         });
 
