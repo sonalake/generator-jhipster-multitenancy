@@ -72,7 +72,7 @@ yarn global upgrade generator-jhipster-multitenancy
 To generate your JHipster Multitenant application using the blueprint, run the below command
 
 ```bash
-jhipster --blueprint multitenancy
+jhipster --blueprints multitenancy
 ```
 
 ## Making an entity tenant aware
@@ -93,7 +93,7 @@ Do you want to make Book tenant aware? (Y/n)
 
 During development of blueprint, please note the below steps. They are very important.
 
-1. Link your blueprint globally 
+1. Link your blueprint globally
 
 Note: If you do not want to link the blueprint(step 3) to each project being created, use NPM instead of Yarn as yeoman doesn't seem to fetch globally linked Yarn modules. On the other hand, this means you have to use NPM in all the below steps as well.
 
@@ -122,7 +122,7 @@ mkdir my-app && cd my-app
 npm link generator-jhipster-multitenancy
 npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
 
-jhipster -d --blueprint multitenancy
+jhipster -d --blueprints multitenancy
 
 ```
 
