@@ -1,12 +1,16 @@
 const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
+const fse = require('fs-extra');
 
 describe('Subgenerator server of multitenancy JHipster blueprint', () => {
-    describe('Sample test', () => {
+    describe('Validation check for "SQL" database type', () => {
         before(done => {
             helpers
                 .run('generator-jhipster/generators/server')
+                .inTmpDir(dir => {
+                    fse.copySync(path.join(__dirname, './templates/default'), dir);
+                })
                 .withOptions({
                     'from-cli': true,
                     skipInstall: true,
@@ -20,27 +24,10 @@ describe('Subgenerator server of multitenancy JHipster blueprint', () => {
                         path.join(__dirname, '../generators/server/index.js')
                     ]
                 ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'session',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['fr', 'de'],
-                    buildTool: 'maven',
-                    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
-                })
                 .on('end', done);
         });
-
-        it('it works', () => {
-            // Adds your tests here
-            assert.textEqual('Write your own tests!', 'Write your own tests!');
+        it('contains databaseType with sql value', () => {
+            assert.fileContent('.yo-rc.json', /"databaseType": "sql"/);
         });
     });
 });

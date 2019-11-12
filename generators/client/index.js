@@ -1,9 +1,10 @@
 /* eslint-disable consistent-return */
+const _ = require('lodash');
 const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const files = require('./files');
-
+const angularFiles = require('./files-angular');
+const reactFiles = require('./files-react');
 const mtUtils = require('../multitenancy-utils');
 
 module.exports = class extends ClientGenerator {
@@ -69,7 +70,6 @@ module.exports = class extends ClientGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._configuring();
     }
 
@@ -86,18 +86,35 @@ module.exports = class extends ClientGenerator {
                 // Ok
                 this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
                 this.angularDir = jhipsterConstants.ANGULAR_DIR;
+                this.reactDir = jhipsterConstants.REACT_DIR;
                 this.CLIENT_TEST_SRC_DIR = jhipsterConstants.CLIENT_TEST_SRC_DIR;
 
                 // template variables
                 mtUtils.tenantVariables(this.config.get('tenantName'), this);
             },
             writeAdditionalFile() {
-                files.writeFiles.call(this);
+                // make the necessary client code changes and adds the tenant UI
+                switch (this.clientFramework) {
+                    case 'angularX':
+                        return angularFiles.writeFiles.call(this);
+                    case 'react':
+                        return reactFiles.writeFiles.call(this);
+                    default:
+                        return angularFiles.writeFiles.call(this);
+                }
             },
-            // make the necessary client code changes and adds the tenant UI
-            generateClientCode() {
+            rewriteExistingFiles() {
                 // Rewrites to existing files
-                mtUtils.processPartialTemplates(files.angular.templates(this), this);
+                switch (this.clientFramework) {
+                    case 'angularX':
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                        break;
+                    case 'react':
+                        mtUtils.processPartialTemplates(reactFiles.templates(this), this);
+                        break;
+                    default:
+                        mtUtils.processPartialTemplates(angularFiles.templates(this), this);
+                }
             }
         };
         return Object.assign(writing, myCustomPhaseSteps);

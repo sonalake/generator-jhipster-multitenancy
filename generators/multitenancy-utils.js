@@ -65,7 +65,7 @@ function requireTemplates(prefix, templates, context) {
         // Look for specific version
         const template = prefix + file;
         let version = context.config.get('jhipsterVersion');
-        while (version !== '') {
+        while (version !== '' && version !== undefined) {
             try {
                 ret.push(require(`${template}.v${version}.js`));
                 return;

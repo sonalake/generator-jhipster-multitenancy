@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+const _ = require('lodash');
 const chalk = require('chalk');
 const ServerGenerator = require('generator-jhipster/generators/server');
 const files = require('./files');
@@ -67,7 +68,6 @@ module.exports = class extends ServerGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._configuring();
     }
 

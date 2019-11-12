@@ -4,7 +4,8 @@ const EntityClientGenerator = require('generator-jhipster/generators/entity-clie
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const mtUtils = require('../multitenancy-utils');
-const files = require('./files');
+const angularFiles = require('./files-angular');
+const reactFiles = require('./files-react');
 
 module.exports = class extends EntityClientGenerator {
     constructor(args, opts) {
@@ -84,16 +85,35 @@ module.exports = class extends EntityClientGenerator {
             // sets up all the variables we'll need for the templating
             setUpVariables() {
                 this.SERVER_MAIN_SRC_DIR = jhipsterConstants.SERVER_MAIN_SRC_DIR;
+                this.webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
+                this.reactDir = jhipsterConstants.REACT_DIR;
 
                 // template variables
                 mtUtils.tenantVariables(this.config.get('tenantName'), this);
             },
             generateClientCode() {
                 if (this.tenantAware) {
-                    // tenant aware entity
-                    mtUtils.processPartialTemplates(files.angular.entityTenantAwareTemplates(this), this);
+                    switch (this.clientFramework) {
+                        case 'angularX':
+                            mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                            break;
+                        case 'react':
+                            mtUtils.processPartialTemplates(reactFiles.entityTenantAwareTemplates(this), this);
+                            break;
+                        default:
+                            mtUtils.processPartialTemplates(angularFiles.entityTenantAwareTemplates(this), this);
+                    }
                 } else if (this.isTenant) {
-                    mtUtils.processPartialTemplates(files.angular.tenantTemplates(this), this);
+                    switch (this.clientFramework) {
+                        case 'angularX':
+                            mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                            break;
+                        case 'react':
+                            mtUtils.processPartialTemplates(reactFiles.tenantTemplates(this), this);
+                            break;
+                        default:
+                            mtUtils.processPartialTemplates(angularFiles.tenantTemplates(this), this);
+                    }
                 }
             }
         };

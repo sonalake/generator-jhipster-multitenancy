@@ -87,7 +87,10 @@ module.exports = class extends EntityGenerator {
                 if (context.fileData !== undefined && context.fileData.tenantAware !== undefined) {
                     return;
                 }
-
+                // Check entity for relationship with otherEntityName to be tenant
+                // Check relationshipType is not one to many or many to multitenancy
+                // Show prompt if that is ok
+                let showTenantAwarePrompt = true;
                 const prompts = [
                     {
                         when: this.newTenantAware === undefined,
@@ -98,12 +101,28 @@ module.exports = class extends EntityGenerator {
                     }
                 ];
                 const done = this.async();
-                this.prompt(prompts).then(props => {
-                    if (!this.isTenant && props.tenantAware !== undefined) {
-                        this.newTenantAware = props.tenantAware;
+                const relationships = context.relationships;
+                let relationshipType;
+                // if any relationship exisits already in the entity to the tenant remove it and regenerate
+                for (let i = relationships.length - 1; i >= 0; i--) {
+                    const otherEntityName = relationships[i].otherEntityName;
+                    relationshipType = relationships[i].relationshipType;
+                    if (this._.toLower(otherEntityName) === this._.toLower(this.tenantName)) {
+                        if (relationshipType === 'one-to-many' || relationshipType === 'many-to-many') {
+                            showTenantAwarePrompt = false;
+                        }
                     }
+                }
+                if (showTenantAwarePrompt) {
+                    this.prompt(prompts).then(props => {
+                        if (!this.isTenant && props.tenantAware !== undefined) {
+                            this.newTenantAware = props.tenantAware;
+                        }
+                        done();
+                    });
+                } else {
                     done();
-                });
+                }
             }
         };
         return Object.assign(prompting, myCustomPhaseSteps);
@@ -141,24 +160,29 @@ module.exports = class extends EntityGenerator {
                     context.service = 'serviceClass';
                     context.dto = 'no';
                     const relationships = context.relationships;
+                    let tenantRelationship = false;
                     // if any relationship exisits already in the entity to the tenant remove it and regenerate
                     for (let i = relationships.length - 1; i >= 0; i--) {
                         if (relationships[i].otherEntityName === this.tenantName) {
-                            relationships.splice(i);
+                            // Instead of removing relationship just don't add relationship below. Set boolean value
+                            // relationships.splice(i);
+                            tenantRelationship = true;
                         }
                     }
 
                     this.log(chalk.white(`Entity ${chalk.bold(this.options.name)} found. Adding relationship`));
-                    const real = {
-                        relationshipName: this._.toLower(this.tenantName),
-                        otherEntityName: this._.toLower(this.tenantName),
-                        relationshipType: 'many-to-one',
-                        otherEntityField: 'name',
-                        relationshipValidateRules: 'required',
-                        ownerSide: true,
-                        otherEntityRelationshipName: this._.toLower(context.name)
-                    };
-                    relationships.push(real);
+                    if (!tenantRelationship) {
+                        const real = {
+                            relationshipName: this._.toLower(this.tenantName),
+                            otherEntityName: this._.toLower(this.tenantName),
+                            relationshipType: 'many-to-one',
+                            otherEntityField: 'id',
+                            relationshipValidateRules: 'required',
+                            ownerSide: true,
+                            otherEntityRelationshipName: this._.toLower(context.name)
+                        };
+                        relationships.push(real);
+                    }
 
                     if (this.newTenantAware) {
                         this.configOptions.tenantAwareEntities = this.config.get('tenantAwareEntities');

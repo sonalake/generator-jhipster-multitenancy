@@ -7,10 +7,7 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
     describe('Sample test', () => {
         before(done => {
             helpers
-                .run('generator-jhipster/generators/common')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, './templates/ngx-blueprint'), dir);
-                })
+                .run('generator-jhipster/generators/app')
                 .withOptions({
                     'from-cli': true,
                     skipInstall: true,
@@ -26,6 +23,7 @@ describe('Subgenerator common of multitenancy JHipster blueprint', () => {
                 ])
                 .withPrompts({
                     baseName: 'sampleMysql',
+                    clientFramework: 'angularX',
                     packageName: 'com.mycompany.myapp',
                     applicationType: 'monolith',
                     databaseType: 'sql',
