@@ -1,7 +1,7 @@
 const mtUtils = require('../multitenancy-utils');
 
 const tenantTemplates = ['entities.tsx', 'admin.tsx'];
-const entityTenantAwareTemplates = ['entity-update.tsx'];
+const entityTenantAwareTemplates = ['entity-detail.tsx', 'entity-update.tsx', 'entity.tsx'];
 
 module.exports = {
     tenantTemplates(context) {
