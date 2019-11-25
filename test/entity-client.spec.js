@@ -52,19 +52,16 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
                     <AvInput`);
         });
 
-<<<<<<< HEAD
         it('entity.tsx partial updates are being done', () => {
           assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? <Translate contentKey`);
           assert.fileContent(`${dir}entities/foo/foo.tsx`, '(storeState: IRootState)');
           assert.fileContent(`${dir}entities/foo/foo.tsx`, 'account: storeState.authentication.account');
           assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? (
                       <td>`);
-=======
         it('entity-detail.tsx partial update is being done', () => {
             assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, `!this.props.account.${tenant}`);
             assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, '(storeState: IRootState)');
             assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, 'account: storeState.authentication.account');
->>>>>>> 8ced7fa56a30ef4f5be876d6ac9b4b4948f45ce8
         });
     });
 });
