@@ -6,6 +6,7 @@ const helpers = require('yeoman-test');
 const dir = 'src/main/webapp/app/';
 const entity = 'foo';
 const tenant = 'company';
+const tenantUpper = 'Company';
 
 describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => {
     describe('React partial update tests', () => {
@@ -49,6 +50,12 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
         it('entity-update.tsx partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/foo/foo-update.tsx`, `{!this.props.account.${tenant} ? (
                     <AvInput`);
+        });
+
+        it('entity-detail.tsx partial update is being done', () => {
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, `!this.props.account.${tenant}`);
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, '(storeState: IRootState)');
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, 'account: storeState.authentication.account');
         });
     });
 });
