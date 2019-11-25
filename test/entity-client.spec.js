@@ -57,7 +57,7 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
             assert.fileContent(`${dir}entities/foo/foo.tsx`, '(storeState: IRootState)');
             assert.fileContent(`${dir}entities/foo/foo.tsx`, 'account: storeState.authentication.account');
             assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? (
-                        <td>`);
+                      <td>`);
         });
 
         it('entity-detail.tsx partial update is being done', () => {
