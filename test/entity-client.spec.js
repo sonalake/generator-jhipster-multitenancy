@@ -50,6 +50,14 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
             assert.fileContent(`${dir}entities/foo/foo-update.tsx`, `{!this.props.account.${tenant} ? (
                     <AvInput`);
         });
+
+        it('entity.tsx partial updates are being done', () => {
+          assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? <Translate contentKey`);
+          assert.fileContent(`${dir}entities/foo/foo.tsx`, '(storeState: IRootState)');
+          assert.fileContent(`${dir}entities/foo/foo.tsx`, 'account: storeState.authentication.account');
+          assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? (
+                      <td>`);
+        });
     });
 });
 
