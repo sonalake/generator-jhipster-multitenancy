@@ -14,7 +14,7 @@ const tmpls = [
         tmpl: context => `<li>
                         <a class="dropdown-item" routerLink="${context.tenantNameLowerFirst}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="${context.baseName}App.${context.tenantNameLowerFirst}.home.title">${context.tenantNamePluralLowerFirst}</span>
+                            <span jhiTranslate="${context.i18nKeyPrefix}.home.title">${context.tenantNamePluralLowerFirst}</span>
                         </a>
                     </li>
                     <li>
