@@ -5,7 +5,7 @@ const tmpls = [
         type: 'replaceContent',
         regex: true,
         target: context => `<Translate(.*)\n(\\s*)${context.tenantNameUpperFirst}\n(\\s*)</Translate>`, // eslint-disable-next-line
-        tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Translate contentKey="${context.baseName}App.${context.entityInstance}.${context.tenantNameLowerFirst}">
+        tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Translate contentKey="${context.angularAppName}.${context.entityInstance}.${context.tenantNameLowerFirst}">
         ${context.tenantNameUpperFirst}</Translate> : ''}`
     },
     {

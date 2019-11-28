@@ -51,7 +51,7 @@ const tmpls = [
       regex: true,
       target: context => `<Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">\n(.*)\n(\\s*)</Label>`,
       tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Label for="${context.entityFileName}-${context.tenantNameLowerFirst}">
-                    <Translate contentKey="${context.baseName}App.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
+                    <Translate contentKey="${context.angularAppName}.${context.entityFileName}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>
                   </Label>: ''}`
     }
 ];

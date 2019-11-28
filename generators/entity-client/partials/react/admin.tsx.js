@@ -6,7 +6,7 @@ const tmpls = [
         target: context => '<MenuItem icon="tachometer-alt" to="/admin/metrics">',
         tmpl: context =>
             `<MenuItem icon="asterisk" to="/entity/${context.tenantNameLowerFirst}">
-              <Translate contentKey="${context.baseName}App.${context.tenantNameLowerFirst}.home.title" />
+              <Translate contentKey="${context.i18nKeyPrefix}.home.title" />
             </MenuItem>`
     }
 ];
