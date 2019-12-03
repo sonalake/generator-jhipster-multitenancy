@@ -3,8 +3,8 @@ const file = context => `${context.webappDir}app/entities/${context.entityFolder
 const tmpls = [
     {
         type: 'replaceContent',
-        target: context => `<Translate contentKey="${context.baseName}App.${context.entityInstance}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>`,
-        tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Translate contentKey="${context.baseName}App.${context.entityInstance}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate> : ''}` // eslint-disable-line
+        target: context => `<Translate contentKey="${context.angularAppName}.${context.entityInstance}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate>`,
+        tmpl: context => `{!this.props.account.${context.tenantNameLowerFirst} ? <Translate contentKey="${context.angularAppName}.${context.entityInstance}.${context.tenantNameLowerFirst}">${context.tenantNameUpperFirst}</Translate> : ''}` // eslint-disable-line
     },
     {
         type: 'replaceContent',
