@@ -77,7 +77,7 @@ jhipster --blueprints multitenancy
 
 ## Making an entity tenant aware
 
-Once the blueprint has generated your application, a tenant entity has been created. All entitites created now can be made tenant aware. Cretae a new entity using the standard JHipster command.
+Once the blueprint has generated your application, a tenant entity has been created. All entitites created now can be made tenant aware. Create a new entity using the standard JHipster command.
 
 ```bash
 jhipster entity Book
@@ -125,6 +125,9 @@ npm link generator-jhipster (Optional: Needed only if you are using a non-releas
 jhipster -d --blueprints multitenancy
 
 ```
+# Sample Applications
+
+If you would like to see sample apps for this multitenancy blueprint, check out our sample [Angular](https://github.com/sonalake/jhipster-mt-sample-angular) and [REACT](https://github.com/sonalake/jhipster-mt-sample-react) apps.
 
 # License
 
