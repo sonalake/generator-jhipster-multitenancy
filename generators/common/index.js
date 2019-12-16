@@ -91,7 +91,7 @@ module.exports = class extends CommonGenerator {
                     {
                         when: this.tenantName === undefined,
                         name: 'tenantName',
-                        message: 'What is the alias given tenants in your application?',
+                        message: 'What is the alias given to tenants in your application?',
                         default: 'Company',
                         validate: input => {
                             if (_.toLower(input) === 'account') {
