@@ -203,7 +203,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                 </AvGroup>
                 <AvGroup>
                   <Label for="<%= tenantNameLowerFirst %>">
-                    <Translate contentKey="<%= baseName %>App.<%= tenantNameLowerFirst %>.detail.title"><%= tenantNameUpperFirst %></Translate>
+                    <Translate contentKey="<%= angularAppName %>.<%= tenantNameLowerFirst %>.detail.title"><%= tenantNameUpperFirst %></Translate>
                   </Label>
                     {User.<%= tenantNameLowerFirst %> ? <AvInput id="user-<%= tenantNameLowerFirst %>" type="select" className="form-control" name="<%= tenantNameLowerFirst %>.id" value={User.<%= tenantNameLowerFirst %>.id}>
                     <option value="" key="0"></option>
