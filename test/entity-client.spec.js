@@ -6,6 +6,7 @@ const helpers = require('yeoman-test');
 const dir = 'src/main/webapp/app/';
 const entity = 'foo';
 const tenant = 'company';
+const tenantUpper = 'Company';
 
 describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => {
     describe('React partial update tests', () => {
@@ -50,9 +51,22 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
             assert.fileContent(`${dir}entities/foo/foo-update.tsx`, `{!this.props.account.${tenant} ? (
                     <AvInput`);
         });
+
+        it('entity.tsx partial updates are being done', () => {
+            assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? <Translate contentKey`);
+            assert.fileContent(`${dir}entities/foo/foo.tsx`, '(storeState: IRootState)');
+            assert.fileContent(`${dir}entities/foo/foo.tsx`, 'account: storeState.authentication.account');
+            assert.fileContent(`${dir}entities/foo/foo.tsx`, `!this.props.account.${tenant} ? (
+                      <td>`);
+        });
+
+        it('entity-detail.tsx partial update is being done', () => {
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, `!this.props.account.${tenant}`);
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, '(storeState: IRootState)');
+            assert.fileContent(`${dir}entities/foo/foo-detail.tsx`, 'account: storeState.authentication.account');
+        });
     });
 });
-
 describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => {
     describe('Angular partial update tests', () => {
         before(done => {
@@ -96,13 +110,13 @@ describe('Subgenerator entity-client of multitenancy JHipster blueprint', () => 
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.html`, `<dt *ngIf="currentAccount && !currentAccount.${tenant}">`);
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.html`, `<div *ngIf="currentAccount && !currentAccount.${tenant}">`);
         });
+
         it('entity-detail.component.ts partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'import { AccountService }');
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'currentAccount: any;');
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'this.accountService.identity().then(account => {'); // eslint-disable-line
             assert.fileContent(`${dir}entities/${entity}/${entity}-detail.component.ts`, 'protected accountService: AccountService');
         });
-
 
         it('entity-update.component.html partial rewrite is being done', () => {
             assert.fileContent(`${dir}entities/${entity}/${entity}-update.component.html`, `<div class="form-group" *ngIf="!currentAccount.${tenant}">`); // eslint-disable-line

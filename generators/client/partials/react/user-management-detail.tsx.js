@@ -5,7 +5,7 @@ const tmpls = [
         regex: true,
         target: context => '<dt><Translate contentKey="userManagement.createdBy">Created By</Translate></dt>',
         tmpl: context => `<dt>
-        <Translate contentKey="jhipsterApp.${context.tenantNameLowerFirst}.detail.title">${context.tenantNameUpperFirst}</Translate>
+        <Translate contentKey="${context.angularAppName}.${context.tenantNameLowerFirst}.detail.title">${context.tenantNameUpperFirst}</Translate>
         </dt>
         <dd>{user.${context.tenantNameLowerFirst} ? user.${context.tenantNameLowerFirst}.id : null}</dd>`
     }
