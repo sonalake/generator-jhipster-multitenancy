@@ -31,7 +31,7 @@ This is a [JHipster](https://www.jhipster.tech/) blueprint for creating multiten
 
 # Prerequisites
 
-As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
+As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster v6.3.1 (newer versions are not yet supported) and its related tools already installed:
 
 - [Installing JHipster](https://www.jhipster.tech/installation/)
 
